@@ -1,0 +1,14 @@
+[workspace]
+members = [
+    "mozzart-std",
+    "mozzart-app"
+]
+
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = []
+description = "Mozzart workspace"
+license = "MIT" 

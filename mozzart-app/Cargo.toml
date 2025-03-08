@@ -1,0 +1,7 @@
+[package]
+name = "mozzart-app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+mozzart-std = { path = "../mozzart-std" } 

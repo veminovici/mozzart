@@ -1,5 +1,9 @@
 use crate::Interval;
-use std::ops::{Add, AddAssign, Sub, SubAssign};
+use std::fmt;
+use std::{
+    fmt::Debug,
+    ops::{Add, AddAssign, Sub, SubAssign},
+};
 
 /// Represents a musical pitch using MIDI note numbers (0-127)
 /// where middle C is 60.
@@ -110,6 +114,7 @@ impl SubAssign<Pitch> for Pitch {
 }
 
 /// A slice of pitches that can be converted into intervals
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct Pitches<'a>(&'a [Pitch]);
 
 impl<'a> Pitches<'a> {
@@ -159,6 +164,29 @@ impl<'a> Pitches<'a> {
             .windows(2)
             .map(|pitches| pitches[1] - pitches[0])
             .collect()
+    }
+}
+
+/// Formats the pitches as a comma-separated list within `Pitches([...])`
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Pitch, Pitches};
+///
+/// let c_major = [Pitch::new(60), Pitch::new(64), Pitch::new(67)];  // C-E-G
+/// let pitches = Pitches::new(&c_major);
+/// assert_eq!(format!("{:?}", pitches), "Pitches([Pitch(60), Pitch(64), Pitch(67)])");
+/// ```
+impl Debug for Pitches<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let pitches = self
+            .0
+            .iter()
+            .map(|p| format!("{:?}", p))
+            .collect::<Vec<_>>()
+            .join(", ");
+
+        write!(f, "Pitches([{pitches}])")
     }
 }
 
@@ -260,5 +288,26 @@ mod tests {
     fn test_pitches_root_empty() {
         let pitches: [Pitch; 0] = [];
         let _ = Pitches::new(&pitches).root(); // Should panic
+    }
+
+    #[test]
+    fn test_pitches_debug() {
+        let pitches = [Pitch::new(60), Pitch::new(64), Pitch::new(67)]; // C-E-G
+        let formatted = format!("{:?}", Pitches::new(&pitches));
+        assert_eq!(formatted, "Pitches([Pitch(60), Pitch(64), Pitch(67)])");
+    }
+
+    #[test]
+    fn test_pitches_debug_empty() {
+        let pitches: [Pitch; 0] = [];
+        let formatted = format!("{:?}", Pitches::new(&pitches));
+        assert_eq!(formatted, "Pitches([])");
+    }
+
+    #[test]
+    fn test_pitches_debug_single() {
+        let pitches = [Pitch::new(60)]; // C4
+        let formatted = format!("{:?}", Pitches::new(&pitches));
+        assert_eq!(formatted, "Pitches([Pitch(60)])");
     }
 }

@@ -122,8 +122,27 @@ impl<'a> Pitches<'a> {
     /// let c_major = [Pitch::new(60), Pitch::new(64), Pitch::new(67)];  // C-E-G
     /// let pitches = Pitches::new(&c_major);
     /// ```
-    pub fn new(pitches: &'a [Pitch]) -> Self {
-        Pitches(pitches)
+    #[inline]
+    pub const fn new(pitches: &'a [Pitch]) -> Self {
+        Self(pitches)
+    }
+
+    /// Returns the first pitch in the sequence
+    ///
+    /// # Panics
+    /// Panics if the sequence is empty
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Pitch, Pitches};
+    ///
+    /// let c_major = [Pitch::new(60), Pitch::new(64), Pitch::new(67)];  // C-E-G
+    /// let pitches = Pitches::new(&c_major);
+    /// assert_eq!(pitches.root(), Pitch::new(60));  // C4
+    /// ```
+    #[inline]
+    pub const fn root(&self) -> Pitch {
+        self.0[0]
     }
 
     /// Converts a sequence of pitches into the intervals between consecutive pitches
@@ -228,5 +247,18 @@ mod tests {
         let c4 = Pitch::new(60);
         let c5 = Pitch::new(72);
         assert_eq!(c5 - c4, Interval::new(12)); // One octave
+    }
+
+    #[test]
+    fn test_pitches_root() {
+        let pitches = [Pitch::new(60), Pitch::new(64), Pitch::new(67)]; // C-E-G
+        assert_eq!(Pitches::new(&pitches).root(), Pitch::new(60)); // C4
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_pitches_root_empty() {
+        let pitches: [Pitch; 0] = [];
+        let _ = Pitches::new(&pitches).root(); // Should panic
     }
 }

@@ -32,7 +32,8 @@ impl Interval {
     /// let perfect_fifth = Interval::new(7);
     /// let octave = Interval::new(12);
     /// ```
-    pub fn new(semitones: u8) -> Self {
+    #[inline]
+    pub const fn new(semitones: u8) -> Self {
         Interval(semitones)
     }
 }
@@ -60,6 +61,40 @@ impl From<u8> for Interval {
         Interval(value)
     }
 }
+
+/// Basic intervals
+pub const SEMITONE: Interval = Interval::new(1);
+pub const TONE: Interval = Interval::new(2);
+
+/// Standard intervals
+pub const UNISON: Interval = Interval::new(0);
+pub const MINOR_SECOND: Interval = Interval::new(1);
+pub const MAJOR_SECOND: Interval = Interval::new(2);
+pub const MINOR_THIRD: Interval = Interval::new(3);
+pub const MAJOR_THIRD: Interval = Interval::new(4);
+pub const PERFECT_FOURTH: Interval = Interval::new(5);
+pub const AUGMENTED_FOURTH: Interval = Interval::new(6);
+pub const DIMINISHED_FIFTH: Interval = Interval::new(6);
+pub const PERFECT_FIFTH: Interval = Interval::new(7);
+pub const MINOR_SIXTH: Interval = Interval::new(8);
+pub const MAJOR_SIXTH: Interval = Interval::new(9);
+pub const MINOR_SEVENTH: Interval = Interval::new(10);
+pub const MAJOR_SEVENTH: Interval = Interval::new(11);
+pub const PERFECT_OCTAVE: Interval = Interval::new(12);
+
+/// Extended intervals
+pub const MINOR_NINTH: Interval = Interval::new(13);
+pub const MAJOR_NINTH: Interval = Interval::new(14);
+pub const MINOR_TENTH: Interval = Interval::new(15);
+pub const MAJOR_TENTH: Interval = Interval::new(16);
+pub const PERFECT_ELEVENTH: Interval = Interval::new(17);
+pub const AUGMENTED_ELEVENTH: Interval = Interval::new(18);
+pub const PERFECT_TWELFTH: Interval = Interval::new(19);
+pub const MINOR_THIRTEENTH: Interval = Interval::new(20);
+pub const MAJOR_THIRTEENTH: Interval = Interval::new(21);
+pub const MINOR_FOURTEENTH: Interval = Interval::new(22);
+pub const MAJOR_FOURTEENTH: Interval = Interval::new(23);
+pub const DOUBLE_OCTAVE: Interval = Interval::new(24);
 
 /// A slice of intervals that can be converted into pitches
 pub struct Intervals<'a>(&'a [Interval]);
@@ -197,5 +232,44 @@ mod tests {
                 Pitch::new(72), // C5
             ]
         );
+    }
+
+    #[test]
+    fn test_standard_intervals() {
+        assert_eq!(UNISON.0, 0);
+        assert_eq!(MINOR_SECOND.0, 1);
+        assert_eq!(MAJOR_SECOND.0, 2);
+        assert_eq!(MINOR_THIRD.0, 3);
+        assert_eq!(MAJOR_THIRD.0, 4);
+        assert_eq!(PERFECT_FOURTH.0, 5);
+        assert_eq!(AUGMENTED_FOURTH.0, 6);
+        assert_eq!(DIMINISHED_FIFTH.0, 6);
+        assert_eq!(PERFECT_FIFTH.0, 7);
+        assert_eq!(MINOR_SIXTH.0, 8);
+        assert_eq!(MAJOR_SIXTH.0, 9);
+        assert_eq!(MINOR_SEVENTH.0, 10);
+        assert_eq!(MAJOR_SEVENTH.0, 11);
+        assert_eq!(PERFECT_OCTAVE.0, 12);
+    }
+
+    #[test]
+    fn test_extended_intervals() {
+        assert_eq!(MINOR_NINTH.0, 13);
+        assert_eq!(MAJOR_NINTH.0, 14);
+        assert_eq!(MINOR_TENTH.0, 15);
+        assert_eq!(MAJOR_TENTH.0, 16);
+        assert_eq!(PERFECT_ELEVENTH.0, 17);
+        assert_eq!(AUGMENTED_ELEVENTH.0, 18);
+        assert_eq!(PERFECT_TWELFTH.0, 19);
+        assert_eq!(MINOR_THIRTEENTH.0, 20);
+        assert_eq!(MAJOR_THIRTEENTH.0, 21);
+        assert_eq!(MINOR_FOURTEENTH.0, 22);
+        assert_eq!(MAJOR_FOURTEENTH.0, 23);
+        assert_eq!(DOUBLE_OCTAVE.0, 24);
+    }
+
+    #[test]
+    fn test_tritone_equivalence() {
+        assert_eq!(AUGMENTED_FOURTH, DIMINISHED_FIFTH);
     }
 }

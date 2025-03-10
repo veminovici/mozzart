@@ -118,12 +118,12 @@ impl<'a> Intervals<'a> {
     ///
     /// # Examples
     /// ```
-    /// use mozzart_std::{Interval, Intervals, Pitch};
+    /// use mozzart_std::{Interval, Intervals, Pitch, C4, E4, G4};
     ///
-    /// let c4 = Pitch::from(60u8);  // Middle C
+    /// let c4 = C4;  // Middle C
     /// let major_triad = [Interval::from(4u8), Interval::from(3u8)];  // Major third, minor third
     /// let pitches = Intervals::new(&major_triad).into_pitches(c4);
-    /// assert_eq!(pitches, vec![Pitch::from(60u8), Pitch::from(64u8), Pitch::from(67u8)]);  // C-E-G
+    /// assert_eq!(pitches, vec![C4, E4, G4]); // C-E-G
     /// ```
     pub fn into_pitches(self, root: Pitch) -> Vec<Pitch> {
         std::iter::once(root)

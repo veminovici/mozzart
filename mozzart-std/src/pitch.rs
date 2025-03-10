@@ -43,14 +43,6 @@ impl From<&Pitch> for u8 {
     }
 }
 
-impl From<u8> for Pitch {
-    /// Creates a pitch from a MIDI note number
-    #[inline]
-    fn from(value: u8) -> Self {
-        Pitch(value)
-    }
-}
-
 impl Add<Interval> for Pitch {
     type Output = Pitch;
 
@@ -400,7 +392,6 @@ mod tests {
         let pitch = Pitch::new(60);
         assert_eq!(u8::from(pitch), 60);
         assert_eq!(u8::from(&pitch), 60);
-        assert_eq!(Pitch::from(60u8), pitch);
     }
 
     #[test]

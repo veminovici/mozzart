@@ -31,7 +31,7 @@ impl Interval {
     /// let octave = PERFECT_OCTAVE;
     /// ```
     #[inline(always)]
-    const fn new(semitones: u8) -> Self {
+    pub(crate) const fn new(semitones: u8) -> Self {
         Interval(semitones)
     }
 }
@@ -52,44 +52,10 @@ impl From<&Interval> for u8 {
     }
 }
 
-/// Basic intervals
-pub const SEMITONE: Interval = Interval::new(1);
-pub const TONE: Interval = Interval::new(2);
-
-/// Standard intervals
-pub const UNISON: Interval = Interval::new(0);
-pub const MINOR_SECOND: Interval = Interval::new(1);
-pub const MAJOR_SECOND: Interval = Interval::new(2);
-pub const MINOR_THIRD: Interval = Interval::new(3);
-pub const MAJOR_THIRD: Interval = Interval::new(4);
-pub const PERFECT_FOURTH: Interval = Interval::new(5);
-pub const AUGMENTED_FOURTH: Interval = Interval::new(6);
-pub const DIMINISHED_FIFTH: Interval = Interval::new(6);
-pub const PERFECT_FIFTH: Interval = Interval::new(7);
-pub const MINOR_SIXTH: Interval = Interval::new(8);
-pub const MAJOR_SIXTH: Interval = Interval::new(9);
-pub const MINOR_SEVENTH: Interval = Interval::new(10);
-pub const MAJOR_SEVENTH: Interval = Interval::new(11);
-pub const PERFECT_OCTAVE: Interval = Interval::new(12);
-
-/// Extended intervals
-pub const MINOR_NINTH: Interval = Interval::new(13);
-pub const MAJOR_NINTH: Interval = Interval::new(14);
-pub const MINOR_TENTH: Interval = Interval::new(15);
-pub const MAJOR_TENTH: Interval = Interval::new(16);
-pub const PERFECT_ELEVENTH: Interval = Interval::new(17);
-pub const AUGMENTED_ELEVENTH: Interval = Interval::new(18);
-pub const PERFECT_TWELFTH: Interval = Interval::new(19);
-pub const MINOR_THIRTEENTH: Interval = Interval::new(20);
-pub const MAJOR_THIRTEENTH: Interval = Interval::new(21);
-pub const MINOR_FOURTEENTH: Interval = Interval::new(22);
-pub const MAJOR_FOURTEENTH: Interval = Interval::new(23);
-pub const DOUBLE_OCTAVE: Interval = Interval::new(24);
-
 #[cfg(test)]
 mod tests {
     use super::*;
-
+    use crate::constants::*;
     #[test]
     fn test_interval_new() {
         let interval = Interval::new(4);

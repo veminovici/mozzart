@@ -20,7 +20,7 @@
 //!
 //! # Examples
 //! ```
-//! use mozzart_std::{C4, E4, G4, MAJOR_THIRD, MINOR_THIRD};
+//! use mozzart_std::{C4, E4, G4, MAJOR_THIRD, MINOR_THIRD, A4_MAJOR_SCALE, C4_MINOR_SCALE, G4_HARMONIC_SCALE, D4_MELODIC_SCALE};
 //!
 //! // Using pitch constants
 //! let middle_c = C4;  // MIDI note 60
@@ -30,6 +30,10 @@
 //! let intervals = [MAJOR_THIRD, MINOR_THIRD];  // Major third, minor third
 //!
 //! // Using scale constants
+//! let a_major = A4_MAJOR_SCALE;
+//! let c_minor = C4_MINOR_SCALE;
+//! let g_harmonic_minor = G4_HARMONIC_SCALE;
+//! let d_melodic_minor = D4_MELODIC_SCALE;
 //! ```
 
 mod intervals;

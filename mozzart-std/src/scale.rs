@@ -42,6 +42,7 @@ pub enum ScaleQuality {
 /// assert_eq!(c_major.quality(), ScaleQuality::Major);
 /// assert_eq!(c_major.pitches()[0], C4); // Root note
 /// ```
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Scale<const N: usize> {
     quality: ScaleQuality,
     pitches: [Pitch; N],

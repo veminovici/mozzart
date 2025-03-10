@@ -1,4 +1,4 @@
-use crate::{Interval, Pitch};
+use crate::{debug_list, debug_title_list, Interval, Pitch};
 use std::fmt;
 
 /// A slice of pitches that can be converted into intervals
@@ -103,18 +103,12 @@ impl<'a> From<&'a [Pitch]> for PitchSlice<'a> {
 ///
 /// let c_major = [C4, E4, G4];  // C-E-G
 /// let pitches = PitchSlice::new(&c_major);
-/// assert_eq!(format!("{:?}", pitches), "Pitches([Pitch(60), Pitch(64), Pitch(67)])");
+/// assert_eq!(format!("{:?}", pitches), "Pitches[Pitch(60), Pitch(64), Pitch(67)]");
 /// ```
 impl fmt::Debug for PitchSlice<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let pitches = self
-            .0
-            .iter()
-            .map(|p| format!("{:?}", p))
-            .collect::<Vec<_>>()
-            .join(", ");
-
-        write!(f, "Pitches([{pitches}])")
+        let pitches = debug_list(self.0.iter());
+        write!(f, "{}", debug_title_list("Pitches", &pitches))
     }
 }
 
@@ -168,21 +162,21 @@ mod tests {
     fn test_pitches_debug() {
         let pitches = [C4, E4, G4]; // C-E-G
         let formatted = format!("{:?}", PitchSlice::new(&pitches));
-        assert_eq!(formatted, "Pitches([Pitch(60), Pitch(64), Pitch(67)])");
+        assert_eq!(formatted, "Pitches[Pitch(60), Pitch(64), Pitch(67)]");
     }
 
     #[test]
     fn test_pitches_debug_empty() {
         let pitches: [Pitch; 0] = [];
         let formatted = format!("{:?}", PitchSlice::new(&pitches));
-        assert_eq!(formatted, "Pitches([])");
+        assert_eq!(formatted, "Pitches[]");
     }
 
     #[test]
     fn test_pitches_debug_single() {
         let pitches = [C4]; // C4
         let formatted = format!("{:?}", PitchSlice::new(&pitches));
-        assert_eq!(formatted, "Pitches([Pitch(60)])");
+        assert_eq!(formatted, "Pitches[Pitch(60)]");
     }
 
     #[test]

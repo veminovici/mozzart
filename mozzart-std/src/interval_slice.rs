@@ -1,4 +1,4 @@
-use crate::{Interval, Pitch};
+use crate::{debug_list, debug_title_list, Interval, Pitch};
 use std::fmt;
 
 /// A slice of intervals that can be converted into pitches
@@ -87,18 +87,12 @@ impl<'a> From<&'a [Interval]> for Intervals<'a> {
 ///
 /// let major_triad = [MAJOR_THIRD, MINOR_THIRD];  // Major third, minor third
 /// let intervals = Intervals::new(&major_triad);
-/// assert_eq!(format!("{:?}", intervals), "Intervals([Interval(4), Interval(3)])");
+/// assert_eq!(format!("{:?}", intervals), "Intervals[Interval(4), Interval(3)]");
 /// ```
 impl fmt::Debug for Intervals<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let intervals = self
-            .0
-            .iter()
-            .map(|i| format!("{i:?}"))
-            .collect::<Vec<_>>()
-            .join(", ");
-
-        write!(f, "Intervals([{intervals}])")
+        let intervals = debug_list(self.0.iter());
+        write!(f, "{}", debug_title_list("Intervals", &intervals))
     }
 }
 
@@ -183,20 +177,20 @@ mod tests {
     fn test_intervals_debug() {
         let intervals = [MAJOR_THIRD, MINOR_THIRD]; // Major third, minor third
         let formatted = format!("{:?}", Intervals::new(&intervals));
-        assert_eq!(formatted, "Intervals([Interval(4), Interval(3)])");
+        assert_eq!(formatted, "Intervals[Interval(4), Interval(3)]");
     }
 
     #[test]
     fn test_intervals_debug_empty() {
         let intervals: [Interval; 0] = [];
         let formatted = format!("{:?}", Intervals::new(&intervals));
-        assert_eq!(formatted, "Intervals([])");
+        assert_eq!(formatted, "Intervals[]");
     }
 
     #[test]
     fn test_intervals_debug_single() {
         let intervals = [MAJOR_THIRD];
         let formatted = format!("{:?}", Intervals::new(&intervals));
-        assert_eq!(formatted, "Intervals([Interval(4)])");
+        assert_eq!(formatted, "Intervals[Interval(4)]");
     }
 }

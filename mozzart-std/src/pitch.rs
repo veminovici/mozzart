@@ -21,16 +21,8 @@ pub struct Pitch(u8);
 
 impl Pitch {
     /// Creates a new pitch from a MIDI note number (0-127).
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::{C4, C5};
-    ///
-    /// let middle_c = C4;
-    /// let high_c = C5;  // One octave above middle C
-    /// ```
     #[inline(always)]
-    pub const fn new(midi_note: u8) -> Self {
+    const fn new(midi_note: u8) -> Self {
         Pitch(midi_note)
     }
 }

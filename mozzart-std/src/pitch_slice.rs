@@ -87,7 +87,7 @@ impl<'a> From<&'a [Pitch]> for PitchSlice<'a> {
     /// use mozzart_std::{Pitch, PitchSlice, C4, E4, G4};
     ///
     /// let c_major = [C4, E4, G4];  // C-E-G
-    /// let pitches: PitchSlice = c_major.as_ref().into();
+    /// let pitches: PitchSlice = (&c_major[..]).into();
     /// assert_eq!(pitches.root(), C4);
     /// ```
     fn from(pitches: &'a [Pitch]) -> Self {

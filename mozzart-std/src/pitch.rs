@@ -1,4 +1,5 @@
 use crate::Interval;
+use crate::interval::PERFECT_OCTAVE;
 use std::fmt;
 use std::{
     fmt::Debug,
@@ -113,6 +114,7 @@ impl SubAssign<Pitch> for Pitch {
     }
 }
 
+/// Pitch class constants (octave-independent)
 pub const C: Pitch = Pitch::new(0);
 pub const CSHARP: Pitch = Pitch::new(1);
 pub const DFLAT: Pitch = CSHARP;
@@ -120,17 +122,18 @@ pub const D: Pitch = Pitch::new(2);
 pub const DSHARP: Pitch = Pitch::new(3);
 pub const EFLAT: Pitch = DSHARP;
 pub const E: Pitch = Pitch::new(4);
-pub const FSHARP: Pitch = Pitch::new(5);
+pub const F: Pitch = Pitch::new(5);
+pub const FSHARP: Pitch = Pitch::new(6);
 pub const GFLAT: Pitch = FSHARP;
-pub const G: Pitch = Pitch::new(6);
-pub const GSHARP: Pitch = Pitch::new(7);
+pub const G: Pitch = Pitch::new(7);
+pub const GSHARP: Pitch = Pitch::new(8);
 pub const AFLAT: Pitch = GSHARP;
-pub const A: Pitch = Pitch::new(8);
-pub const ASHARP: Pitch = Pitch::new(9);
+pub const A: Pitch = Pitch::new(9);
+pub const ASHARP: Pitch = Pitch::new(10);
 pub const BFLAT: Pitch = ASHARP;
-pub const B: Pitch = Pitch::new(10);
-pub const BSHARP: Pitch = Pitch::new(11);
+pub const B: Pitch = Pitch::new(11);
 
+/// Pitches in octave 0 (16.35 Hz to 30.87 Hz)
 pub const C0: Pitch = Pitch::new(12);
 pub const CSHARP0: Pitch = Pitch::new(13);
 pub const DFLAT0: Pitch = CSHARP0;
@@ -149,6 +152,7 @@ pub const ASHARP0: Pitch = Pitch::new(22);
 pub const BFLAT0: Pitch = ASHARP0;
 pub const B0: Pitch = Pitch::new(23);
 
+/// Pitches in octave 1 (32.70 Hz to 61.74 Hz)
 pub const C1: Pitch = Pitch::new(24);
 pub const CSHARP1: Pitch = Pitch::new(25);
 pub const DFLAT1: Pitch = CSHARP1;
@@ -167,6 +171,7 @@ pub const ASHARP1: Pitch = Pitch::new(34);
 pub const BFLAT1: Pitch = ASHARP1;
 pub const B1: Pitch = Pitch::new(35);
 
+/// Pitches in octave 2 (65.41 Hz to 123.47 Hz)
 pub const C2: Pitch = Pitch::new(36);
 pub const CSHARP2: Pitch = Pitch::new(37);
 pub const DFLAT2: Pitch = CSHARP2;
@@ -185,6 +190,7 @@ pub const ASHARP2: Pitch = Pitch::new(46);
 pub const BFLAT2: Pitch = ASHARP2;
 pub const B2: Pitch = Pitch::new(47);
 
+/// Pitches in octave 3 (130.81 Hz to 246.94 Hz)
 pub const C3: Pitch = Pitch::new(48);
 pub const CSHARP3: Pitch = Pitch::new(49);
 pub const DFLAT3: Pitch = CSHARP3;
@@ -203,6 +209,8 @@ pub const ASHARP3: Pitch = Pitch::new(58);
 pub const BFLAT3: Pitch = ASHARP3;
 pub const B3: Pitch = Pitch::new(59);
 
+/// Pitches in octave 4 (261.63 Hz to 493.88 Hz)
+/// This octave contains middle C (C4 = 261.63 Hz)
 pub const C4: Pitch = Pitch::new(60);
 pub const CSHARP4: Pitch = Pitch::new(61);
 pub const DFLAT4: Pitch = CSHARP4;
@@ -221,6 +229,7 @@ pub const ASHARP4: Pitch = Pitch::new(70);
 pub const BFLAT4: Pitch = ASHARP4;
 pub const B4: Pitch = Pitch::new(71);
 
+/// Pitches in octave 5 (523.25 Hz to 987.77 Hz)
 pub const C5: Pitch = Pitch::new(72);
 pub const CSHARP5: Pitch = Pitch::new(73);
 pub const DFLAT5: Pitch = CSHARP5;
@@ -239,6 +248,7 @@ pub const ASHARP5: Pitch = Pitch::new(82);
 pub const BFLAT5: Pitch = ASHARP5;
 pub const B5: Pitch = Pitch::new(83);
 
+/// Pitches in octave 6 (1046.50 Hz to 1975.53 Hz)
 pub const C6: Pitch = Pitch::new(84);
 pub const CSHARP6: Pitch = Pitch::new(85);
 pub const DFLAT6: Pitch = CSHARP6;
@@ -257,6 +267,7 @@ pub const ASHARP6: Pitch = Pitch::new(94);
 pub const BFLAT6: Pitch = ASHARP6;
 pub const B6: Pitch = Pitch::new(95);
 
+/// Pitches in octave 7 (2093.00 Hz to 3951.07 Hz)
 pub const C7: Pitch = Pitch::new(96);
 pub const CSHARP7: Pitch = Pitch::new(97);
 pub const DFLAT7: Pitch = CSHARP7;
@@ -275,6 +286,7 @@ pub const ASHARP7: Pitch = Pitch::new(106);
 pub const BFLAT7: Pitch = ASHARP7;
 pub const B7: Pitch = Pitch::new(107);
 
+/// Pitches in octave 8 (4186.01 Hz to 7902.13 Hz)
 pub const C8: Pitch = Pitch::new(108);
 pub const CSHARP8: Pitch = Pitch::new(109);
 pub const DFLAT8: Pitch = CSHARP8;
@@ -293,6 +305,7 @@ pub const ASHARP8: Pitch = Pitch::new(118);
 pub const BFLAT8: Pitch = ASHARP8;
 pub const B8: Pitch = Pitch::new(119);
 
+/// Pitches in octave 9 (8372.02 Hz to 15804.27 Hz)
 pub const C9: Pitch = Pitch::new(120);
 pub const CSHARP9: Pitch = Pitch::new(121);
 pub const DFLAT9: Pitch = CSHARP9;
@@ -385,6 +398,7 @@ impl Debug for Pitches<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::interval::PERFECT_OCTAVE;
 
     #[test]
     fn test_pitch_new() {
@@ -501,5 +515,61 @@ mod tests {
         let pitches = [Pitch::new(60)]; // C4
         let formatted = format!("{:?}", Pitches::new(&pitches));
         assert_eq!(formatted, "Pitches([Pitch(60)])");
+    }
+
+    #[test]
+    fn test_pitch_classes() {
+        assert_eq!(u8::from(C), 0);
+        assert_eq!(u8::from(CSHARP), 1);
+        assert_eq!(DFLAT, CSHARP);  // Enharmonic equivalence
+        assert_eq!(u8::from(D), 2);
+        assert_eq!(u8::from(DSHARP), 3);
+        assert_eq!(EFLAT, DSHARP);  // Enharmonic equivalence
+        assert_eq!(u8::from(E), 4);
+        assert_eq!(u8::from(F), 5);
+        assert_eq!(u8::from(FSHARP), 6);
+        assert_eq!(GFLAT, FSHARP);  // Enharmonic equivalence
+        assert_eq!(u8::from(G), 7);
+        assert_eq!(u8::from(GSHARP), 8);
+        assert_eq!(AFLAT, GSHARP);  // Enharmonic equivalence
+        assert_eq!(u8::from(A), 9);
+        assert_eq!(u8::from(ASHARP), 10);
+        assert_eq!(BFLAT, ASHARP);  // Enharmonic equivalence
+        assert_eq!(u8::from(B), 11);
+    }
+
+    #[test]
+    fn test_octave_relationships() {
+        // Test that each C is 12 semitones (one octave) apart
+        assert_eq!(C1 - C0, PERFECT_OCTAVE);
+        assert_eq!(C2 - C1, PERFECT_OCTAVE);
+        assert_eq!(C3 - C2, PERFECT_OCTAVE);
+        assert_eq!(C4 - C3, PERFECT_OCTAVE);
+        assert_eq!(C5 - C4, PERFECT_OCTAVE);
+        assert_eq!(C6 - C5, PERFECT_OCTAVE);
+        assert_eq!(C7 - C6, PERFECT_OCTAVE);
+        assert_eq!(C8 - C7, PERFECT_OCTAVE);
+        assert_eq!(C9 - C8, PERFECT_OCTAVE);
+    }
+
+    #[test]
+    fn test_standard_tuning() {
+        // Test A4 = 69 (440 Hz concert pitch)
+        assert_eq!(u8::from(A4), 69);
+        
+        // Test standard guitar tuning (E2 to E4)
+        assert_eq!(u8::from(E2), 40);  // Low E
+        assert_eq!(u8::from(A2), 45);  // A
+        assert_eq!(u8::from(D3), 50);  // D
+        assert_eq!(u8::from(G3), 55);  // G
+        assert_eq!(u8::from(B3), 59);  // B
+        assert_eq!(u8::from(E4), 64);  // High E
+    }
+
+    #[test]
+    fn test_midi_range() {
+        // Test MIDI note number range (0-127)
+        assert_eq!(u8::from(C0), 12);   // Lowest C
+        assert_eq!(u8::from(G9), 127);  // Highest note
     }
 }

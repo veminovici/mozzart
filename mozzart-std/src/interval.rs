@@ -13,10 +13,10 @@ use crate::Pitch;
 ///
 /// # Examples
 /// ```
-/// use mozzart_std::Interval;
+/// use mozzart_std::{Interval, MAJOR_THIRD, MINOR_THIRD};
 ///
-/// let major_third = Interval::new(4);
-/// let minor_third = Interval::new(3);
+/// let major_third = MAJOR_THIRD;
+/// let minor_third = MINOR_THIRD;
 /// assert!(major_third > minor_third);
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -33,7 +33,7 @@ impl Interval {
     /// let octave = PERFECT_OCTAVE;
     /// ```
     #[inline(always)]
-    pub const fn new(semitones: u8) -> Self {
+    const fn new(semitones: u8) -> Self {
         Interval(semitones)
     }
 }
@@ -104,9 +104,9 @@ impl<'a> Intervals<'a> {
     ///
     /// # Examples
     /// ```
-    /// use mozzart_std::{Interval, Intervals};
+    /// use mozzart_std::{Interval, Intervals, MAJOR_THIRD, MINOR_THIRD};
     ///
-    /// let major_triad = [Interval::new(4), Interval::new(3)];  // Major third, minor third
+    /// let major_triad = [MAJOR_THIRD, MINOR_THIRD];  // Major third, minor third
     /// let intervals = Intervals::new(&major_triad);
     /// ```
     #[inline(always)]

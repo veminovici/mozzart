@@ -387,7 +387,7 @@ impl Debug for Pitches<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::interval::PERFECT_OCTAVE;
+    use crate::{interval::PERFECT_OCTAVE, MAJOR_THIRD, MINOR_THIRD, PERFECT_FIFTH};
 
     #[test]
     fn test_pitch_new() {
@@ -406,14 +406,14 @@ mod tests {
     #[test]
     fn test_pitch_add_interval() {
         let pitch = Pitch::new(60); // Middle C
-        let interval = Interval::new(4); // Major third
+        let interval = MAJOR_THIRD; // Major third
         assert_eq!(pitch + interval, Pitch::new(64));
     }
 
     #[test]
     fn test_pitch_add_assign() {
         let mut pitch = Pitch::new(60); // Middle C
-        let interval = Interval::new(4); // Major third
+        let interval = MAJOR_THIRD; // Major third
         pitch += &interval;
         assert_eq!(pitch, Pitch::new(64));
     }
@@ -422,7 +422,7 @@ mod tests {
     fn test_pitch_subtraction() {
         let pitch1 = Pitch::new(67); // G
         let pitch2 = Pitch::new(60); // C
-        assert_eq!(pitch1 - pitch2, Interval::new(7)); // Perfect fifth
+        assert_eq!(pitch1 - pitch2, PERFECT_FIFTH); // Perfect fifth
     }
 
     #[test]
@@ -448,7 +448,7 @@ mod tests {
     fn test_pitches_into_intervals() {
         let pitches = [Pitch::new(60), Pitch::new(64), Pitch::new(67)]; // C-E-G
         let intervals = Pitches::new(&pitches).into_intervals();
-        assert_eq!(intervals, vec![Interval::new(4), Interval::new(3)]); // Major third, minor third
+        assert_eq!(intervals, vec![MAJOR_THIRD, MINOR_THIRD]); // Major third, minor third
     }
 
     #[test]
@@ -469,7 +469,7 @@ mod tests {
     fn test_pitch_octave_arithmetic() {
         let c4 = Pitch::new(60);
         let c5 = Pitch::new(72);
-        assert_eq!(c5 - c4, Interval::new(12)); // One octave
+        assert_eq!(c5 - c4, PERFECT_OCTAVE); // One octave
     }
 
     #[test]

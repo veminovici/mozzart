@@ -1,5 +1,4 @@
 use crate::Interval;
-use std::fmt;
 use std::{
     fmt::Debug,
     ops::{Add, AddAssign, Sub, SubAssign},
@@ -298,88 +297,10 @@ pub const FSHARP9: Pitch = Pitch::new(126);
 pub const GFLAT9: Pitch = FSHARP9;
 pub const G9: Pitch = Pitch::new(127);
 
-/// A slice of pitches that can be converted into intervals
-#[derive(Clone, Copy, PartialEq, Eq)]
-pub struct Pitches<'a>(&'a [Pitch]);
-
-impl<'a> Pitches<'a> {
-    /// Creates a new `Pitches` from a slice of pitches
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::{Pitch, Pitches, C4, E4, G4};
-    ///
-    /// let c_major = [C4, E4, G4];  // C-E-G
-    /// let pitches = Pitches::new(&c_major);
-    /// ```
-    #[inline(always)]
-    pub const fn new(pitches: &'a [Pitch]) -> Self {
-        Self(pitches)
-    }
-
-    /// Returns the first pitch in the sequence
-    ///
-    /// # Panics
-    /// Panics if the sequence is empty
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::{Pitch, Pitches, C4, E4, G4};
-    ///
-    /// let c_major = [C4, E4, G4];  // C-E-G
-    /// let pitches = Pitches::new(&c_major);
-    /// assert_eq!(pitches.root(), C4);
-    /// ```
-    #[inline(always)]
-    pub const fn root(&self) -> Pitch {
-        self.0[0]
-    }
-
-    /// Converts a sequence of pitches into the intervals between consecutive pitches
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::{Interval, Pitches, Pitch, C4, E4, G4, MAJOR_THIRD, MINOR_THIRD};
-    ///
-    /// let c_major = [C4, E4, G4];  // C-E-G
-    /// let intervals = Pitches::new(&c_major).into_intervals();
-    /// assert_eq!(intervals, vec![MAJOR_THIRD, MINOR_THIRD]);
-    /// ```
-    pub fn into_intervals(self) -> Vec<Interval> {
-        self.0
-            .windows(2)
-            .map(|pitches| pitches[1] - pitches[0])
-            .collect()
-    }
-}
-
-/// Formats the pitches as a comma-separated list within `Pitches([...])`
-///
-/// # Examples
-/// ```
-/// use mozzart_std::{Pitch, Pitches, C4, E4, G4};
-///
-/// let c_major = [C4, E4, G4];  // C-E-G
-/// let pitches = Pitches::new(&c_major);
-/// assert_eq!(format!("{:?}", pitches), "Pitches([Pitch(60), Pitch(64), Pitch(67)])");
-/// ```
-impl Debug for Pitches<'_> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let pitches = self
-            .0
-            .iter()
-            .map(|p| format!("{:?}", p))
-            .collect::<Vec<_>>()
-            .join(", ");
-
-        write!(f, "Pitches([{pitches}])")
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{interval::PERFECT_OCTAVE, MAJOR_THIRD, MINOR_THIRD, PERFECT_FIFTH};
+    use crate::{interval::PERFECT_OCTAVE, MAJOR_THIRD, PERFECT_FIFTH};
 
     #[test]
     fn test_pitch_new() {
@@ -433,68 +354,6 @@ mod tests {
         assert!(c4 < e4);
         assert!(e4 < g4);
         assert_eq!(c4.cmp(&e4), std::cmp::Ordering::Less);
-    }
-
-    #[test]
-    fn test_pitches_into_intervals() {
-        let pitches = [Pitch::new(60), Pitch::new(64), Pitch::new(67)]; // C-E-G
-        let intervals = Pitches::new(&pitches).into_intervals();
-        assert_eq!(intervals, vec![MAJOR_THIRD, MINOR_THIRD]); // Major third, minor third
-    }
-
-    #[test]
-    fn test_pitches_into_intervals_empty() {
-        let pitches: [Pitch; 0] = [];
-        let intervals = Pitches::new(&pitches).into_intervals();
-        assert!(intervals.is_empty());
-    }
-
-    #[test]
-    fn test_pitches_into_intervals_single_pitch() {
-        let pitches = [Pitch::new(60)];
-        let intervals = Pitches::new(&pitches).into_intervals();
-        assert!(intervals.is_empty());
-    }
-
-    #[test]
-    fn test_pitch_octave_arithmetic() {
-        let c4 = Pitch::new(60);
-        let c5 = Pitch::new(72);
-        assert_eq!(c5 - c4, PERFECT_OCTAVE); // One octave
-    }
-
-    #[test]
-    fn test_pitches_root() {
-        let pitches = [Pitch::new(60), Pitch::new(64), Pitch::new(67)]; // C-E-G
-        assert_eq!(Pitches::new(&pitches).root(), Pitch::new(60)); // C4
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_pitches_root_empty() {
-        let pitches: [Pitch; 0] = [];
-        let _ = Pitches::new(&pitches).root(); // Should panic
-    }
-
-    #[test]
-    fn test_pitches_debug() {
-        let pitches = [Pitch::new(60), Pitch::new(64), Pitch::new(67)]; // C-E-G
-        let formatted = format!("{:?}", Pitches::new(&pitches));
-        assert_eq!(formatted, "Pitches([Pitch(60), Pitch(64), Pitch(67)])");
-    }
-
-    #[test]
-    fn test_pitches_debug_empty() {
-        let pitches: [Pitch; 0] = [];
-        let formatted = format!("{:?}", Pitches::new(&pitches));
-        assert_eq!(formatted, "Pitches([])");
-    }
-
-    #[test]
-    fn test_pitches_debug_single() {
-        let pitches = [Pitch::new(60)]; // C4
-        let formatted = format!("{:?}", Pitches::new(&pitches));
-        assert_eq!(formatted, "Pitches([Pitch(60)])");
     }
 
     #[test]

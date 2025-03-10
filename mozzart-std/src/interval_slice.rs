@@ -1,4 +1,4 @@
-use crate::{Interval, NamedList, Pitch};
+use crate::{Interval, NamedSlice, Pitch};
 use std::fmt;
 
 /// A slice of intervals that can be converted into pitches
@@ -91,7 +91,7 @@ impl<'a> From<&'a [Interval]> for Intervals<'a> {
 /// ```
 impl fmt::Debug for Intervals<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let intervals = NamedList::new("Intervals", self.0);
+        let intervals = NamedSlice::new("Intervals", self.0);
         write!(f, "{intervals:?}")
     }
 }

@@ -56,6 +56,45 @@ impl<'a> PitchSlice<'a> {
     }
 }
 
+impl AsRef<[Pitch]> for PitchSlice<'_> {
+    /// Returns a reference to the underlying slice of pitches
+    ///
+    /// This implementation allows `PitchSlice` to be used in contexts that expect
+    /// a reference to a slice of pitches.
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Pitch, PitchSlice, C4, E4, G4};
+    ///
+    /// let c_major = [C4, E4, G4];  // C-E-G
+    /// let pitches = PitchSlice::new(&c_major);
+    /// let slice: &[Pitch] = pitches.as_ref();
+    /// assert_eq!(slice, &[C4, E4, G4]);
+    /// ```
+    fn as_ref(&self) -> &[Pitch] {
+        self.0
+    }
+}
+
+impl<'a> From<&'a [Pitch]> for PitchSlice<'a> {
+    /// Creates a `PitchSlice` from a slice of pitches
+    ///
+    /// This implementation allows for ergonomic conversion from a pitch slice
+    /// using `into()` or `from()`.
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Pitch, PitchSlice, C4, E4, G4};
+    ///
+    /// let c_major = [C4, E4, G4];  // C-E-G
+    /// let pitches: PitchSlice = c_major.as_ref().into();
+    /// assert_eq!(pitches.root(), C4);
+    /// ```
+    fn from(pitches: &'a [Pitch]) -> Self {
+        Self(pitches)
+    }
+}
+
 /// Formats the pitches as a comma-separated list within `Pitches([...])`
 ///
 /// # Examples
@@ -144,5 +183,50 @@ mod tests {
         let pitches = [C4]; // C4
         let formatted = format!("{:?}", PitchSlice::new(&pitches));
         assert_eq!(formatted, "Pitches([Pitch(60)])");
+    }
+
+    #[test]
+    fn test_pitches_as_ref() {
+        let pitches = [C4, E4, G4]; // C-E-G
+        let pitch_slice = PitchSlice::new(&pitches);
+        let slice: &[Pitch] = pitch_slice.as_ref();
+        assert_eq!(slice, &pitches);
+    }
+
+    #[test]
+    fn test_pitches_as_ref_empty() {
+        let pitches: [Pitch; 0] = [];
+        let pitch_slice = PitchSlice::new(&pitches);
+        let slice: &[Pitch] = pitch_slice.as_ref();
+        assert!(slice.is_empty());
+    }
+
+    #[test]
+    fn test_pitches_as_ref_single() {
+        let pitches = [C4];
+        let pitch_slice = PitchSlice::new(&pitches);
+        let slice: &[Pitch] = pitch_slice.as_ref();
+        assert_eq!(slice, &[C4]);
+    }
+
+    #[test]
+    fn test_pitches_from() {
+        let pitches = [C4, E4, G4]; // C-E-G
+        let pitch_slice = PitchSlice::from(&pitches[..]);
+        assert_eq!(pitch_slice.as_ref(), &pitches[..]);
+    }
+
+    #[test]
+    fn test_pitches_from_empty() {
+        let pitches: [Pitch; 0] = [];
+        let pitch_slice = PitchSlice::from(&pitches[..]);
+        assert!(pitch_slice.as_ref().is_empty());
+    }
+
+    #[test]
+    fn test_pitches_into() {
+        let pitches = [C4, E4, G4]; // C-E-G
+        let pitch_slice: PitchSlice = (&pitches[..]).into();
+        assert_eq!(pitch_slice.as_ref(), &pitches[..]);
     }
 }

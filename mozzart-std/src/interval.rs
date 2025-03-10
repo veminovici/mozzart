@@ -1,3 +1,4 @@
+use crate::PERFECT_OCTAVE;
 use std::ops::{Mul, MulAssign, Shr, ShrAssign};
 
 /// Represents a musical interval as a number of semitones.
@@ -138,9 +139,6 @@ impl MulAssign<u8> for Interval {
     }
 }
 
-/// Number of semitones in an octave
-const SEMITONES_PER_OCTAVE: u8 = 12;
-
 impl Shr<u8> for Interval {
     type Output = Interval;
 
@@ -157,7 +155,7 @@ impl Shr<u8> for Interval {
     /// assert_eq!(compound, MAJOR_TENTH);
     /// ```
     fn shr(self, shift: u8) -> Self::Output {
-        Interval::new(self.0 + (shift * SEMITONES_PER_OCTAVE))
+        Interval::new(self.0 + (shift * PERFECT_OCTAVE.0))
     }
 }
 
@@ -173,7 +171,7 @@ impl ShrAssign<u8> for Interval {
     /// assert_eq!(interval, MAJOR_TENTH);
     /// ```
     fn shr_assign(&mut self, shift: u8) {
-        self.0 += shift * SEMITONES_PER_OCTAVE;
+        self.0 += shift * PERFECT_OCTAVE.0;
     }
 }
 
@@ -306,7 +304,7 @@ mod tests {
 
         // Test multiple shifts
         let mut compound = PERFECT_FIFTH;
-        compound >>= 2;  // Up two octaves
+        compound >>= 2; // Up two octaves
         assert_eq!(compound.semitones(), PERFECT_FIFTH.semitones() + 24);
     }
 

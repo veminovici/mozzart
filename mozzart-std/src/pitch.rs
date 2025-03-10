@@ -1,5 +1,4 @@
 use crate::Interval;
-use crate::interval::PERFECT_OCTAVE;
 use std::fmt;
 use std::{
     fmt::Debug,
@@ -11,10 +10,10 @@ use std::{
 ///
 /// # Examples
 /// ```
-/// use mozzart_std::Pitch;
+/// use mozzart_std::{C4, A4};
 ///
-/// let middle_c = Pitch::new(60);
-/// let middle_a = Pitch::new(69);  // A4 = 440Hz
+/// let middle_c = C4;
+/// let middle_a = A4;  // A4 = 440Hz
 /// assert!(middle_a > middle_c);
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -66,11 +65,9 @@ impl Add<Interval> for Pitch {
     ///
     /// # Examples
     /// ```
-    /// use mozzart_std::{Interval, Pitch};
+    /// use mozzart_std::{Interval, Pitch, C4, E4, MAJOR_THIRD};
     ///
-    /// let c4 = Pitch::from(60u8);  // Middle C
-    /// let major_third = Interval::from(4u8);
-    /// assert_eq!(c4 + major_third, Pitch::from(64u8));  // E4
+    /// assert_eq!(C4 + MAJOR_THIRD, E4);
     /// ```
     #[inline]
     fn add(self, interval: Interval) -> Self::Output {
@@ -94,11 +91,9 @@ impl Sub<Pitch> for Pitch {
     ///
     /// # Examples
     /// ```
-    /// use mozzart_std::{Interval, Pitch};
+    /// use mozzart_std::{Interval, Pitch, G4, C4, PERFECT_FIFTH};
     ///
-    /// let g4 = Pitch::from(67u8);  // G4
-    /// let c4 = Pitch::from(60u8);  // C4
-    /// assert_eq!(g4 - c4, Interval::from(7u8));  // Perfect fifth
+    /// assert_eq!(G4 - C4, PERFECT_FIFTH);
     /// ```
     #[inline]
     fn sub(self, other: Pitch) -> Self::Output {
@@ -327,9 +322,9 @@ impl<'a> Pitches<'a> {
     ///
     /// # Examples
     /// ```
-    /// use mozzart_std::{Pitch, Pitches};
+    /// use mozzart_std::{Pitch, Pitches, C4, E4, G4};
     ///
-    /// let c_major = [Pitch::new(60), Pitch::new(64), Pitch::new(67)];  // C-E-G
+    /// let c_major = [C4, E4, G4];  // C-E-G
     /// let pitches = Pitches::new(&c_major);
     /// ```
     #[inline]
@@ -344,11 +339,11 @@ impl<'a> Pitches<'a> {
     ///
     /// # Examples
     /// ```
-    /// use mozzart_std::{Pitch, Pitches};
+    /// use mozzart_std::{Pitch, Pitches, C4, E4, G4};
     ///
-    /// let c_major = [Pitch::new(60), Pitch::new(64), Pitch::new(67)];  // C-E-G
+    /// let c_major = [C4, E4, G4];  // C-E-G
     /// let pitches = Pitches::new(&c_major);
-    /// assert_eq!(pitches.root(), Pitch::new(60));  // C4
+    /// assert_eq!(pitches.root(), C4);
     /// ```
     #[inline]
     pub const fn root(&self) -> Pitch {
@@ -359,10 +354,11 @@ impl<'a> Pitches<'a> {
     ///
     /// # Examples
     /// ```
-    /// use mozzart_std::{Interval, Pitches, Pitch};
-    /// let c_major = [Pitch::from(60u8), Pitch::from(64u8), Pitch::from(67u8)];  // C-E-G
+    /// use mozzart_std::{Interval, Pitches, Pitch, C4, E4, G4, MAJOR_THIRD, MINOR_THIRD};
+    ///
+    /// let c_major = [C4, E4, G4];  // C-E-G
     /// let intervals = Pitches::new(&c_major).into_intervals();
-    /// assert_eq!(intervals, vec![Interval::from(4u8), Interval::from(3u8)]);  // Major third, minor third
+    /// assert_eq!(intervals, vec![MAJOR_THIRD, MINOR_THIRD]);
     /// ```
     pub fn into_intervals(self) -> Vec<Interval> {
         self.0
@@ -376,9 +372,9 @@ impl<'a> Pitches<'a> {
 ///
 /// # Examples
 /// ```
-/// use mozzart_std::{Pitch, Pitches};
+/// use mozzart_std::{Pitch, Pitches, C4, E4, G4};
 ///
-/// let c_major = [Pitch::new(60), Pitch::new(64), Pitch::new(67)];  // C-E-G
+/// let c_major = [C4, E4, G4];  // C-E-G
 /// let pitches = Pitches::new(&c_major);
 /// assert_eq!(format!("{:?}", pitches), "Pitches([Pitch(60), Pitch(64), Pitch(67)])");
 /// ```
@@ -521,20 +517,20 @@ mod tests {
     fn test_pitch_classes() {
         assert_eq!(u8::from(C), 0);
         assert_eq!(u8::from(CSHARP), 1);
-        assert_eq!(DFLAT, CSHARP);  // Enharmonic equivalence
+        assert_eq!(DFLAT, CSHARP); // Enharmonic equivalence
         assert_eq!(u8::from(D), 2);
         assert_eq!(u8::from(DSHARP), 3);
-        assert_eq!(EFLAT, DSHARP);  // Enharmonic equivalence
+        assert_eq!(EFLAT, DSHARP); // Enharmonic equivalence
         assert_eq!(u8::from(E), 4);
         assert_eq!(u8::from(F), 5);
         assert_eq!(u8::from(FSHARP), 6);
-        assert_eq!(GFLAT, FSHARP);  // Enharmonic equivalence
+        assert_eq!(GFLAT, FSHARP); // Enharmonic equivalence
         assert_eq!(u8::from(G), 7);
         assert_eq!(u8::from(GSHARP), 8);
-        assert_eq!(AFLAT, GSHARP);  // Enharmonic equivalence
+        assert_eq!(AFLAT, GSHARP); // Enharmonic equivalence
         assert_eq!(u8::from(A), 9);
         assert_eq!(u8::from(ASHARP), 10);
-        assert_eq!(BFLAT, ASHARP);  // Enharmonic equivalence
+        assert_eq!(BFLAT, ASHARP); // Enharmonic equivalence
         assert_eq!(u8::from(B), 11);
     }
 
@@ -556,20 +552,20 @@ mod tests {
     fn test_standard_tuning() {
         // Test A4 = 69 (440 Hz concert pitch)
         assert_eq!(u8::from(A4), 69);
-        
+
         // Test standard guitar tuning (E2 to E4)
-        assert_eq!(u8::from(E2), 40);  // Low E
-        assert_eq!(u8::from(A2), 45);  // A
-        assert_eq!(u8::from(D3), 50);  // D
-        assert_eq!(u8::from(G3), 55);  // G
-        assert_eq!(u8::from(B3), 59);  // B
-        assert_eq!(u8::from(E4), 64);  // High E
+        assert_eq!(u8::from(E2), 40); // Low E
+        assert_eq!(u8::from(A2), 45); // A
+        assert_eq!(u8::from(D3), 50); // D
+        assert_eq!(u8::from(G3), 55); // G
+        assert_eq!(u8::from(B3), 59); // B
+        assert_eq!(u8::from(E4), 64); // High E
     }
 
     #[test]
     fn test_midi_range() {
         // Test MIDI note number range (0-127)
-        assert_eq!(u8::from(C0), 12);   // Lowest C
-        assert_eq!(u8::from(G9), 127);  // Highest note
+        assert_eq!(u8::from(C0), 12); // Lowest C
+        assert_eq!(u8::from(G9), 127); // Highest note
     }
 }

@@ -54,14 +54,6 @@ impl From<&Interval> for u8 {
     }
 }
 
-impl From<u8> for Interval {
-    /// Creates an interval from a semitone count
-    #[inline(always)]
-    fn from(value: u8) -> Self {
-        Interval(value)
-    }
-}
-
 /// Basic intervals
 pub const SEMITONE: Interval = Interval::new(1);
 pub const TONE: Interval = Interval::new(2);
@@ -118,10 +110,10 @@ impl<'a> Intervals<'a> {
     ///
     /// # Examples
     /// ```
-    /// use mozzart_std::{Interval, Intervals, Pitch, C4, E4, G4};
+    /// use mozzart_std::{Interval, Intervals, Pitch, C4, E4, G4, MAJOR_THIRD, MINOR_THIRD};
     ///
     /// let c4 = C4;  // Middle C
-    /// let major_triad = [Interval::from(4u8), Interval::from(3u8)];  // Major third, minor third
+    /// let major_triad = [MAJOR_THIRD, MINOR_THIRD];  // Major third, minor third
     /// let pitches = Intervals::new(&major_triad).into_pitches(c4);
     /// assert_eq!(pitches, vec![C4, E4, G4]); // C-E-G
     /// ```
@@ -152,7 +144,7 @@ mod tests {
         let interval = Interval::new(4);
         assert_eq!(u8::from(interval), 4);
         assert_eq!(u8::from(&interval), 4);
-        assert_eq!(Interval::from(4u8), interval);
+        assert_eq!(MAJOR_THIRD, interval);
     }
 
     #[test]
@@ -160,13 +152,6 @@ mod tests {
         let interval = Interval::new(4); // Major third
         let value: u8 = interval.into();
         assert_eq!(value, 4);
-    }
-
-    #[test]
-    fn test_u8_to_interval() {
-        let value: u8 = 7; // Perfect fifth
-        let interval: Interval = value.into();
-        assert_eq!(interval, Interval::new(7));
     }
 
     #[test]

@@ -10,6 +10,24 @@ pub use interval_slice::*;
 pub use pitch::*;
 pub use pitch_slice::*;
 
+pub(crate) struct NamedList<'a, T> {
+    title: &'static str,
+    items: &'a [T],
+}
+
+impl<'a, T: std::fmt::Debug> NamedList<'a, T> {
+    pub fn new(title: &'static str, items: &'a [T]) -> Self {
+        Self { title, items }
+    }
+}
+
+impl<T: std::fmt::Debug> std::fmt::Debug for NamedList<'_, T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let items = debug_list(self.items.iter());
+        write!(f, "{}[{items}]", self.title)
+    }
+}
+
 /// Separator used for formatting lists in debug output
 const LIST_SEPARATOR: &str = ", ";
 
@@ -21,20 +39,20 @@ pub(crate) fn debug_list<T: std::fmt::Debug>(items: impl Iterator<Item = T>) -> 
         .join(LIST_SEPARATOR)
 }
 
-/// Formats a list of items with a title in the format `title[items]`
-pub(crate) fn debug_title_list(title: &str, items: &str) -> String {
-    format!("{title}[{items}]")
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn test_debug_title_list() {
-        assert_eq!(debug_title_list("Test", "1, 2, 3"), "Test[1, 2, 3]");
-        assert_eq!(debug_title_list("Empty", ""), "Empty[]");
-        assert_eq!(debug_title_list("Single", "item"), "Single[item]");
+    fn test_namedlist_debug() {
+        let nl = NamedList::new("Test", &[1, 2, 3]);
+        assert_eq!(format!("{nl:?}"), "Test[1, 2, 3]");
+
+        let nl: NamedList<i32> = NamedList::new("Empty", &[]);
+        assert_eq!(format!("{nl:?}"), "Empty[]");
+
+        let nl = NamedList::new("Single", &[100u8]);
+        assert_eq!(format!("{nl:?}"), "Single[100]");
     }
 
     #[test]

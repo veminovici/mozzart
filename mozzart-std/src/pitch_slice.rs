@@ -1,4 +1,4 @@
-use crate::{debug_list, debug_title_list, Interval, Pitch};
+use crate::{Interval, NamedList, Pitch};
 use std::fmt;
 
 /// A slice of pitches that can be converted into intervals
@@ -107,8 +107,8 @@ impl<'a> From<&'a [Pitch]> for PitchSlice<'a> {
 /// ```
 impl fmt::Debug for PitchSlice<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let pitches = debug_list(self.0.iter());
-        write!(f, "{}", debug_title_list("Pitches", &pitches))
+        let pitches = NamedList::new("Pitches", self.0);
+        write!(f, "{pitches:?}")
     }
 }
 

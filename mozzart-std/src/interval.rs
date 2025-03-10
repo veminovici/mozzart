@@ -27,12 +27,12 @@ impl Interval {
     ///
     /// # Examples
     /// ```
-    /// use mozzart_std::Interval;
+    /// use mozzart_std::{PERFECT_FIFTH, PERFECT_OCTAVE};
     ///
-    /// let perfect_fifth = Interval::new(7);
-    /// let octave = Interval::new(12);
+    /// let perfect_fifth = PERFECT_FIFTH;
+    /// let octave = PERFECT_OCTAVE;
     /// ```
-    #[inline]
+    #[inline(always)]
     pub const fn new(semitones: u8) -> Self {
         Interval(semitones)
     }
@@ -40,7 +40,7 @@ impl Interval {
 
 impl From<Interval> for u8 {
     /// Converts an interval to its semitone count
-    #[inline]
+    #[inline(always)]
     fn from(interval: Interval) -> Self {
         interval.0
     }
@@ -48,7 +48,7 @@ impl From<Interval> for u8 {
 
 impl From<&Interval> for u8 {
     /// Converts a reference to an interval to its semitone count
-    #[inline]
+    #[inline(always)]
     fn from(interval: &Interval) -> Self {
         interval.0
     }
@@ -56,7 +56,7 @@ impl From<&Interval> for u8 {
 
 impl From<u8> for Interval {
     /// Creates an interval from a semitone count
-    #[inline]
+    #[inline(always)]
     fn from(value: u8) -> Self {
         Interval(value)
     }
@@ -109,6 +109,7 @@ impl<'a> Intervals<'a> {
     /// let major_triad = [Interval::new(4), Interval::new(3)];  // Major third, minor third
     /// let intervals = Intervals::new(&major_triad);
     /// ```
+    #[inline(always)]
     pub fn new(intervals: &'a [Interval]) -> Self {
         Intervals(intervals)
     }
@@ -136,6 +137,8 @@ impl<'a> Intervals<'a> {
 
 #[cfg(test)]
 mod tests {
+    use crate::{C4, C5, E4, G4};
+
     use super::*;
 
     #[test]
@@ -179,21 +182,18 @@ mod tests {
 
     #[test]
     fn test_intervals_into_pitches() {
-        let c4 = Pitch::new(60);
+        let c4 = C4;
         let intervals = [Interval::new(4), Interval::new(3)]; // Major third, minor third
         let pitches = Intervals::new(&intervals).into_pitches(c4);
-        assert_eq!(
-            pitches,
-            vec![Pitch::new(60), Pitch::new(64), Pitch::new(67)]
-        ); // C-E-G
+        assert_eq!(pitches, [C4, E4, G4]); // C-E-G
     }
 
     #[test]
     fn test_intervals_into_pitches_empty() {
-        let c4 = Pitch::new(60);
+        let c4 = C4;
         let intervals: [Interval; 0] = [];
         let pitches = Intervals::new(&intervals).into_pitches(c4);
-        assert_eq!(pitches, vec![Pitch::new(60)]); // Just the root
+        assert_eq!(pitches, vec![C4]); // Just the root
     }
 
     #[test]
@@ -216,22 +216,14 @@ mod tests {
 
     #[test]
     fn test_intervals_compound_triad() {
-        let c4 = Pitch::new(60);
+        let c4 = C4;
         let intervals = [
             Interval::new(4), // Major third
             Interval::new(3), // Minor third
             Interval::new(5), // Perfect fourth
         ];
         let pitches = Intervals::new(&intervals).into_pitches(c4);
-        assert_eq!(
-            pitches,
-            vec![
-                Pitch::new(60), // C4
-                Pitch::new(64), // E4
-                Pitch::new(67), // G4
-                Pitch::new(72), // C5
-            ]
-        );
+        assert_eq!(pitches, vec![C4, E4, G4, C5,]);
     }
 
     #[test]

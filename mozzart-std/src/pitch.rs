@@ -24,11 +24,12 @@ impl Pitch {
     ///
     /// # Examples
     /// ```
-    /// use mozzart_std::Pitch;
+    /// use mozzart_std::{C4, C5};
     ///
-    /// let middle_c = Pitch::new(60);
-    /// let high_c = Pitch::new(72);  // C5, one octave above middle C
+    /// let middle_c = C4;
+    /// let high_c = C5;  // One octave above middle C
     /// ```
+    #[inline(always)]
     pub const fn new(midi_note: u8) -> Self {
         Pitch(midi_note)
     }
@@ -65,11 +66,11 @@ impl Add<Interval> for Pitch {
     ///
     /// # Examples
     /// ```
-    /// use mozzart_std::{Interval, Pitch, C4, E4, MAJOR_THIRD};
+    /// use mozzart_std::{C4, E4, MAJOR_THIRD};
     ///
     /// assert_eq!(C4 + MAJOR_THIRD, E4);
     /// ```
-    #[inline]
+    #[inline(always)]
     fn add(self, interval: Interval) -> Self::Output {
         let pitch = self.0 + u8::from(interval);
         Pitch(pitch)
@@ -78,7 +79,7 @@ impl Add<Interval> for Pitch {
 
 impl AddAssign<&Interval> for Pitch {
     /// Adds an interval to a pitch in place
-    #[inline]
+    #[inline(always)]
     fn add_assign(&mut self, interval: &Interval) {
         self.0 += u8::from(interval);
     }
@@ -91,11 +92,11 @@ impl Sub<Pitch> for Pitch {
     ///
     /// # Examples
     /// ```
-    /// use mozzart_std::{Interval, Pitch, G4, C4, PERFECT_FIFTH};
+    /// use mozzart_std::{G4, C4, PERFECT_FIFTH};
     ///
     /// assert_eq!(G4 - C4, PERFECT_FIFTH);
     /// ```
-    #[inline]
+    #[inline(always)]
     fn sub(self, other: Pitch) -> Self::Output {
         Interval(self.0 - other.0)
     }
@@ -103,7 +104,7 @@ impl Sub<Pitch> for Pitch {
 
 impl SubAssign<Pitch> for Pitch {
     /// Subtracts a pitch from another pitch in place
-    #[inline]
+    #[inline(always)]
     fn sub_assign(&mut self, other: Pitch) {
         self.0 -= other.0;
     }
@@ -327,7 +328,7 @@ impl<'a> Pitches<'a> {
     /// let c_major = [C4, E4, G4];  // C-E-G
     /// let pitches = Pitches::new(&c_major);
     /// ```
-    #[inline]
+    #[inline(always)]
     pub const fn new(pitches: &'a [Pitch]) -> Self {
         Self(pitches)
     }
@@ -345,7 +346,7 @@ impl<'a> Pitches<'a> {
     /// let pitches = Pitches::new(&c_major);
     /// assert_eq!(pitches.root(), C4);
     /// ```
-    #[inline]
+    #[inline(always)]
     pub const fn root(&self) -> Pitch {
         self.0[0]
     }

@@ -12,6 +12,12 @@
 //! - Standard intervals (unison to octave)
 //! - Extended intervals (ninth to double octave)
 //!
+//! # Scales
+//! - Major scale
+//! - Minor scale
+//! - Harmonic minor scale
+//! - Melodic minor scale
+//!
 //! # Examples
 //! ```
 //! use mozzart_std::{C4, E4, G4, MAJOR_THIRD, MINOR_THIRD};
@@ -22,10 +28,14 @@
 //! // Using interval constants
 //! let major_triad = [C4, E4, G4];  // C-E-G
 //! let intervals = [MAJOR_THIRD, MINOR_THIRD];  // Major third, minor third
+//!
+//! // Using scale constants
 //! ```
 
 mod intervals;
 mod pitches;
+mod scales;
 
 pub use intervals::*;
 pub use pitches::*;
+pub use scales::*;

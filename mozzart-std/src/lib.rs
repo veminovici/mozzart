@@ -43,11 +43,13 @@
 mod constants;
 mod interval;
 mod pitch;
+mod scale;
 mod slices;
 mod utils;
 
 pub use constants::*;
 pub use interval::*;
 pub use pitch::*;
+pub use scale::*;
 pub use slices::*;
 pub(crate) use utils::*;

@@ -6,7 +6,7 @@
 //! - Access to scale degrees and pitches
 
 use crate::Pitch;
-
+use std::ops::{Shl, ShlAssign, Shr, ShrAssign};
 /// Represents the quality (or type) of a musical scale.
 ///
 /// Each quality defines a specific pattern of intervals that characterizes the scale:
@@ -195,6 +195,90 @@ impl<const N: usize> Scale<N> {
     }
 }
 
+/// Implements right shift operator (`>>`) for scales, which transposes the scale up by the specified number of octaves.
+///
+/// Each octave shift up decreases each pitch in the scale by 12 semitones.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C5_MAJOR_SCALE};
+///
+/// // Transpose C4 major scale up one octave to get C5 major scale
+/// let c5_scale = C4_MAJOR_SCALE >> 1;
+/// assert_eq!(c5_scale, C5_MAJOR_SCALE);
+/// ```
+impl<const N: usize> Shr<u8> for Scale<N> {
+    type Output = Self;
+
+    fn shr(self, shift: u8) -> Self::Output {
+        let pitches: [Pitch; N] = self.pitches.map(|p| p >> shift);
+        Self::new(self.quality, pitches)
+    }
+}
+
+/// Implements right shift assignment operator (`>>=`) for scales, which transposes the scale up by the specified number of octaves in place.
+///
+/// Each octave shift up decreases each pitch in the scale by 12 semitones.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C5_MAJOR_SCALE};
+///
+/// // Create a mutable C4 major scale
+/// let mut scale = C4_MAJOR_SCALE;
+///
+/// // Transpose up one octave in place
+/// scale >>= 1;
+/// assert_eq!(scale, C5_MAJOR_SCALE);
+/// ```
+impl<const N: usize> ShrAssign<u8> for Scale<N> {
+    fn shr_assign(&mut self, shift: u8) {
+        self.pitches = self.pitches.map(|p| p >> shift);
+    }
+}
+
+/// Implements left shift operator (`<<`) for scales, which transposes the scale down by the specified number of octaves.
+///
+/// Each octave shift down increases each pitch in the scale by 12 semitones.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C3_MAJOR_SCALE};
+///
+/// // Transpose C4 major scale up one octave to get C5 major scale
+/// let c3_scale = C4_MAJOR_SCALE << 1;
+/// assert_eq!(c3_scale, C3_MAJOR_SCALE);
+/// ```
+impl<const N: usize> Shl<u8> for Scale<N> {
+    type Output = Self;
+
+    fn shl(self, shift: u8) -> Self::Output {
+        let pitches: [Pitch; N] = self.pitches.map(|p| p << shift);
+        Self::new(self.quality, pitches)
+    }
+}
+
+/// Implements left shift assignment operator (`<<=`) for scales, which transposes the scale down by the specified number of octaves in place.
+///
+/// Each octave shift udownp increases each pitch in the scale by 12 semitones.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C3_MAJOR_SCALE};
+///
+/// // Create a mutable C4 major scale
+/// let mut scale = C4_MAJOR_SCALE;
+///
+/// // Transpose up one octave in place
+/// scale <<= 1;
+/// assert_eq!(scale, C3_MAJOR_SCALE);
+/// ```
+impl<const N: usize> ShlAssign<u8> for Scale<N> {
+    fn shl_assign(&mut self, shift: u8) {
+        self.pitches = self.pitches.map(|p| p << shift);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -297,5 +381,94 @@ mod tests {
                 assert!(pitches[i + 1] > pitches[i], "Scale notes should ascend");
             }
         }
+    }
+
+    #[test]
+    fn test_scale_right_shift() {
+        // Test shifting C4 major scale down one octave
+        let c4_scale = C4_MAJOR_SCALE;
+        let c5_scale = c4_scale >> 1;
+        assert_eq!(c5_scale, C5_MAJOR_SCALE);
+
+        // Test shifting C4 major scale down two octaves
+        let c6_scale = c4_scale >> 2;
+        assert_eq!(c6_scale, C6_MAJOR_SCALE);
+
+        // Test that original scale is unchanged
+        assert_eq!(c4_scale, C4_MAJOR_SCALE);
+    }
+
+    #[test]
+    fn test_scale_right_shift_assign() {
+        // Test shifting C4 major scale down one octave in place
+        let mut scale = C4_MAJOR_SCALE;
+        scale >>= 1;
+        assert_eq!(scale, C5_MAJOR_SCALE);
+
+        // Test shifting down another octave
+        scale >>= 1;
+        assert_eq!(scale, C6_MAJOR_SCALE);
+    }
+
+    #[test]
+    fn test_scale_left_shift() {
+        // Test shifting C4 major scale up one octave
+        let c4_scale = C4_MAJOR_SCALE;
+        let c3_scale = c4_scale << 1;
+        assert_eq!(c3_scale, C3_MAJOR_SCALE);
+
+        // Test shifting C4 major scale up two octaves
+        let c1_scale = c3_scale << 2;
+        assert_eq!(c1_scale, C1_MAJOR_SCALE);
+
+        // Test that original scale is unchanged
+        assert_eq!(c4_scale, C4_MAJOR_SCALE);
+    }
+
+    #[test]
+    fn test_scale_left_shift_assign() {
+        // Test shifting C4 major scale up one octave in place
+        let mut scale = C4_MAJOR_SCALE;
+        scale <<= 1;
+        assert_eq!(scale, C3_MAJOR_SCALE);
+
+        // Test shifting up another octave
+        scale <<= 1;
+        assert_eq!(scale, C2_MAJOR_SCALE);
+    }
+
+    #[test]
+    fn test_scale_shift_preserves_quality() {
+        // Test that shifting preserves scale quality for different scale types
+        let major_scale = C4_MAJOR_SCALE;
+        let minor_scale = A4_MELODIC_SCALE;
+        let harmonic_scale = E4_HARMONIC_SCALE;
+
+        // Test right shift
+        assert_eq!((major_scale >> 1).quality(), ScaleQuality::Major);
+        assert_eq!((minor_scale >> 1).quality(), ScaleQuality::Melodic);
+        assert_eq!((harmonic_scale >> 1).quality(), ScaleQuality::Harmonic);
+
+        // Test left shift
+        assert_eq!((major_scale << 1).quality(), ScaleQuality::Major);
+        assert_eq!((minor_scale << 1).quality(), ScaleQuality::Melodic);
+        assert_eq!((harmonic_scale << 1).quality(), ScaleQuality::Harmonic);
+    }
+
+    #[test]
+    fn test_scale_shift_multiple_octaves() {
+        let c4_scale = C4_MAJOR_SCALE;
+
+        // Test multiple octave shifts up and down
+        assert_eq!(c4_scale >> 3, C7_MAJOR_SCALE); // Down 3 octaves
+        assert_eq!(c4_scale << 3, C1_MAJOR_SCALE); // Up 3 octaves
+
+        // Test that shifting up then down returns to original
+        let shifted = (c4_scale << 2) >> 2;
+        assert_eq!(shifted, c4_scale);
+
+        // Test that shifting down then up returns to original
+        let shifted = (c4_scale >> 2) << 2;
+        assert_eq!(shifted, c4_scale);
     }
 }

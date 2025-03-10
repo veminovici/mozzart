@@ -1,5 +1,3 @@
-use crate::Pitch;
-
 /// Represents a musical interval as a number of semitones.
 ///
 /// Common intervals:
@@ -88,49 +86,8 @@ pub const MINOR_FOURTEENTH: Interval = Interval::new(22);
 pub const MAJOR_FOURTEENTH: Interval = Interval::new(23);
 pub const DOUBLE_OCTAVE: Interval = Interval::new(24);
 
-/// A slice of intervals that can be converted into pitches
-pub struct Intervals<'a>(&'a [Interval]);
-
-impl<'a> Intervals<'a> {
-    /// Creates a new `Intervals` from a slice of intervals
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::{Interval, Intervals, MAJOR_THIRD, MINOR_THIRD};
-    ///
-    /// let major_triad = [MAJOR_THIRD, MINOR_THIRD];  // Major third, minor third
-    /// let intervals = Intervals::new(&major_triad);
-    /// ```
-    #[inline(always)]
-    pub fn new(intervals: &'a [Interval]) -> Self {
-        Intervals(intervals)
-    }
-
-    /// Converts a sequence of intervals into pitches, starting from a root pitch
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::{Interval, Intervals, Pitch, C4, E4, G4, MAJOR_THIRD, MINOR_THIRD};
-    ///
-    /// let c4 = C4;  // Middle C
-    /// let major_triad = [MAJOR_THIRD, MINOR_THIRD];  // Major third, minor third
-    /// let pitches = Intervals::new(&major_triad).into_pitches(c4);
-    /// assert_eq!(pitches, vec![C4, E4, G4]); // C-E-G
-    /// ```
-    pub fn into_pitches(self, root: Pitch) -> Vec<Pitch> {
-        std::iter::once(root)
-            .chain(self.0.iter().scan(root, |pitch, interval| {
-                *pitch += interval;
-                Some(*pitch)
-            }))
-            .collect()
-    }
-}
-
 #[cfg(test)]
 mod tests {
-    use crate::{C4, C5, E4, G4};
-
     use super::*;
 
     #[test]
@@ -166,22 +123,6 @@ mod tests {
     }
 
     #[test]
-    fn test_intervals_into_pitches() {
-        let c4 = C4;
-        let intervals = [Interval::new(4), Interval::new(3)]; // Major third, minor third
-        let pitches = Intervals::new(&intervals).into_pitches(c4);
-        assert_eq!(pitches, [C4, E4, G4]); // C-E-G
-    }
-
-    #[test]
-    fn test_intervals_into_pitches_empty() {
-        let c4 = C4;
-        let intervals: [Interval; 0] = [];
-        let pitches = Intervals::new(&intervals).into_pitches(c4);
-        assert_eq!(pitches, vec![C4]); // Just the root
-    }
-
-    #[test]
     fn test_common_intervals() {
         let minor_second = Interval::new(1);
         let major_second = Interval::new(2);
@@ -197,18 +138,6 @@ mod tests {
         assert!(major_third < perfect_fourth);
         assert!(perfect_fourth < perfect_fifth);
         assert!(perfect_fifth < octave);
-    }
-
-    #[test]
-    fn test_intervals_compound_triad() {
-        let c4 = C4;
-        let intervals = [
-            Interval::new(4), // Major third
-            Interval::new(3), // Minor third
-            Interval::new(5), // Perfect fourth
-        ];
-        let pitches = Intervals::new(&intervals).into_pitches(c4);
-        assert_eq!(pitches, vec![C4, E4, G4, C5,]);
     }
 
     #[test]

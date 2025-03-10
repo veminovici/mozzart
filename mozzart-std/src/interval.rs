@@ -1,4 +1,4 @@
-use std::ops::{Mul, MulAssign};
+use std::ops::{Mul, MulAssign, Shr, ShrAssign};
 
 /// Represents a musical interval as a number of semitones.
 ///
@@ -30,6 +30,11 @@ use std::ops::{Mul, MulAssign};
 /// - Thirteenth (M13): Major sixth + octave (21 semitones)
 /// - Double octave: Two octaves (24 semitones)
 ///
+/// # Octave Operations
+/// Intervals can be shifted up or down by octaves using the shift operators:
+/// - Right shift (`>>`) moves an interval up by octaves
+/// - Left shift (`<<`) moves an interval down by octaves
+///
 /// # Examples
 /// ```
 /// use mozzart_std::{Interval, MAJOR_THIRD, MINOR_THIRD, PERFECT_FIFTH};
@@ -39,6 +44,9 @@ use std::ops::{Mul, MulAssign};
 ///
 /// // Multiply intervals
 /// let octave = PERFECT_FIFTH * 2;  // A fifth times 2 is greater than an octave
+///
+/// // Shift intervals by octaves
+/// let compound_third = MAJOR_THIRD >> 1;  // Major third up one octave
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Interval(pub(crate) u8);
@@ -127,6 +135,45 @@ impl MulAssign<u8> for Interval {
     /// ```
     fn mul_assign(&mut self, rhs: u8) {
         self.0 *= rhs;
+    }
+}
+
+/// Number of semitones in an octave
+const SEMITONES_PER_OCTAVE: u8 = 12;
+
+impl Shr<u8> for Interval {
+    type Output = Interval;
+
+    /// Shifts an interval up by the specified number of octaves.
+    ///
+    /// This operation adds octaves to the interval, creating compound intervals.
+    /// For example, shifting a major third up one octave creates a major tenth.
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{MAJOR_THIRD, MAJOR_TENTH};
+    ///
+    /// let compound = MAJOR_THIRD >> 1;  // Shift up one octave
+    /// assert_eq!(compound, MAJOR_TENTH);
+    /// ```
+    fn shr(self, shift: u8) -> Self::Output {
+        Interval::new(self.0 + (shift * SEMITONES_PER_OCTAVE))
+    }
+}
+
+impl ShrAssign<u8> for Interval {
+    /// Shifts an interval up by the specified number of octaves in place.
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Interval, MAJOR_THIRD, MAJOR_TENTH};
+    ///
+    /// let mut interval = MAJOR_THIRD;
+    /// interval >>= 1;  // Shift up one octave
+    /// assert_eq!(interval, MAJOR_TENTH);
+    /// ```
+    fn shr_assign(&mut self, shift: u8) {
+        self.0 += shift * SEMITONES_PER_OCTAVE;
     }
 }
 
@@ -237,5 +284,41 @@ mod tests {
         // Test compound intervals
         assert_eq!(PERFECT_FOURTH * 3, MINOR_TENTH);
         assert_eq!(MAJOR_THIRD * 4, MAJOR_TENTH);
+    }
+
+    #[test]
+    fn test_interval_octave_shifts() {
+        // Test shifting up by octaves
+        assert_eq!(MAJOR_THIRD >> 1, MAJOR_TENTH);
+        assert_eq!(PERFECT_FIFTH >> 1, PERFECT_TWELFTH);
+        assert_eq!(MAJOR_SIXTH >> 1, MAJOR_THIRTEENTH);
+
+        // // Test multiple octave shifts
+        assert_eq!(MAJOR_THIRD >> 2, MAJOR_TENTH >> 1);
+    }
+
+    #[test]
+    fn test_interval_shift_assignments() {
+        // Test shifting up
+        let mut interval = MAJOR_THIRD;
+        interval >>= 1;
+        assert_eq!(interval, MAJOR_TENTH);
+
+        // Test multiple shifts
+        let mut compound = PERFECT_FIFTH;
+        compound >>= 2;  // Up two octaves
+        assert_eq!(compound.semitones(), PERFECT_FIFTH.semitones() + 24);
+    }
+
+    #[test]
+    fn test_compound_interval_relationships() {
+        // Test relationships between simple and compound intervals
+        assert_eq!(MAJOR_SECOND >> 1, MAJOR_NINTH);
+        assert_eq!(MAJOR_THIRD >> 1, MAJOR_TENTH);
+        assert_eq!(PERFECT_FOURTH >> 1, PERFECT_ELEVENTH);
+        assert_eq!(PERFECT_FIFTH >> 1, PERFECT_TWELFTH);
+        assert_eq!(MAJOR_SIXTH >> 1, MAJOR_THIRTEENTH);
+        assert_eq!(MAJOR_SEVENTH >> 1, MAJOR_FOURTEENTH);
+        assert_eq!(PERFECT_OCTAVE >> 1, DOUBLE_OCTAVE >> 0);
     }
 }

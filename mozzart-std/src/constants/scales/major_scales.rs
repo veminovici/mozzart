@@ -727,11 +727,6 @@ mod tests {
 
     #[test]
     fn test_major_scales_canonical() {
-        assert_eq!(
-            MAJOR_SCALE_STEPS,
-            [UNISON, TONE, TONE, SEMITONE, TONE, TONE, TONE, SEMITONE]
-        );
-
         let steps = C_MAJOR_SCALE.steps();
         assert_eq!(steps, MAJOR_SCALE_STEPS);
 

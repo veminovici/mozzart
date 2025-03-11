@@ -34,9 +34,40 @@
 //! ```
 
 use crate::constants::*;
-use crate::{Pitch, Scale};
+use crate::{Interval, Pitch, Scale};
 use lazy_static::lazy_static;
 use std::collections::HashMap;
+
+/// The interval pattern defining a major scale.
+///
+/// This array represents the intervals between consecutive notes in a major scale,
+/// following the classic whole-whole-half-whole-whole-whole-half step pattern:
+/// - UNISON: Starting position (0 semitones)
+/// - TONE: From 1st to 2nd degree (C to D, 2 semitones)
+/// - TONE: From 2nd to 3rd degree (D to E, 2 semitones)
+/// - SEMITONE: From 3rd to 4th degree (E to F, 1 semitone)
+/// - TONE: From 4th to 5th degree (F to G, 2 semitones)
+/// - TONE: From 5th to 6th degree (G to A, 2 semitones)
+/// - TONE: From 6th to 7th degree (A to B, 2 semitones)
+/// - SEMITONE: From 7th to 8th degree (B to C, 1 semitone)
+///
+/// This pattern creates the characteristic sound of the major scale and is
+/// the foundation for the diatonic system in Western music theory.
+///
+/// # Musical Theory
+/// The major scale pattern has been central to Western music since the 17th century.
+/// Its pattern of whole and half steps creates specific tonal relationships that
+/// establish a strong sense of key center and harmonic function.
+///
+/// # Example Usage
+/// ```
+/// use mozzart_std::{MAJOR_SCALE_STEPS, C4_MAJOR_SCALE};
+///
+/// // Verify that a C major scale follows the standard major scale pattern
+/// assert_eq!(C4_MAJOR_SCALE.steps(), MAJOR_SCALE_STEPS);
+/// ```
+pub const MAJOR_SCALE_STEPS: [Interval; 8] =
+    [UNISON, TONE, TONE, SEMITONE, TONE, TONE, TONE, SEMITONE];
 
 // Octave-independent major scales (pitch class only)
 /// C major scale (C-D-E-F-G-A-B-C)

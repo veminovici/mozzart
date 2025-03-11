@@ -437,81 +437,35 @@ mod tests {
     /// Test that all octave 0 minor scales follow the correct interval pattern
     #[test]
     fn test_minor_scales_octave_0() {
-        let steps = C0_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = CSHARP0_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = D0_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = DSHARP0_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = E0_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = F0_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = FSHARP0_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = G0_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = GSHARP0_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = A0_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = ASHARP0_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = B0_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
+        assert_eq!(C0_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(CSHARP0_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(D0_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(DSHARP0_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(E0_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(F0_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(FSHARP0_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(G0_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(GSHARP0_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(A0_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(ASHARP0_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(B0_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
     }
 
     /// Test that all canonical minor scales follow the correct interval pattern
     #[test]
     fn test_minor_scales_canonical() {
-        let steps = C_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = CSHARP_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = D_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = DSHARP_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = E_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = F_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = FSHARP_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = G_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = GSHARP_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = A_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = ASHARP_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = B_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
+        assert_eq!(C_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(CSHARP_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(D_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(DSHARP_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(E_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(F_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(FSHARP_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(G_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(GSHARP_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(A_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(ASHARP_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(B_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
     }
 
     /// Test that all canonical minor scales can be retrieved from the MINOR_SCALES HashMap
@@ -550,41 +504,18 @@ mod tests {
 
     #[test]
     fn test_minor_scales_octave_1() {
-        let steps = C1_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = CSHARP1_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = D1_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = DSHARP1_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = E1_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = F1_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = FSHARP1_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = G1_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = GSHARP1_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = A1_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = ASHARP1_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = B1_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
+        assert_eq!(C1_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(CSHARP1_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(D1_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(DSHARP1_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(E1_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(F1_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(FSHARP1_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(G1_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(GSHARP1_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(A1_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(ASHARP1_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(B1_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
     }
 
     #[test]
@@ -605,41 +536,18 @@ mod tests {
 
     #[test]
     fn test_minor_scales_octave_2() {
-        let steps = C2_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = CSHARP2_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = D2_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = DSHARP2_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = E2_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = F2_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = FSHARP2_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = G2_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = GSHARP2_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = A2_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = ASHARP2_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = B2_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
+        assert_eq!(C2_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(CSHARP2_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(D2_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(DSHARP2_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(E2_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(F2_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(FSHARP2_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(G2_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(GSHARP2_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(A2_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(ASHARP2_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(B2_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
     }
 
     #[test]
@@ -660,41 +568,18 @@ mod tests {
 
     #[test]
     fn test_minor_scales_octave_3() {
-        let steps = C3_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = CSHARP3_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = D3_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = DSHARP3_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = E3_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = F3_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = FSHARP3_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = G3_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = GSHARP3_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = A3_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = ASHARP3_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = B3_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
+        assert_eq!(C3_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(CSHARP3_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(D3_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(DSHARP3_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(E3_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(F3_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(FSHARP3_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(G3_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(GSHARP3_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(A3_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(ASHARP3_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(B3_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
     }
 
     #[test]
@@ -715,41 +600,18 @@ mod tests {
 
     #[test]
     fn test_minor_scales_octave_4() {
-        let steps = C4_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = CSHARP4_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = D4_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = DSHARP4_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = E4_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = F4_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = FSHARP4_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = G4_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = GSHARP4_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = A4_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = ASHARP4_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = B4_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
+        assert_eq!(C4_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(CSHARP4_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(D4_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(DSHARP4_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(E4_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(F4_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(FSHARP4_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(G4_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(GSHARP4_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(A4_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(ASHARP4_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(B4_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
     }
 
     #[test]
@@ -770,41 +632,18 @@ mod tests {
 
     #[test]
     fn test_minor_scales_octave_5() {
-        let steps = C5_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = CSHARP5_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = D5_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = DSHARP5_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = E5_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = F5_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = FSHARP5_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = G5_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = GSHARP5_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = A5_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = ASHARP5_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = B5_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
+        assert_eq!(C5_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(CSHARP5_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(D5_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(DSHARP5_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(E5_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(F5_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(FSHARP5_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(G5_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(GSHARP5_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(A5_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(ASHARP5_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(B5_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
     }
 
     #[test]
@@ -825,41 +664,18 @@ mod tests {
 
     #[test]
     fn test_minor_scales_octave_6() {
-        let steps = C6_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = CSHARP6_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = D6_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = DSHARP6_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = E6_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = F6_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = FSHARP6_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = G6_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = GSHARP6_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = A6_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = ASHARP6_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = B6_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
+        assert_eq!(C6_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(CSHARP6_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(D6_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(DSHARP6_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(E6_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(F6_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(FSHARP6_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(G6_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(GSHARP6_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(A6_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(ASHARP6_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(B6_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
     }
 
     #[test]
@@ -880,41 +696,18 @@ mod tests {
 
     #[test]
     fn test_minor_scales_octave_7() {
-        let steps = C7_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = CSHARP7_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = D7_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = DSHARP7_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = E7_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = F7_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = FSHARP7_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = G7_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = GSHARP7_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = A7_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = ASHARP7_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = B7_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
+        assert_eq!(C7_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(CSHARP7_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(D7_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(DSHARP7_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(E7_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(F7_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(FSHARP7_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(G7_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(GSHARP7_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(A7_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(ASHARP7_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(B7_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
     }
 
     #[test]
@@ -935,29 +728,14 @@ mod tests {
 
     #[test]
     fn test_minor_scales_octave_8() {
-        let steps = C8_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = CSHARP8_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = D8_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = DSHARP8_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = E8_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = F8_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = FSHARP8_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
-
-        let steps = G8_MINOR_SCALE.steps();
-        assert_eq!(steps, MINOR_SCALE_STEPS);
+        assert_eq!(C8_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(CSHARP8_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(D8_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(DSHARP8_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(E8_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(F8_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(FSHARP8_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
+        assert_eq!(G8_MINOR_SCALE.steps(), MINOR_SCALE_STEPS);
     }
 
     #[test]

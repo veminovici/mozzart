@@ -27,29 +27,16 @@
 //! let e_above = middle_c + MAJOR_THIRD;
 //! assert_eq!(e_above, E4);
 //!
-//! // Working with sequences
-//! use mozzart_std::{into_intervals, into_pitches};
-//!
-//! // Analyze intervals in a C major triad
-//! let c_major = [C4, E4, G4];
-//! let intervals = into_intervals(&c_major);
-//! assert_eq!(intervals, vec![MAJOR_THIRD, MINOR_THIRD]);
-//!
-//! // Build an E major triad using the same interval pattern
-//! let e_major = into_pitches(E4, &intervals);
-//! assert_eq!(e_major.len(), 3);  // Root + 2 intervals = 3 pitches
 //! ```
 
 mod constants;
 mod interval;
 mod pitch;
 mod scale;
-mod slices;
 mod utils;
 
 pub use constants::*;
 pub use interval::*;
 pub use pitch::*;
 pub use scale::*;
-pub use slices::*;
-pub(crate) use utils::*;
+pub use utils::*;

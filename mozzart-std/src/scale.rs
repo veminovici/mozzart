@@ -5,7 +5,7 @@
 //! - Scale construction and manipulation
 //! - Access to scale degrees and pitches
 
-use crate::Pitch;
+use crate::{Interval, Pitch, UNISON};
 use std::ops::{Shl, ShlAssign, Shr, ShrAssign};
 
 /// Represents the quality (or type) of a musical scale.
@@ -194,6 +194,38 @@ impl<const N: usize> Scale<N> {
     pub fn pitches(&self) -> &[Pitch; N] {
         &self.pitches
     }
+
+    /// Returns the intervals between consecutive pitches in the scale.
+    ///
+    /// This function calculates the interval (in semitones) between each adjacent pair
+    /// of notes in the scale. For an N-note scale, this returns an array of N intervals where:
+    /// - steps[0] = interval between pitches[0] and pitches[1]
+    /// - steps[1] = interval between pitches[1] and pitches[2]
+    /// - ...and so on
+    ///
+    /// This is useful for:
+    /// - Analyzing the structure of scales
+    /// - Identifying characteristic intervals (e.g., augmented 2nd in harmonic minor)
+    /// - Comparing scale patterns
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{C4_MAJOR_SCALE, TONE, SEMITONE};
+    ///
+    /// let steps = C4_MAJOR_SCALE.steps();
+    /// // Major scale pattern: Whole, Whole, Half, Whole, Whole, Whole, Half
+    /// assert_eq!(steps[0], TONE);      // C to D: whole step
+    /// assert_eq!(steps[1], TONE);      // D to E: whole step
+    /// assert_eq!(steps[2], SEMITONE);  // E to F: half step
+    /// assert_eq!(steps[3], TONE);      // F to G: whole step
+    /// ```
+    pub fn steps(&self) -> [Interval; N] {
+        let mut steps = [UNISON; N];
+        for i in 1..N {
+            steps[i - 1] = self.pitches[i] - self.pitches[i - 1];
+        }
+        steps
+    }
 }
 
 /// Implements right shift operator (`>>`) for scales, which transposes the scale up by the specified number of octaves.
@@ -212,7 +244,6 @@ impl<const N: usize> Shr<u8> for Scale<N> {
     type Output = Self;
 
     fn shr(self, shift: u8) -> Self::Output {
-
         let pitches: [Pitch; N] = self.pitches.map(|p| p >> shift);
         Self::new(self.quality, pitches)
     }
@@ -471,5 +502,54 @@ mod tests {
         // Test that shifting down then up returns to original
         let shifted = (c4_scale >> 2) << 2;
         assert_eq!(shifted, c4_scale);
+    }
+
+    #[test]
+    fn test_scale_steps() {
+        use crate::{Interval, SEMITONE, TONE};
+
+        // Test major scale steps (Whole-Whole-Half-Whole-Whole-Whole-Half)
+        let major_scale = C4_MAJOR_SCALE;
+        let major_steps = major_scale.steps();
+        assert_eq!(major_steps[0], TONE); // C-D: 2 semitones
+        assert_eq!(major_steps[1], TONE); // D-E: 2 semitones
+        assert_eq!(major_steps[2], SEMITONE); // E-F: 1 semitone
+        assert_eq!(major_steps[3], TONE); // F-G: 2 semitones
+        assert_eq!(major_steps[4], TONE); // G-A: 2 semitones
+        assert_eq!(major_steps[5], TONE); // A-B: 2 semitones
+        assert_eq!(major_steps[6], SEMITONE); // B-C: 1 semitone
+
+        // Test natural minor scale steps (Whole-Half-Whole-Whole-Half-Whole-Whole)
+        let minor_scale = A4_MINOR_SCALE;
+        let minor_steps = minor_scale.steps();
+        assert_eq!(minor_steps[0], TONE); // A-B: 2 semitones
+        assert_eq!(minor_steps[1], SEMITONE); // B-C: 1 semitone
+        assert_eq!(minor_steps[2], TONE); // C-D: 2 semitones
+        assert_eq!(minor_steps[3], TONE); // D-E: 2 semitones
+        assert_eq!(minor_steps[4], SEMITONE); // E-F: 1 semitone
+        assert_eq!(minor_steps[5], TONE); // F-G: 2 semitones
+        assert_eq!(minor_steps[6], TONE); // G-A: 2 semitones
+
+        // Test harmonic minor scale steps (Whole-Half-Whole-Whole-Half-Whole+Half-Half)
+        // G# is 1 semitone higher than G
+        let g_sharp_5 = G5 + SEMITONE;
+        let harmonic_scale = Scale::harmonic([A4, B4, C5, D5, E5, F5, g_sharp_5, A5]);
+        let harmonic_steps = harmonic_scale.steps();
+        assert_eq!(harmonic_steps[0], TONE); // A-B: 2 semitones
+        assert_eq!(harmonic_steps[1], SEMITONE); // B-C: 1 semitone
+        assert_eq!(harmonic_steps[2], TONE); // C-D: 2 semitones
+        assert_eq!(harmonic_steps[3], TONE); // D-E: 2 semitones
+        assert_eq!(harmonic_steps[4], SEMITONE); // E-F: 1 semitone
+
+        // The augmented 2nd is 3 semitones (TONE + SEMITONE)
+        let aug_second = Interval::new(3); // 3 semitones
+        assert_eq!(harmonic_steps[5], aug_second); // F-G#: 3 semitones (augmented 2nd)
+        assert_eq!(harmonic_steps[6], SEMITONE); // G#-A: 1 semitone
+
+        // Test that steps don't exceed array bounds
+        let short_scale = Scale::major([C4, D4, E4]);
+        let short_steps = short_scale.steps();
+        assert_eq!(short_steps[0], TONE); // C-D: 2 semitones
+        assert_eq!(short_steps[1], TONE); // D-E: 2 semitones
     }
 }

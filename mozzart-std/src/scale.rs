@@ -357,6 +357,99 @@ impl<const N: usize> ShlAssign<u8> for Scale<N> {
         self.pitches = self.pitches.map(|p| p << shift);
     }
 }
+
+/// Implements right shift operator (`>>`) for scale references, which transposes the scale up by the specified number of octaves.
+///
+/// Each octave shift up increases each pitch in the scale by 12 semitones.
+/// This implementation works on a reference to a scale and returns a new scale.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C5_MAJOR_SCALE};
+///
+/// // Transpose C4 major scale up one octave to get C5 major scale
+/// let c4_scale_ref = &C4_MAJOR_SCALE;
+/// let c5_scale = c4_scale_ref >> 1;
+/// assert_eq!(c5_scale, C5_MAJOR_SCALE);
+/// ```
+impl<const N: usize> Shr<u8> for &Scale<N> {
+    type Output = Scale<N>;
+
+    fn shr(self, shift: u8) -> Self::Output {
+        *self >> shift
+    }
+}
+
+/// Implements right shift assignment operator (`>>=`) for mutable scale references, which transposes
+/// the scale up by the specified number of octaves in place.
+///
+/// Each octave shift up increases each pitch in the scale by 12 semitones.
+/// This implementation modifies the scale in place through a mutable reference.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C5_MAJOR_SCALE};
+///
+/// // Create a mutable scale
+/// let mut scale = C4_MAJOR_SCALE;
+/// let mut scale_ref = &mut scale;
+///
+/// // Transpose up one octave in place
+/// scale_ref >>= 1;
+/// assert_eq!(scale, C5_MAJOR_SCALE);
+/// ```
+impl<const N: usize> ShrAssign<u8> for &mut Scale<N> {
+    fn shr_assign(&mut self, shift: u8) {
+        self.pitches = self.pitches.map(|p| p >> shift);
+    }
+}
+
+/// Implements left shift operator (`<<`) for scale references, which transposes the scale down by the specified number of octaves.
+///
+/// Each octave shift down decreases each pitch in the scale by 12 semitones.
+/// This implementation works on a reference to a scale and returns a new scale.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C3_MAJOR_SCALE};
+///
+/// // Transpose C4 major scale down one octave to get C3 major scale
+/// let c4_scale_ref = &C4_MAJOR_SCALE;
+/// let c3_scale = c4_scale_ref << 1;
+/// assert_eq!(c3_scale, C3_MAJOR_SCALE);
+/// ```
+impl<const N: usize> Shl<u8> for &Scale<N> {
+    type Output = Scale<N>;
+
+    fn shl(self, shift: u8) -> Self::Output {
+        *self << shift
+    }
+}
+
+/// Implements left shift assignment operator (`<<=`) for mutable scale references, which transposes
+/// the scale down by the specified number of octaves in place.
+///
+/// Each octave shift down decreases each pitch in the scale by 12 semitones.
+/// This implementation modifies the scale in place through a mutable reference.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C3_MAJOR_SCALE};
+///
+/// // Create a mutable scale
+/// let mut scale = C4_MAJOR_SCALE;
+/// let mut scale_ref = &mut scale;
+///
+/// // Transpose down one octave in place
+/// scale_ref <<= 1;
+/// assert_eq!(scale, C3_MAJOR_SCALE);
+/// ```
+impl<const N: usize> ShlAssign<u8> for &mut Scale<N> {
+    fn shl_assign(&mut self, shift: u8) {
+        self.pitches = self.pitches.map(|p| p << shift);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -665,5 +758,143 @@ mod tests {
         assert_eq!(penta.pitches()[2], B4);
         assert_eq!(penta.pitches()[3], D5);
         assert_eq!(penta.pitches()[4], E5);
+    }
+
+    #[test]
+    fn test_scale_right_shift_reference() {
+        // Test right-shift on a scale reference
+        let c4_scale = C4_MAJOR_SCALE;
+        let c4_ref = &c4_scale;
+
+        // Shift up one octave
+        let c5_scale = c4_ref >> 1;
+
+        // Verify that shift worked correctly
+        assert_eq!(c5_scale.root(), C5);
+        assert_eq!(c5_scale.pitches()[0], C5);
+        assert_eq!(c5_scale.pitches()[4], G5);
+
+        // Verify that original scale is unchanged
+        assert_eq!(c4_scale.root(), C4);
+
+        // Test with melodic scale
+        let e3_melodic = E3_MELODIC_SCALE;
+        let e3_ref = &e3_melodic;
+        let e4_melodic = e3_ref >> 1;
+
+        assert_eq!(e4_melodic.quality(), ScaleQuality::Melodic);
+        assert_eq!(e4_melodic.root(), E4);
+    }
+
+    #[test]
+    fn test_scale_right_shift_assign_mut_reference() {
+        // Test right-shift assignment with a separate mutable reference
+        let mut scale = C4_MAJOR_SCALE.clone();
+
+        // Create a mutable reference and shift it
+        {
+            let scale_ref: &mut Scale<8> = &mut scale;
+            *scale_ref >>= 1;
+        }
+
+        // Verify that shift worked correctly
+        assert_eq!(scale.root(), C5);
+        assert_eq!(scale.pitches()[0], C5);
+
+        // Test with multiple octaves
+        let mut d_scale = D3_HARMONIC_SCALE.clone();
+
+        // Create a mutable reference and shift it two octaves
+        {
+            let d_ref: &mut Scale<8> = &mut d_scale;
+            *d_ref >>= 2;
+        }
+
+        // Verify results
+        assert_eq!(d_scale.root(), D5);
+        assert_eq!(d_scale.quality(), ScaleQuality::Harmonic);
+    }
+
+    #[test]
+    fn test_scale_left_shift_reference() {
+        // Test left-shift on a scale reference
+        let c4_scale = C4_MAJOR_SCALE;
+        let c4_ref = &c4_scale;
+
+        // Shift down one octave
+        let c3_scale = c4_ref << 1;
+
+        // Verify that shift worked correctly
+        assert_eq!(c3_scale.root(), C3);
+        assert_eq!(c3_scale.pitches()[0], C3);
+        assert_eq!(c3_scale.pitches()[4], G3);
+
+        // Verify that original scale is unchanged
+        assert_eq!(c4_scale.root(), C4);
+
+        // Test with melodic scale
+        let e5_melodic = E5_MELODIC_SCALE;
+        let e5_ref = &e5_melodic;
+        let e4_melodic = e5_ref << 1;
+
+        assert_eq!(e4_melodic.quality(), ScaleQuality::Melodic);
+        assert_eq!(e4_melodic.root(), E4);
+    }
+
+    #[test]
+    fn test_scale_left_shift_assign_mut_reference() {
+        // Test left-shift assignment with a separate mutable reference
+        let mut scale = C4_MAJOR_SCALE.clone();
+
+        // Create a mutable reference and shift it
+        {
+            let scale_ref: &mut Scale<8> = &mut scale;
+            *scale_ref <<= 1;
+        }
+
+        // Verify that shift worked correctly
+        assert_eq!(scale.root(), C3);
+        assert_eq!(scale.pitches()[0], C3);
+
+        // Test with multiple octaves
+        let mut a_scale = A5_MINOR_SCALE.clone();
+
+        // Create a mutable reference and shift it two octaves
+        {
+            let a_ref: &mut Scale<8> = &mut a_scale;
+            *a_ref <<= 2;
+        }
+
+        // Verify results
+        assert_eq!(a_scale.root(), A3);
+        assert_eq!(a_scale.quality(), ScaleQuality::Minor);
+    }
+
+    #[test]
+    fn test_scale_mixed_reference_operations() {
+        // Test a combination of reference and value operations
+        let c4_scale = C4_MAJOR_SCALE;
+
+        // Reference shift
+        let c5_scale = &c4_scale >> 1;
+
+        // Value shift on result of reference shift
+        let c6_scale = c5_scale >> 1;
+
+        // Verify double shift
+        assert_eq!(c6_scale.root(), C6);
+
+        // Original remains unchanged
+        assert_eq!(c4_scale.root(), C4);
+
+        // Test reference shift in both directions
+        let b4_scale = B4_MELODIC_SCALE;
+        let b3_scale = &b4_scale << 1;
+        let b5_scale = &b3_scale >> 2;
+
+        // Verify shifts worked correctly
+        assert_eq!(b3_scale.root(), B3);
+        assert_eq!(b5_scale.root(), B5);
+        assert_eq!(b5_scale.quality(), ScaleQuality::Melodic);
     }
 }

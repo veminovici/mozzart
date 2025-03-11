@@ -808,4 +808,160 @@ mod tests {
         assert_eq!(FSHARP8_HARMONIC_SCALE.steps(), HARMONIC_SCALE_STEPS);
         assert_eq!(G8_HARMONIC_SCALE.steps(), HARMONIC_SCALE_STEPS);
     }
+
+    #[test]
+    fn test_scales_contains_canonical() {
+        assert_eq!(HARMONIC_SCALES.get(&C), Some(&C_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&CSHARP), Some(&CSHARP_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&D), Some(&D_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&DSHARP), Some(&DSHARP_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&E), Some(&E_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&F), Some(&F_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&FSHARP), Some(&FSHARP_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&G), Some(&G_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&GSHARP), Some(&GSHARP_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&A), Some(&A_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&ASHARP), Some(&ASHARP_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&B), Some(&B_HARMONIC_SCALE));
+    }
+
+    #[test]
+    fn test_scales_contains_octave_0() {
+        assert_eq!(HARMONIC_SCALES.get(&C0), Some(&C0_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&CSHARP0), Some(&CSHARP0_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&D0), Some(&D0_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&DSHARP0), Some(&DSHARP0_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&E0), Some(&E0_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&F0), Some(&F0_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&FSHARP0), Some(&FSHARP0_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&G0), Some(&G0_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&GSHARP0), Some(&GSHARP0_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&A0), Some(&A0_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&ASHARP0), Some(&ASHARP0_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&B0), Some(&B0_HARMONIC_SCALE));
+    }
+
+    #[test]
+    fn test_scales_contains_octave_1() {
+        assert_eq!(HARMONIC_SCALES.get(&C1), Some(&C1_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&CSHARP1), Some(&CSHARP1_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&D1), Some(&D1_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&DSHARP1), Some(&DSHARP1_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&E1), Some(&E1_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&F1), Some(&F1_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&FSHARP1), Some(&FSHARP1_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&G1), Some(&G1_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&GSHARP1), Some(&GSHARP1_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&A1), Some(&A1_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&ASHARP1), Some(&ASHARP1_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&B1), Some(&B1_HARMONIC_SCALE));
+    }
+
+    #[test]
+    fn test_scales_contains_octave_2() {
+        assert_eq!(HARMONIC_SCALES.get(&C2), Some(&C2_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&CSHARP2), Some(&CSHARP2_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&D2), Some(&D2_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&DSHARP2), Some(&DSHARP2_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&E2), Some(&E2_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&F2), Some(&F2_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&FSHARP2), Some(&FSHARP2_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&G2), Some(&G2_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&GSHARP2), Some(&GSHARP2_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&A2), Some(&A2_HARMONIC_SCALE));  
+        assert_eq!(HARMONIC_SCALES.get(&ASHARP2), Some(&ASHARP2_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&B2), Some(&B2_HARMONIC_SCALE));
+    }
+
+    #[test]
+    fn test_scales_contains_octave_3() {
+        assert_eq!(HARMONIC_SCALES.get(&C3), Some(&C3_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&CSHARP3), Some(&CSHARP3_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&D3), Some(&D3_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&DSHARP3), Some(&DSHARP3_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&E3), Some(&E3_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&F3), Some(&F3_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&FSHARP3), Some(&FSHARP3_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&G3), Some(&G3_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&GSHARP3), Some(&GSHARP3_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&A3), Some(&A3_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&ASHARP3), Some(&ASHARP3_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&B3), Some(&B3_HARMONIC_SCALE));
+    }
+
+    #[test]
+    fn test_scales_contains_octave_4() {
+        assert_eq!(HARMONIC_SCALES.get(&C4), Some(&C4_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&CSHARP4), Some(&CSHARP4_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&D4), Some(&D4_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&DSHARP4), Some(&DSHARP4_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&E4), Some(&E4_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&F4), Some(&F4_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&FSHARP4), Some(&FSHARP4_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&G4), Some(&G4_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&GSHARP4), Some(&GSHARP4_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&A4), Some(&A4_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&ASHARP4), Some(&ASHARP4_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&B4), Some(&B4_HARMONIC_SCALE));
+    }
+
+    #[test]
+    fn test_scales_contains_octave_5() {
+        assert_eq!(HARMONIC_SCALES.get(&C5), Some(&C5_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&CSHARP5), Some(&CSHARP5_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&D5), Some(&D5_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&DSHARP5), Some(&DSHARP5_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&E5), Some(&E5_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&F5), Some(&F5_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&FSHARP5), Some(&FSHARP5_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&G5), Some(&G5_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&GSHARP5), Some(&GSHARP5_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&A5), Some(&A5_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&ASHARP5), Some(&ASHARP5_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&B5), Some(&B5_HARMONIC_SCALE));
+    }
+
+    #[test]
+    fn test_scales_contains_octave_6() {
+        assert_eq!(HARMONIC_SCALES.get(&C6), Some(&C6_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&CSHARP6), Some(&CSHARP6_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&D6), Some(&D6_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&DSHARP6), Some(&DSHARP6_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&E6), Some(&E6_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&F6), Some(&F6_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&FSHARP6), Some(&FSHARP6_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&G6), Some(&G6_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&GSHARP6), Some(&GSHARP6_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&A6), Some(&A6_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&ASHARP6), Some(&ASHARP6_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&B6), Some(&B6_HARMONIC_SCALE));
+    }
+
+    #[test]
+    fn test_scales_contains_octave_7() {
+        assert_eq!(HARMONIC_SCALES.get(&C7), Some(&C7_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&CSHARP7), Some(&CSHARP7_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&D7), Some(&D7_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&DSHARP7), Some(&DSHARP7_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&E7), Some(&E7_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&F7), Some(&F7_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&FSHARP7), Some(&FSHARP7_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&G7), Some(&G7_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&GSHARP7), Some(&GSHARP7_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&A7), Some(&A7_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&ASHARP7), Some(&ASHARP7_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&B7), Some(&B7_HARMONIC_SCALE));
+    }
+
+    #[test]
+    fn test_scales_contains_octave_8() {
+        assert_eq!(HARMONIC_SCALES.get(&C8), Some(&C8_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&CSHARP8), Some(&CSHARP8_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&D8), Some(&D8_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&DSHARP8), Some(&DSHARP8_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&E8), Some(&E8_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&F8), Some(&F8_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&FSHARP8), Some(&FSHARP8_HARMONIC_SCALE));
+        assert_eq!(HARMONIC_SCALES.get(&G8), Some(&G8_HARMONIC_SCALE));
+    }   
 }

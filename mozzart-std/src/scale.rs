@@ -553,17 +553,9 @@ mod tests {
     #[test]
     fn test_scale_steps() {
         // Test major scale steps (Whole-Whole-Half-Whole-Whole-Whole-Half)
-        let major_scale = C4_MAJOR_SCALE;
+        let major_scale = C0_MAJOR_SCALE;
         let major_steps = major_scale.steps();
         assert_eq!(major_steps, MAJOR_SCALE_STEPS);
-
-        // assert_eq!(major_steps[0], TONE); // C-D: 2 semitones
-        // assert_eq!(major_steps[1], TONE); // D-E: 2 semitones
-        // assert_eq!(major_steps[2], SEMITONE); // E-F: 1 semitone
-        // assert_eq!(major_steps[3], TONE); // F-G: 2 semitones
-        // assert_eq!(major_steps[4], TONE); // G-A: 2 semitones
-        // assert_eq!(major_steps[5], TONE); // A-B: 2 semitones
-        // assert_eq!(major_steps[6], SEMITONE); // B-C: 1 semitone
 
         // Test natural minor scale steps (Whole-Half-Whole-Whole-Half-Whole-Whole)
         // let minor_scale = A4_MINOR_SCALE;

@@ -3,8 +3,14 @@ use std::ops::{Mul, MulAssign, Shr, ShrAssign};
 
 /// Represents a musical interval as a number of semitones.
 ///
-/// An interval is the distance between two pitches, measured in semitones.
-/// Musical intervals are fundamental to understanding scales, chords, and melody.
+/// An interval is the distance between two pitches, measured in semitones (half steps).
+/// Musical intervals are fundamental to understanding scales, chords, and melody construction.
+///
+/// # Musical Theory
+/// Intervals are classified by:
+/// 1. Quality (perfect, major, minor, augmented, diminished)
+/// 2. Size (second, third, fourth, etc.)
+/// 3. Direction (ascending or descending)
 ///
 /// # Common Intervals
 /// Basic intervals (within one octave):
@@ -23,7 +29,7 @@ use std::ops::{Mul, MulAssign, Shr, ShrAssign};
 /// - Perfect octave (P8): 12 semitones
 ///
 /// # Extended Intervals
-/// Intervals beyond one octave:
+/// Intervals beyond one octave (compound intervals):
 /// - Ninth (M9): Major second + octave (14 semitones)
 /// - Tenth (M10): Major third + octave (16 semitones)
 /// - Eleventh (P11): Perfect fourth + octave (17 semitones)
@@ -31,10 +37,11 @@ use std::ops::{Mul, MulAssign, Shr, ShrAssign};
 /// - Thirteenth (M13): Major sixth + octave (21 semitones)
 /// - Double octave: Two octaves (24 semitones)
 ///
-/// # Octave Operations
-/// Intervals can be shifted up or down by octaves using the shift operators:
-/// - Right shift (`>>`) moves an interval up by octaves
-/// - Left shift (`<<`) moves an interval down by octaves
+/// # Operations
+/// Intervals support several operations:
+/// - Comparison: Intervals can be compared using standard comparison operators
+/// - Multiplication: Intervals can be multiplied by a scalar to create compound intervals
+/// - Octave shifts: Intervals can be shifted up or down by octaves using shift operators
 ///
 /// # Examples
 /// ```
@@ -43,29 +50,51 @@ use std::ops::{Mul, MulAssign, Shr, ShrAssign};
 /// // Compare intervals
 /// assert!(MAJOR_THIRD > MINOR_THIRD);
 ///
-/// // Multiply intervals
+/// // Create compound intervals through multiplication
 /// let octave = PERFECT_FIFTH * 2;  // A fifth times 2 is greater than an octave
 ///
 /// // Shift intervals by octaves
 /// let compound_third = MAJOR_THIRD >> 1;  // Major third up one octave
 /// ```
+///
+/// # Musical Context
+/// Intervals are essential for:
+/// - Scale construction (defining the steps between notes)
+/// - Chord building (stacking thirds or other intervals)
+/// - Melody analysis (understanding melodic leaps and steps)
+/// - Harmony (vertical relationships between notes)
+/// - Voice leading (smooth connection between chords)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Interval(pub(crate) u8);
 
 impl Interval {
     /// Creates a new interval from a number of semitones.
     ///
+    /// The interval is represented internally as the number of semitones between
+    /// two pitches. This constructor allows creating custom intervals beyond the
+    /// standard ones provided as constants.
+    ///
     /// # Arguments
-    /// * `semitones` - The number of semitones in the interval
+    /// * `semitones` - The number of semitones in the interval (0-255)
     ///
     /// # Examples
-    /// ```
+    /// ```ignore
     /// use mozzart_std::{Interval, PERFECT_FIFTH, PERFECT_OCTAVE};
     ///
     /// let perfect_fifth = PERFECT_FIFTH;  // 7 semitones
     /// let octave = PERFECT_OCTAVE;       // 12 semitones
     /// assert!(octave > perfect_fifth);
+    ///
+    /// // Create a custom interval (e.g., compound perfect fifth)
+    /// let compound_fifth = Interval::new(19);  // Perfect fifth plus octave
+    /// assert!(compound_fifth > octave);
     /// ```
+    ///
+    /// # Musical Context
+    /// - 0 semitones: Perfect unison (same note)
+    /// - 1-11 semitones: Various intervals within an octave
+    /// - 12 semitones: Perfect octave
+    /// - >12 semitones: Compound intervals (spanning more than one octave)
     #[inline(always)]
     pub(crate) const fn new(semitones: u8) -> Self {
         Interval(semitones)
@@ -73,103 +102,188 @@ impl Interval {
 
     /// Returns the number of semitones in the interval.
     ///
+    /// This method provides access to the raw semitone count that defines the interval.
+    /// Useful for interval arithmetic and comparison operations.
+    ///
     /// # Examples
     /// ```
     /// use mozzart_std::{Interval, MAJOR_THIRD};
     ///
     /// let major_third = MAJOR_THIRD;
-    /// assert_eq!(u8::from(major_third), 4);  // Major third is 4 semitones
+    /// assert_eq!(major_third.semitones(), 4);  // Major third is 4 semitones
+    ///
+    /// // Use semitones for interval arithmetic
+    /// let is_consonant = major_third.semitones() == 4 || major_third.semitones() == 7;
+    /// assert!(is_consonant);  // Major thirds are consonant intervals
     /// ```
+    ///
+    /// # Musical Context
+    /// The semitone count is fundamental to:
+    /// - Determining interval quality (major, minor, perfect)
+    /// - Calculating compound intervals
+    /// - Analyzing consonance and dissonance
+    /// - Transposition operations
     #[inline(always)]
     pub const fn semitones(&self) -> u8 {
         self.0
     }
 }
 
+/// Converts an interval to its semitone count.
+///
+/// This implementation allows seamless conversion from an `Interval`
+/// to its underlying semitone value, enabling direct arithmetic operations.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Interval, MAJOR_THIRD};
+///
+/// let semitones: u8 = MAJOR_THIRD.into();
+/// assert_eq!(semitones, 4);  // Major third is 4 semitones
+/// ```
 impl From<Interval> for u8 {
-    /// Converts an interval to its semitone count
     #[inline(always)]
     fn from(interval: Interval) -> Self {
         interval.0
     }
 }
 
+/// Converts a reference to an interval to its semitone count.
+///
+/// This implementation allows converting an interval reference to its
+/// semitone value without taking ownership, useful in borrowed contexts.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Interval, MAJOR_THIRD};
+///
+/// let major_third = &MAJOR_THIRD;
+/// let semitones: u8 = major_third.into();
+/// assert_eq!(semitones, 4);
+/// ```
 impl From<&Interval> for u8 {
-    /// Converts a reference to an interval to its semitone count
     #[inline(always)]
     fn from(interval: &Interval) -> Self {
         interval.0
     }
 }
 
+/// Implements multiplication of an interval by a scalar value.
+///
+/// This operation is useful for:
+/// - Creating compound intervals (e.g., perfect fifth × 2)
+/// - Building extended intervals from basic ones
+/// - Generating harmonic series intervals
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{PERFECT_FIFTH, PERFECT_OCTAVE};
+///
+/// // Create a compound fifth (perfect twelfth)
+/// let compound_fifth = PERFECT_FIFTH * 2;  // 7 semitones * 2 = 14 semitones
+/// assert!(compound_fifth > PERFECT_OCTAVE);
+///
+/// // Create a double octave
+/// let double_octave = PERFECT_OCTAVE * 2;  // 12 semitones * 2 = 24 semitones
+/// ```
+///
+/// # Musical Context
+/// Multiplication is commonly used for:
+/// - Building compound intervals (intervals larger than an octave)
+/// - Creating parallel harmonies (stacking similar intervals)
+/// - Analyzing harmonic series relationships
 impl Mul<u8> for Interval {
     type Output = Interval;
 
-    /// Multiplies an interval by a scalar value.
-    ///
-    /// This is useful for:
-    /// - Creating compound intervals (e.g., perfect fifth × 2)
-    /// - Building extended intervals from basic ones
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::{PERFECT_FIFTH, PERFECT_OCTAVE};
-    ///
-    /// let compound_fifth = PERFECT_FIFTH * 2;  // Perfect twelfth (19 semitones)
-    /// assert!(compound_fifth > PERFECT_OCTAVE);
-    /// ```
     fn mul(self, rhs: u8) -> Self::Output {
         Interval::new(self.0 * rhs)
     }
 }
 
+/// Implements in-place multiplication of an interval by a scalar value.
+///
+/// This operation modifies the interval in place, multiplying its semitone count
+/// by the given scalar value. Useful for building compound intervals efficiently.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Interval, PERFECT_FIFTH};
+///
+/// let mut interval = PERFECT_FIFTH;  // 7 semitones
+/// interval *= 2;  // Convert to a perfect twelfth (14 semitones)
+/// assert_eq!(interval.semitones(), 14);
+///
+/// // Create a triple fifth
+/// interval *= 3;  // Now 42 semitones
+/// ```
+///
+/// # Musical Context
+/// In-place multiplication is useful for:
+/// - Progressive interval expansion in voice leading
+/// - Building complex harmonic structures
+/// - Creating parallel harmony movements
 impl MulAssign<u8> for Interval {
-    /// Multiplies an interval in place by a scalar value.
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::{Interval, PERFECT_FIFTH};
-    ///
-    /// let mut interval = PERFECT_FIFTH;
-    /// interval *= 2;  // Convert to a perfect twelfth
-    /// assert_eq!(interval.semitones(), 14);
-    /// ```
     fn mul_assign(&mut self, rhs: u8) {
         self.0 *= rhs;
     }
 }
 
+/// Implements right shift operator for intervals, shifting up by octaves.
+///
+/// Each octave shift adds 12 semitones to the interval, creating compound intervals.
+/// This is particularly useful for voice leading and harmonic expansion.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{MAJOR_THIRD, MAJOR_TENTH};
+///
+/// // Create a major tenth (major third + octave)
+/// let compound = MAJOR_THIRD >> 1;  // Shift up one octave
+/// assert_eq!(compound, MAJOR_TENTH);
+///
+/// // Create a double compound third (major third + two octaves)
+/// let double_compound = MAJOR_THIRD >> 2;
+/// assert_eq!(double_compound.semitones(), 28);  // 4 + (12 * 2)
+/// ```
+///
+/// # Musical Context
+/// Octave shifts are essential for:
+/// - Voice leading in different registers
+/// - Creating compound intervals
+/// - Arranging harmonies across multiple octaves
+/// - Building extended chord voicings
 impl Shr<u8> for Interval {
     type Output = Interval;
 
-    /// Shifts an interval up by the specified number of octaves.
-    ///
-    /// This operation adds octaves to the interval, creating compound intervals.
-    /// For example, shifting a major third up one octave creates a major tenth.
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::{MAJOR_THIRD, MAJOR_TENTH};
-    ///
-    /// let compound = MAJOR_THIRD >> 1;  // Shift up one octave
-    /// assert_eq!(compound, MAJOR_TENTH);
-    /// ```
     fn shr(self, shift: u8) -> Self::Output {
         Interval::new(self.0 + (shift * PERFECT_OCTAVE.0))
     }
 }
 
+/// Implements in-place right shift for intervals, shifting up by octaves.
+///
+/// Modifies the interval in place by adding octaves, useful for progressive
+/// voice leading and harmonic expansion in a single voice.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Interval, MAJOR_THIRD, MAJOR_TENTH};
+///
+/// let mut interval = MAJOR_THIRD;
+/// interval >>= 1;  // Shift up one octave
+/// assert_eq!(interval, MAJOR_TENTH);
+///
+/// // Shift up another octave
+/// interval >>= 1;
+/// assert_eq!(interval.semitones(), 28);  // 4 + (12 * 2)
+/// ```
+///
+/// # Musical Context
+/// In-place octave shifts are useful for:
+/// - Progressive voice leading
+/// - Building ascending harmonic sequences
+/// - Creating registral expansion effects
 impl ShrAssign<u8> for Interval {
-    /// Shifts an interval up by the specified number of octaves in place.
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::{Interval, MAJOR_THIRD, MAJOR_TENTH};
-    ///
-    /// let mut interval = MAJOR_THIRD;
-    /// interval >>= 1;  // Shift up one octave
-    /// assert_eq!(interval, MAJOR_TENTH);
-    /// ```
     fn shr_assign(&mut self, shift: u8) {
         self.0 += shift * PERFECT_OCTAVE.0;
     }

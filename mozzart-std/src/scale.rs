@@ -7,6 +7,7 @@
 
 use crate::Pitch;
 use std::ops::{Shl, ShlAssign, Shr, ShrAssign};
+
 /// Represents the quality (or type) of a musical scale.
 ///
 /// Each quality defines a specific pattern of intervals that characterizes the scale:
@@ -211,6 +212,7 @@ impl<const N: usize> Shr<u8> for Scale<N> {
     type Output = Self;
 
     fn shr(self, shift: u8) -> Self::Output {
+
         let pitches: [Pitch; N] = self.pitches.map(|p| p >> shift);
         Self::new(self.quality, pitches)
     }
@@ -278,7 +280,6 @@ impl<const N: usize> ShlAssign<u8> for Scale<N> {
         self.pitches = self.pitches.map(|p| p << shift);
     }
 }
-
 #[cfg(test)]
 mod tests {
     use super::*;

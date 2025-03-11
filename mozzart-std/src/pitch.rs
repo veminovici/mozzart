@@ -1,5 +1,5 @@
 use crate::utils::SEMITONES_PER_OCTAVE;
-use crate::Interval;
+use crate::{Interval, Scale, HARMONIC_SCALES, MAJOR_SCALES, MELODIC_SCALES, MINOR_SCALES};
 use std::{
     fmt::Debug,
     ops::{Add, AddAssign, Shl, ShlAssign, Shr, ShrAssign, Sub, SubAssign},
@@ -47,6 +47,122 @@ impl Pitch {
     #[inline(always)]
     pub(crate) const fn new(midi_note: u8) -> Self {
         Pitch(midi_note)
+    }
+
+    /// Returns the major scale starting from this pitch.
+    ///
+    /// The major scale is one of the most common scales in Western music, characterized by
+    /// its bright, happy sound. It consists of seven notes plus the octave, following the
+    /// interval pattern: TONE, TONE, SEMITONE, TONE, TONE, TONE, SEMITONE.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use mozzart_std::{C4, C5, Scale};
+    ///
+    /// // Get the major scale starting from middle C (C4)
+    /// let c_major = C4.major_scale();
+    ///
+    /// // The scale contains notes: C4, D4, E4, F4, G4, A4, B4, C5
+    /// assert_eq!(c_major.pitches()[0], C4);
+    /// assert_eq!(c_major.pitches()[7], C5);
+    /// ```
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if the pitch is not found in the `MAJOR_SCALES` HashMap.
+    /// This should not happen for any valid MIDI pitch within the standard range (0-127).
+    #[inline(always)]
+    pub fn major_scale(&self) -> &Scale<8> {
+        MAJOR_SCALES.get(self).unwrap()
+    }
+
+    /// Returns the natural minor scale starting from this pitch.
+    ///
+    /// The natural minor scale (also called the Aeolian mode) has a more melancholic
+    /// or somber sound compared to the major scale. It consists of seven notes plus
+    /// the octave, following the interval pattern: TONE, SEMITONE, TONE, TONE, SEMITONE, TONE, TONE.
+    ///
+    /// This is different from both the harmonic minor (which raises the 7th degree) and the
+    /// melodic minor (which raises both the 6th and 7th degrees when ascending).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use mozzart_std::{A4, A5, Scale};
+    ///
+    /// // Get the minor scale starting from A4
+    /// let a_minor = A4.minor_scale();
+    ///
+    /// // The scale contains notes: A4, B4, C5, D5, E5, F5, G5, A5
+    /// assert_eq!(a_minor.pitches()[0], A4);
+    /// assert_eq!(a_minor.pitches()[7], A5);
+    /// ```
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if the pitch is not found in the `MINOR_SCALES` HashMap.
+    /// This should not happen for any valid MIDI pitch within the standard range (0-127).
+    #[inline(always)]
+    pub fn minor_scale(&self) -> &Scale<8> {
+        MINOR_SCALES.get(self).unwrap()
+    }
+
+    /// Returns the harmonic scale starting from this pitch.
+    ///
+    /// The harmonic scale is a collection of pitches that are related by a specific interval pattern.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use mozzart_std::{C4, Scale, TONE, SEMITONE, UNISON, MINOR_THIRD};
+    ///
+    /// // Get the harmonic scale starting from middle C
+    /// let c_harmonic = C4.harmonic_scale();
+    ///
+    /// // The scale contains the expected intervals for a harmonic scale
+    /// assert_eq!(c_harmonic.steps(), [
+    ///     UNISON, TONE, SEMITONE, TONE, TONE, SEMITONE, MINOR_THIRD, SEMITONE
+    /// ]);
+    /// ```
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if the pitch is not found in the `HARMONIC_SCALES` HashMap.
+    /// This should not happen for any valid MIDI pitch within the standard range (0-127).
+    #[inline(always)]
+    pub fn harmonic_scale(&self) -> &Scale<8> {
+        HARMONIC_SCALES.get(self).unwrap()
+    }
+
+    /// Returns the melodic minor scale starting from this pitch.
+    ///
+    /// The melodic minor scale ascends with raised 6th and 7th degrees compared to the natural minor scale,
+    /// but descends as a natural minor scale. In this implementation, we refer to the ascending form.
+    ///
+    /// The melodic minor scale has the interval pattern: TONE, SEMITONE, TONE, TONE, TONE, TONE, SEMITONE.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use mozzart_std::{C4, Scale, TONE, SEMITONE, UNISON};
+    ///
+    /// // Get the melodic minor scale starting from middle C
+    /// let c_melodic = C4.melodic_scale();
+    ///
+    /// // The scale contains the expected intervals for a melodic minor scale
+    /// assert_eq!(c_melodic.steps(), [
+    ///     UNISON, TONE, SEMITONE, TONE, TONE, TONE, TONE, SEMITONE
+    /// ]);
+    /// ```
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if the pitch is not found in the `MELODIC_SCALES` HashMap.
+    /// This should not happen for any valid MIDI pitch within the standard range (0-127).
+    #[inline(always)]
+    pub fn melodic_scale(&self) -> &Scale<8> {
+        MELODIC_SCALES.get(self).unwrap()
     }
 }
 
@@ -811,5 +927,135 @@ mod tests {
         }
         // C6 - fifth = F5, - third = D5, - octave = D4
         assert_eq!(pitch, CSHARP4);
+    }
+
+    #[test]
+    fn test_pitch_melodic_scale() {
+        // Test that we can get melodic scales for different octaves
+        let c0_melodic = C0.melodic_scale();
+        let d3_melodic = D3.melodic_scale();
+        let fsharp5_melodic = FSHARP5.melodic_scale();
+        let gsharp7_melodic = GSHARP7.melodic_scale();
+
+        // Verify that each scale returns the expected steps
+        assert_eq!(c0_melodic.steps(), MELODIC_SCALE_STEPS);
+        assert_eq!(d3_melodic.steps(), MELODIC_SCALE_STEPS);
+        assert_eq!(fsharp5_melodic.steps(), MELODIC_SCALE_STEPS);
+        assert_eq!(gsharp7_melodic.steps(), MELODIC_SCALE_STEPS);
+
+        // Verify that the first note of each scale is the expected pitch
+        assert_eq!(c0_melodic.pitches()[0], C0);
+        assert_eq!(d3_melodic.pitches()[0], D3);
+        assert_eq!(fsharp5_melodic.pitches()[0], FSHARP5);
+        assert_eq!(gsharp7_melodic.pitches()[0], GSHARP7);
+
+        // Test with high octave (octave 8) pitches
+        let c8_melodic = C8.melodic_scale();
+        let d8_melodic = D8.melodic_scale();
+        let g8_melodic = G8.melodic_scale();
+
+        assert_eq!(c8_melodic.steps(), MELODIC_SCALE_STEPS);
+        assert_eq!(d8_melodic.steps(), MELODIC_SCALE_STEPS);
+        assert_eq!(g8_melodic.steps(), MELODIC_SCALE_STEPS);
+
+        // Check that the scales contain the expected first and last notes
+        assert_eq!(c8_melodic.pitches()[0], C8);
+        assert_eq!(c8_melodic.pitches()[7], C9);
+        assert_eq!(d8_melodic.pitches()[0], D8);
+        assert_eq!(d8_melodic.pitches()[7], D9);
+        assert_eq!(g8_melodic.pitches()[0], G8);
+        assert_eq!(g8_melodic.pitches()[7], G9);
+    }
+
+    #[test]
+    fn test_pitch_major_scale() {
+        // Test major scales across different octaves
+        let c0_major = C0.major_scale();
+        let f2_major = F2.major_scale();
+        let a4_major = A4.major_scale();
+        let e6_major = E6.major_scale();
+        let g8_major = G8.major_scale();
+
+        // Verify that each scale follows the major scale pattern
+        // Use .as_slice() to compare with the expected steps pattern
+        let major_steps = [UNISON, TONE, TONE, SEMITONE, TONE, TONE, TONE, SEMITONE];
+        assert_eq!(c0_major.steps().as_slice(), major_steps.as_slice());
+        assert_eq!(f2_major.steps().as_slice(), major_steps.as_slice());
+        assert_eq!(a4_major.steps().as_slice(), major_steps.as_slice());
+        assert_eq!(e6_major.steps().as_slice(), major_steps.as_slice());
+        assert_eq!(g8_major.steps().as_slice(), major_steps.as_slice());
+
+        // Verify that the first note of each scale is the root pitch
+        assert_eq!(c0_major.pitches()[0], C0);
+        assert_eq!(f2_major.pitches()[0], F2);
+        assert_eq!(a4_major.pitches()[0], A4);
+        assert_eq!(e6_major.pitches()[0], E6);
+        assert_eq!(g8_major.pitches()[0], G8);
+
+        // Verify that the last note is an octave above the first
+        assert_eq!(c0_major.pitches()[7], C1);
+        assert_eq!(f2_major.pitches()[7], F3);
+        assert_eq!(a4_major.pitches()[7], A5);
+        assert_eq!(e6_major.pitches()[7], E7);
+        assert_eq!(g8_major.pitches()[7], G9);
+
+        // Test that specific major scales contain the expected notes
+        let c4_major = C4.major_scale();
+        let c4_expected = [C4, D4, E4, F4, G4, A4, B4, C5];
+        for (i, &pitch) in c4_expected.iter().enumerate() {
+            assert_eq!(c4_major.pitches()[i], pitch);
+        }
+
+        let g3_major = G3.major_scale();
+        let g3_expected = [G3, A3, B3, C4, D4, E4, FSHARP4, G4];
+        for (i, &pitch) in g3_expected.iter().enumerate() {
+            assert_eq!(g3_major.pitches()[i], pitch);
+        }
+    }
+
+    #[test]
+    fn test_pitch_minor_scale() {
+        // Test minor scales across different octaves
+        let a0_minor = A0.minor_scale();
+        let d2_minor = D2.minor_scale();
+        let e4_minor = E4.minor_scale();
+        let b6_minor = B6.minor_scale();
+        let c8_minor = C8.minor_scale();
+
+        // Verify that each scale follows the minor scale pattern
+        // Use .as_slice() to compare with the expected steps pattern
+        let minor_steps = [UNISON, TONE, SEMITONE, TONE, TONE, SEMITONE, TONE, TONE];
+        assert_eq!(a0_minor.steps().as_slice(), minor_steps.as_slice());
+        assert_eq!(d2_minor.steps().as_slice(), minor_steps.as_slice());
+        assert_eq!(e4_minor.steps().as_slice(), minor_steps.as_slice());
+        assert_eq!(b6_minor.steps().as_slice(), minor_steps.as_slice());
+        assert_eq!(c8_minor.steps().as_slice(), minor_steps.as_slice());
+
+        // Verify that the first note of each scale is the root pitch
+        assert_eq!(a0_minor.pitches()[0], A0);
+        assert_eq!(d2_minor.pitches()[0], D2);
+        assert_eq!(e4_minor.pitches()[0], E4);
+        assert_eq!(b6_minor.pitches()[0], B6);
+        assert_eq!(c8_minor.pitches()[0], C8);
+
+        // Verify that the last note is an octave above the first
+        assert_eq!(a0_minor.pitches()[7], A1);
+        assert_eq!(d2_minor.pitches()[7], D3);
+        assert_eq!(e4_minor.pitches()[7], E5);
+        assert_eq!(b6_minor.pitches()[7], B7);
+        assert_eq!(c8_minor.pitches()[7], C9);
+
+        // Test that specific minor scales contain the expected notes
+        let a4_minor = A4.minor_scale();
+        let a4_expected = [A4, B4, C5, D5, E5, F5, G5, A5];
+        for (i, &pitch) in a4_expected.iter().enumerate() {
+            assert_eq!(a4_minor.pitches()[i], pitch);
+        }
+
+        let e3_minor = E3.minor_scale();
+        let e3_expected = [E3, FSHARP3, G3, A3, B3, C4, D4, E4];
+        for (i, &pitch) in e3_expected.iter().enumerate() {
+            assert_eq!(e3_minor.pitches()[i], pitch);
+        }
     }
 }

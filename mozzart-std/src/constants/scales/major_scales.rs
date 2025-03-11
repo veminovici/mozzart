@@ -570,147 +570,124 @@ lazy_static! {
     /// used for creating melodies, harmonies, and understanding key centers.
     /// Having access to all possible major scales enables musical operations
     /// in any key across the entire MIDI range.
-    pub static ref MAJOR_SCALES: std::collections::HashMap<Pitch, Scale<8>> = {
-        let mut scales = HashMap::new();
-
-        // Add octave-independent scales
-        scales.insert(C, C_MAJOR_SCALE);
-        scales.insert(CSHARP, CSHARP_MAJOR_SCALE);
-        scales.insert(D, D_MAJOR_SCALE);
-        scales.insert(DSHARP, DSHARP_MAJOR_SCALE);
-        scales.insert(E, E_MAJOR_SCALE);
-        scales.insert(F, F_MAJOR_SCALE);
-        scales.insert(FSHARP, FSHARP_MAJOR_SCALE);
-        scales.insert(G, G_MAJOR_SCALE);
-        scales.insert(GSHARP, GSHARP_MAJOR_SCALE);
-        scales.insert(A, A_MAJOR_SCALE);
-        scales.insert(ASHARP, ASHARP_MAJOR_SCALE);
-        scales.insert(B, B_MAJOR_SCALE);
-
-        // Add octave 0 scales (lowest MIDI octave)
-        scales.insert(C0, C0_MAJOR_SCALE);
-        scales.insert(CSHARP0, CSHARP0_MAJOR_SCALE);
-        scales.insert(D0, D0_MAJOR_SCALE);
-        scales.insert(DSHARP0, DSHARP0_MAJOR_SCALE);
-        scales.insert(E0, E0_MAJOR_SCALE);
-        scales.insert(F0, F0_MAJOR_SCALE);
-        scales.insert(FSHARP0, FSHARP0_MAJOR_SCALE);
-        scales.insert(G0, G0_MAJOR_SCALE);
-        scales.insert(GSHARP0, GSHARP0_MAJOR_SCALE);
-        scales.insert(A0, A0_MAJOR_SCALE);
-        scales.insert(ASHARP0, ASHARP0_MAJOR_SCALE);
-        scales.insert(B0, B0_MAJOR_SCALE);
-
-        // Add octave 1 scales (low bass register)
-        scales.insert(C1, C1_MAJOR_SCALE);
-        scales.insert(CSHARP1, CSHARP1_MAJOR_SCALE);
-        scales.insert(D1, D1_MAJOR_SCALE);
-        scales.insert(DSHARP1, DSHARP1_MAJOR_SCALE);
-        scales.insert(E1, E1_MAJOR_SCALE);
-        scales.insert(F1, F1_MAJOR_SCALE);
-        scales.insert(FSHARP1, FSHARP1_MAJOR_SCALE);
-        scales.insert(G1, G1_MAJOR_SCALE);
-        scales.insert(GSHARP1, GSHARP1_MAJOR_SCALE);
-        scales.insert(A1, A1_MAJOR_SCALE);
-        scales.insert(ASHARP1, ASHARP1_MAJOR_SCALE);
-        scales.insert(B1, B1_MAJOR_SCALE);
-
-        // Add octave 2 scales (bass register)
-        scales.insert(C2, C2_MAJOR_SCALE);
-        scales.insert(CSHARP2, CSHARP2_MAJOR_SCALE);
-        scales.insert(D2, D2_MAJOR_SCALE);
-        scales.insert(DSHARP2, DSHARP2_MAJOR_SCALE);
-        scales.insert(E2, E2_MAJOR_SCALE);
-        scales.insert(F2, F2_MAJOR_SCALE);
-        scales.insert(FSHARP2, FSHARP2_MAJOR_SCALE);
-        scales.insert(G2, G2_MAJOR_SCALE);
-        scales.insert(GSHARP2, GSHARP2_MAJOR_SCALE);
-        scales.insert(A2, A2_MAJOR_SCALE);
-        scales.insert(ASHARP2, ASHARP2_MAJOR_SCALE);
-        scales.insert(B2, B2_MAJOR_SCALE);
-
-        // Add octave 3 scales (lower middle register)
-        scales.insert(C3, C3_MAJOR_SCALE);
-        scales.insert(CSHARP3, CSHARP3_MAJOR_SCALE);
-        scales.insert(D3, D3_MAJOR_SCALE);
-        scales.insert(DSHARP3, DSHARP3_MAJOR_SCALE);
-        scales.insert(E3, E3_MAJOR_SCALE);
-        scales.insert(F3, F3_MAJOR_SCALE);
-        scales.insert(FSHARP3, FSHARP3_MAJOR_SCALE);
-        scales.insert(G3, G3_MAJOR_SCALE);
-        scales.insert(GSHARP3, GSHARP3_MAJOR_SCALE);
-        scales.insert(A3, A3_MAJOR_SCALE);
-        scales.insert(ASHARP3, ASHARP3_MAJOR_SCALE);
-        scales.insert(B3, B3_MAJOR_SCALE);
-
-        // Add octave 4 scales (middle register - includes middle C)
-        scales.insert(C4, C4_MAJOR_SCALE);
-        scales.insert(CSHARP4, CSHARP4_MAJOR_SCALE);
-        scales.insert(D4, D4_MAJOR_SCALE);
-        scales.insert(DSHARP4, DSHARP4_MAJOR_SCALE);
-        scales.insert(E4, E4_MAJOR_SCALE);
-        scales.insert(F4, F4_MAJOR_SCALE);
-        scales.insert(FSHARP4, FSHARP4_MAJOR_SCALE);
-        scales.insert(G4, G4_MAJOR_SCALE);
-        scales.insert(GSHARP4, GSHARP4_MAJOR_SCALE);
-        scales.insert(A4, A4_MAJOR_SCALE); // A4 = 440Hz concert pitch
-        scales.insert(ASHARP4, ASHARP4_MAJOR_SCALE);
-        scales.insert(B4, B4_MAJOR_SCALE);
-
-        // Add octave 5 scales (higher middle register)
-        scales.insert(C5, C5_MAJOR_SCALE);
-        scales.insert(CSHARP5, CSHARP5_MAJOR_SCALE);
-        scales.insert(D5, D5_MAJOR_SCALE);
-        scales.insert(DSHARP5, DSHARP5_MAJOR_SCALE);
-        scales.insert(E5, E5_MAJOR_SCALE);
-        scales.insert(F5, F5_MAJOR_SCALE);
-        scales.insert(FSHARP5, FSHARP5_MAJOR_SCALE);
-        scales.insert(G5, G5_MAJOR_SCALE);
-        scales.insert(GSHARP5, GSHARP5_MAJOR_SCALE);
-        scales.insert(A5, A5_MAJOR_SCALE);
-        scales.insert(ASHARP5, ASHARP5_MAJOR_SCALE);
-        scales.insert(B5, B5_MAJOR_SCALE);
-
-        // Add octave 6 scales (high register)
-        scales.insert(C6, C6_MAJOR_SCALE);
-        scales.insert(CSHARP6, CSHARP6_MAJOR_SCALE);
-        scales.insert(D6, D6_MAJOR_SCALE);
-        scales.insert(DSHARP6, DSHARP6_MAJOR_SCALE);
-        scales.insert(E6, E6_MAJOR_SCALE);
-        scales.insert(F6, F6_MAJOR_SCALE);
-        scales.insert(FSHARP6, FSHARP6_MAJOR_SCALE);
-        scales.insert(G6, G6_MAJOR_SCALE);
-        scales.insert(GSHARP6, GSHARP6_MAJOR_SCALE);
-        scales.insert(A6, A6_MAJOR_SCALE);
-        scales.insert(ASHARP6, ASHARP6_MAJOR_SCALE);
-        scales.insert(B6, B6_MAJOR_SCALE);
-
-        // Add octave 7 scales (very high register)
-        scales.insert(C7, C7_MAJOR_SCALE);
-        scales.insert(CSHARP7, CSHARP7_MAJOR_SCALE);
-        scales.insert(D7, D7_MAJOR_SCALE);
-        scales.insert(DSHARP7, DSHARP7_MAJOR_SCALE);
-        scales.insert(E7, E7_MAJOR_SCALE);
-        scales.insert(F7, F7_MAJOR_SCALE);
-        scales.insert(FSHARP7, FSHARP7_MAJOR_SCALE);
-        scales.insert(G7, G7_MAJOR_SCALE);
-        scales.insert(GSHARP7, GSHARP7_MAJOR_SCALE);
-        scales.insert(A7, A7_MAJOR_SCALE);
-        scales.insert(ASHARP7, ASHARP7_MAJOR_SCALE);
-        scales.insert(B7, B7_MAJOR_SCALE);
-
-        // Add octave 8 scales (highest MIDI range)
-        scales.insert(C8, C8_MAJOR_SCALE);
-        scales.insert(CSHARP8, CSHARP8_MAJOR_SCALE);
-        scales.insert(D8, D8_MAJOR_SCALE);
-        scales.insert(DSHARP8, DSHARP8_MAJOR_SCALE);
-        scales.insert(E8, E8_MAJOR_SCALE);
-        scales.insert(F8, F8_MAJOR_SCALE);
-        scales.insert(FSHARP8, FSHARP8_MAJOR_SCALE);
-        scales.insert(G8, G8_MAJOR_SCALE); // G8 is effectively the highest major scale in MIDI
-
-        scales
-    };
+    pub static ref MAJOR_SCALES: std::collections::HashMap<Pitch, Scale<8>> = HashMap::from([
+        (C, C_MAJOR_SCALE),
+        (CSHARP, CSHARP_MAJOR_SCALE),
+        (D, D_MAJOR_SCALE),
+        (DSHARP, DSHARP_MAJOR_SCALE),
+        (E, E_MAJOR_SCALE),
+        (F, F_MAJOR_SCALE),
+        (FSHARP, FSHARP_MAJOR_SCALE),
+        (G, G_MAJOR_SCALE),
+        (GSHARP, GSHARP_MAJOR_SCALE),
+        (A, A_MAJOR_SCALE),
+        (ASHARP, ASHARP_MAJOR_SCALE),
+        (B, B_MAJOR_SCALE),
+        (C0, C0_MAJOR_SCALE),
+        (CSHARP0, CSHARP0_MAJOR_SCALE),
+        (D0, D0_MAJOR_SCALE),
+        (DSHARP0, DSHARP0_MAJOR_SCALE),
+        (E0, E0_MAJOR_SCALE),
+        (F0, F0_MAJOR_SCALE),
+        (FSHARP0, FSHARP0_MAJOR_SCALE),
+        (G0, G0_MAJOR_SCALE),
+        (GSHARP0, GSHARP0_MAJOR_SCALE),
+        (A0, A0_MAJOR_SCALE),
+        (ASHARP0, ASHARP0_MAJOR_SCALE),
+        (B0, B0_MAJOR_SCALE),
+        (C1, C1_MAJOR_SCALE),
+        (CSHARP1, CSHARP1_MAJOR_SCALE),
+        (D1, D1_MAJOR_SCALE),
+        (DSHARP1, DSHARP1_MAJOR_SCALE),
+        (E1, E1_MAJOR_SCALE),
+        (F1, F1_MAJOR_SCALE),
+        (FSHARP1, FSHARP1_MAJOR_SCALE),
+        (G1, G1_MAJOR_SCALE),
+        (GSHARP1, GSHARP1_MAJOR_SCALE),
+        (A1, A1_MAJOR_SCALE),
+        (ASHARP1, ASHARP1_MAJOR_SCALE),
+        (B1, B1_MAJOR_SCALE),
+        (C2, C2_MAJOR_SCALE),
+        (CSHARP2, CSHARP2_MAJOR_SCALE),
+        (D2, D2_MAJOR_SCALE),
+        (DSHARP2, DSHARP2_MAJOR_SCALE),
+        (E2, E2_MAJOR_SCALE),
+        (F2, F2_MAJOR_SCALE),
+        (FSHARP2, FSHARP2_MAJOR_SCALE),
+        (G2, G2_MAJOR_SCALE),
+        (GSHARP2, GSHARP2_MAJOR_SCALE),
+        (A2, A2_MAJOR_SCALE),
+        (ASHARP2, ASHARP2_MAJOR_SCALE),
+        (B2, B2_MAJOR_SCALE),
+        (C3, C3_MAJOR_SCALE),
+        (CSHARP3, CSHARP3_MAJOR_SCALE),
+        (D3, D3_MAJOR_SCALE),
+        (DSHARP3, DSHARP3_MAJOR_SCALE),
+        (E3, E3_MAJOR_SCALE),
+        (F3, F3_MAJOR_SCALE),
+        (FSHARP3, FSHARP3_MAJOR_SCALE),
+        (G3, G3_MAJOR_SCALE),
+        (GSHARP3, GSHARP3_MAJOR_SCALE),
+        (A3, A3_MAJOR_SCALE),
+        (ASHARP3, ASHARP3_MAJOR_SCALE),
+        (B3, B3_MAJOR_SCALE),
+        (C4, C4_MAJOR_SCALE),
+        (CSHARP4, CSHARP4_MAJOR_SCALE),
+        (D4, D4_MAJOR_SCALE),
+        (DSHARP4, DSHARP4_MAJOR_SCALE),
+        (E4, E4_MAJOR_SCALE),
+        (F4, F4_MAJOR_SCALE),
+        (FSHARP4, FSHARP4_MAJOR_SCALE),
+        (G4, G4_MAJOR_SCALE),
+        (GSHARP4, GSHARP4_MAJOR_SCALE),
+        (A4, A4_MAJOR_SCALE),
+        (ASHARP4, ASHARP4_MAJOR_SCALE),
+        (B4, B4_MAJOR_SCALE),
+        (C5, C5_MAJOR_SCALE),
+        (CSHARP5, CSHARP5_MAJOR_SCALE),
+        (D5, D5_MAJOR_SCALE),
+        (DSHARP5, DSHARP5_MAJOR_SCALE),
+        (E5, E5_MAJOR_SCALE),
+        (F5, F5_MAJOR_SCALE),
+        (FSHARP5, FSHARP5_MAJOR_SCALE),
+        (G5, G5_MAJOR_SCALE),
+        (GSHARP5, GSHARP5_MAJOR_SCALE),
+        (A5, A5_MAJOR_SCALE),
+        (ASHARP5, ASHARP5_MAJOR_SCALE),
+        (B5, B5_MAJOR_SCALE),
+        (C6, C6_MAJOR_SCALE),
+        (CSHARP6, CSHARP6_MAJOR_SCALE),
+        (D6, D6_MAJOR_SCALE),
+        (DSHARP6, DSHARP6_MAJOR_SCALE),
+        (E6, E6_MAJOR_SCALE),
+        (F6, F6_MAJOR_SCALE),
+        (FSHARP6, FSHARP6_MAJOR_SCALE),
+        (G6, G6_MAJOR_SCALE),
+        (GSHARP6, GSHARP6_MAJOR_SCALE),
+        (A6, A6_MAJOR_SCALE),
+        (ASHARP6, ASHARP6_MAJOR_SCALE),
+        (B6, B6_MAJOR_SCALE),
+        (C7, C7_MAJOR_SCALE),
+        (CSHARP7, CSHARP7_MAJOR_SCALE),
+        (D7, D7_MAJOR_SCALE),
+        (DSHARP7, DSHARP7_MAJOR_SCALE),
+        (E7, E7_MAJOR_SCALE),
+        (F7, F7_MAJOR_SCALE),
+        (FSHARP7, FSHARP7_MAJOR_SCALE),
+        (G7, G7_MAJOR_SCALE),
+        (GSHARP7, GSHARP7_MAJOR_SCALE),
+        (A7, A7_MAJOR_SCALE),
+        (ASHARP7, ASHARP7_MAJOR_SCALE),
+        (B7, B7_MAJOR_SCALE),
+        (C8, C8_MAJOR_SCALE),
+        (CSHARP8, CSHARP8_MAJOR_SCALE),
+        (D8, D8_MAJOR_SCALE),
+        (DSHARP8, DSHARP8_MAJOR_SCALE),
+        (E8, E8_MAJOR_SCALE),
+        (F8, F8_MAJOR_SCALE),
+        (FSHARP8, FSHARP8_MAJOR_SCALE),
+        (G8, G8_MAJOR_SCALE),
+    ]);
 }
 
 #[cfg(test)]

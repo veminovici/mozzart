@@ -868,7 +868,7 @@ mod tests {
         assert_eq!(HARMONIC_SCALES.get(&FSHARP2), Some(&FSHARP2_HARMONIC_SCALE));
         assert_eq!(HARMONIC_SCALES.get(&G2), Some(&G2_HARMONIC_SCALE));
         assert_eq!(HARMONIC_SCALES.get(&GSHARP2), Some(&GSHARP2_HARMONIC_SCALE));
-        assert_eq!(HARMONIC_SCALES.get(&A2), Some(&A2_HARMONIC_SCALE));  
+        assert_eq!(HARMONIC_SCALES.get(&A2), Some(&A2_HARMONIC_SCALE));
         assert_eq!(HARMONIC_SCALES.get(&ASHARP2), Some(&ASHARP2_HARMONIC_SCALE));
         assert_eq!(HARMONIC_SCALES.get(&B2), Some(&B2_HARMONIC_SCALE));
     }
@@ -963,5 +963,5 @@ mod tests {
         assert_eq!(HARMONIC_SCALES.get(&F8), Some(&F8_HARMONIC_SCALE));
         assert_eq!(HARMONIC_SCALES.get(&FSHARP8), Some(&FSHARP8_HARMONIC_SCALE));
         assert_eq!(HARMONIC_SCALES.get(&G8), Some(&G8_HARMONIC_SCALE));
-    }   
+    }
 }

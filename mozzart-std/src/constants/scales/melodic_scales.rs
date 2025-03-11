@@ -864,18 +864,18 @@ mod tests {
 
     #[test]
     fn test_scales_contains_canonical() {
-        assert_eq!(MELODIC_SCALES.contains_key(&C), true);
-        assert_eq!(MELODIC_SCALES.contains_key(&CSHARP), true);
-        assert_eq!(MELODIC_SCALES.contains_key(&D), true);
-        assert_eq!(MELODIC_SCALES.contains_key(&DSHARP), true);
-        assert_eq!(MELODIC_SCALES.contains_key(&E), true);
-        assert_eq!(MELODIC_SCALES.contains_key(&F), true);
-        assert_eq!(MELODIC_SCALES.contains_key(&FSHARP), true);
-        assert_eq!(MELODIC_SCALES.contains_key(&G), true);
-        assert_eq!(MELODIC_SCALES.contains_key(&GSHARP), true);
-        assert_eq!(MELODIC_SCALES.contains_key(&A), true);
-        assert_eq!(MELODIC_SCALES.contains_key(&ASHARP), true);
-        assert_eq!(MELODIC_SCALES.contains_key(&B), true);
+        assert_eq!(MELODIC_SCALES.get(&C), Some(&C_MELODIC_SCALE));
+        assert_eq!(MELODIC_SCALES.get(&CSHARP), Some(&CSHARP_MELODIC_SCALE));
+        assert_eq!(MELODIC_SCALES.get(&D), Some(&D_MELODIC_SCALE));
+        assert_eq!(MELODIC_SCALES.get(&DSHARP), Some(&DSHARP_MELODIC_SCALE));
+        assert_eq!(MELODIC_SCALES.get(&E), Some(&E_MELODIC_SCALE));
+        assert_eq!(MELODIC_SCALES.get(&F), Some(&F_MELODIC_SCALE));
+        assert_eq!(MELODIC_SCALES.get(&FSHARP), Some(&FSHARP_MELODIC_SCALE));
+        assert_eq!(MELODIC_SCALES.get(&G), Some(&G_MELODIC_SCALE));
+        assert_eq!(MELODIC_SCALES.get(&GSHARP), Some(&GSHARP_MELODIC_SCALE));
+        assert_eq!(MELODIC_SCALES.get(&A), Some(&A_MELODIC_SCALE));
+        assert_eq!(MELODIC_SCALES.get(&ASHARP), Some(&ASHARP_MELODIC_SCALE));
+        assert_eq!(MELODIC_SCALES.get(&B), Some(&B_MELODIC_SCALE));
     }
 
     #[test]

@@ -67,6 +67,47 @@ impl<const N: usize> Scale<N> {
         Self { quality, pitches }
     }
 
+    /// Creates a new scale from a root pitch and an array of intervals.
+    ///
+    /// This method constructs a scale by:
+    /// 1. Starting with a root pitch
+    /// 2. Adding successive intervals to create each scale degree
+    ///
+    /// The interval steps represent the distance from the root to each scale degree,
+    /// not the distance between adjacent notes (which would be returned by `steps()`).
+    ///
+    /// # Arguments
+    /// * `quality` - The scale quality (major, minor, harmonic, melodic)
+    /// * `root` - The starting pitch of the scale
+    /// * `steps` - An array of intervals from the root to each scale degree
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Scale, ScaleQuality, C4, UNISON, MAJOR_SECOND, MAJOR_THIRD,
+    ///                   PERFECT_FOURTH, PERFECT_FIFTH, MAJOR_SIXTH, MAJOR_SEVENTH, PERFECT_OCTAVE};
+    ///
+    /// // Create a C major scale using intervals from the root
+    /// let major_steps = [UNISON, MAJOR_SECOND, MAJOR_THIRD, PERFECT_FOURTH,
+    ///                    PERFECT_FIFTH, MAJOR_SIXTH, MAJOR_SEVENTH, PERFECT_OCTAVE];
+    /// let c_major = Scale::from_steps(ScaleQuality::Major, C4, major_steps);
+    ///
+    /// // First note is the root
+    /// assert_eq!(c_major.pitches()[0], C4);
+    /// ```
+    ///
+    /// # Musical Context
+    /// This method is useful for:
+    /// - Creating custom scales from interval patterns
+    /// - Building scales from mode patterns (e.g., Dorian, Phrygian)
+    /// - Implementing exotic or non-Western scales
+    pub fn from_steps(quality: ScaleQuality, root: Pitch, steps: [Interval; N]) -> Self {
+        let mut pitches = [root; N];
+        for (i, step) in steps.iter().enumerate() {
+            pitches[i] = root + step;
+        }
+        Self::new(quality, pitches)
+    }
+
     /// Creates a new major scale from the given pitches.
     ///
     /// A major scale follows the whole-whole-half-whole-whole-whole-half step pattern (W-W-H-W-W-W-H).
@@ -556,5 +597,81 @@ mod tests {
         // let short_steps = short_scale.steps();
         // assert_eq!(short_steps[0], TONE); // C-D: 2 semitones
         // assert_eq!(short_steps[1], TONE); // D-E: 2 semitones
+    }
+
+    #[test]
+    fn test_scale_from_steps() {
+        use crate::{
+            ScaleQuality, MAJOR_SECOND, MAJOR_SEVENTH, MAJOR_SIXTH, MAJOR_THIRD, PERFECT_FIFTH,
+            PERFECT_FOURTH, PERFECT_OCTAVE, UNISON,
+        };
+        use crate::{MINOR_SEVENTH, MINOR_SIXTH, MINOR_THIRD};
+
+        // Test creating a major scale using from_steps
+        let major_steps = [
+            UNISON,         // Root
+            MAJOR_SECOND,   // 2nd
+            MAJOR_THIRD,    // 3rd
+            PERFECT_FOURTH, // 4th
+            PERFECT_FIFTH,  // 5th
+            MAJOR_SIXTH,    // 6th
+            MAJOR_SEVENTH,  // 7th
+            PERFECT_OCTAVE, // Octave
+        ];
+        let c4_major = Scale::from_steps(ScaleQuality::Major, C4, major_steps);
+
+        // Verify the pitches match C4 major scale
+        assert_eq!(c4_major.root(), C4);
+        assert_eq!(c4_major.pitches()[0], C4);
+        assert_eq!(c4_major.pitches()[1], D4);
+        assert_eq!(c4_major.pitches()[2], E4);
+        assert_eq!(c4_major.pitches()[3], F4);
+        assert_eq!(c4_major.pitches()[4], G4);
+        assert_eq!(c4_major.pitches()[5], A4);
+        assert_eq!(c4_major.pitches()[6], B4);
+        assert_eq!(c4_major.pitches()[7], C5);
+
+        // Test creating a natural minor scale using from_steps
+        let minor_steps = [
+            UNISON,         // Root
+            MAJOR_SECOND,   // 2nd
+            MINOR_THIRD,    // ♭3rd
+            PERFECT_FOURTH, // 4th
+            PERFECT_FIFTH,  // 5th
+            MINOR_SIXTH,    // ♭6th
+            MINOR_SEVENTH,  // ♭7th
+            PERFECT_OCTAVE, // Octave
+        ];
+        let a4_minor = Scale::from_steps(ScaleQuality::Minor, A4, minor_steps);
+
+        // Verify the pitches match A4 minor scale
+        assert_eq!(a4_minor.root(), A4);
+        assert_eq!(a4_minor.pitches()[0], A4);
+        assert_eq!(a4_minor.pitches()[1], B4);
+        assert_eq!(a4_minor.pitches()[2], C5);
+        assert_eq!(a4_minor.pitches()[3], D5);
+        assert_eq!(a4_minor.pitches()[4], E5);
+        assert_eq!(a4_minor.pitches()[5], F5);
+        assert_eq!(a4_minor.pitches()[6], G5);
+        assert_eq!(a4_minor.pitches()[7], A5);
+
+        // Test that scales created with different step patterns are different
+        assert_ne!(c4_major.steps(), a4_minor.steps());
+
+        // Test with a smaller scale (pentatonic-like structure)
+        let pentatonic_steps = [
+            UNISON,
+            MAJOR_SECOND,
+            MAJOR_THIRD,
+            PERFECT_FIFTH,
+            MAJOR_SIXTH,
+        ];
+        let penta = Scale::from_steps(ScaleQuality::Major, G4, pentatonic_steps);
+
+        assert_eq!(penta.pitches()[0], G4);
+        assert_eq!(penta.pitches()[1], A4);
+        assert_eq!(penta.pitches()[2], B4);
+        assert_eq!(penta.pitches()[3], D5);
+        assert_eq!(penta.pitches()[4], E5);
     }
 }

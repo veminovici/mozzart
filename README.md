@@ -23,13 +23,14 @@ The workspace contains:
 ### Musical Constants
 - Pitch constants (e.g., `C4`, `A4`) for all notes across the MIDI range (octaves 0-8)
 - Interval constants (e.g., `MAJOR_THIRD`, `PERFECT_FIFTH`) for standard musical intervals
-- Scale constants for major, minor, harmonic, and melodic scales in all keys and octaves
+- Scale constants for major, minor, harmonic, melodic, and blues scales in all keys and octaves
 
 ### Scale System
 - Major scales with the classic diatonic pattern (TONE, TONE, SEMITONE, TONE, TONE, TONE, SEMITONE)
 - Natural minor scales (Aeolian mode) with their characteristic melancholic sound
 - Harmonic minor scales with the raised 7th degree
 - Melodic minor scales with raised 6th and 7th degrees (ascending form)
+- Blues scales with the characteristic "blue note" (♭5) for jazz, blues, and rock music
 - All scales available in all 12 keys across the entire MIDI range (octaves 0-8)
 
 ### Octave Shifting
@@ -62,6 +63,7 @@ let c_major_scale = C4.major_scale();
 let a_minor_scale = A4.minor_scale();
 let d_harmonic_scale = D4.harmonic_scale();
 let f_melodic_scale = F4.melodic_scale();
+let g_blues_scale = G4.blues_scale();
 
 // Octave shifting
 let c5 = C4 << 1;  // Shift C4 up one octave to C5
@@ -70,6 +72,9 @@ let c3 = C4 >> 1;  // Shift C4 down one octave to C3
 // Scale constants
 use mozzart_std::{C4_MAJOR_SCALE, C5_MAJOR_SCALE};
 assert_eq!(C4_MAJOR_SCALE.pitches()[0], C4);
+
+// The blues scale includes the "blue note" (♭5)
+assert_eq!(g_blues_scale.pitches()[3], CSHARP5); // The blue note in G blues
 ```
 
 ## Building

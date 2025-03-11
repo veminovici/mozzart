@@ -12,7 +12,7 @@
 //! The library provides a rich set of musical constants through the [`constants`] module:
 //! - Pitch constants (e.g., `C4`, `A4`) for common reference pitches across all MIDI octaves (0-8)
 //! - Interval constants (e.g., `MAJOR_THIRD`, `PERFECT_FIFTH`) for standard musical intervals
-//! - Scale constants for major, minor, harmonic, and melodic scales in all keys and octaves
+//! - Scale constants for major, minor, harmonic, melodic, and blues scales in all keys and octaves
 //!
 //! # Scale System
 //! The library offers a comprehensive scale system with:
@@ -20,6 +20,7 @@
 //! - Natural minor scales: The Aeolian mode with its characteristic melancholy sound
 //! - Harmonic minor scales: Minor scales with a raised 7th degree
 //! - Melodic minor scales: Minor scales with raised 6th and 7th degrees when ascending
+//! - Blues scales: Minor pentatonic scales with an added "blue note" (♭5), essential for blues, jazz, and rock music
 //!
 //! Each scale type is available in all 12 keys across the entire MIDI range (octaves 0-8).
 //!

@@ -9,6 +9,30 @@ use crate::constants::*;
 use crate::{Interval, Pitch, UNISON};
 use std::ops::{Shl, ShlAssign, Shr, ShrAssign};
 
+/// Generates a sequence of pitches starting from a root note, following the specified interval steps.
+///
+/// This function creates an iterator that yields pitches of a scale, where each pitch is
+/// determined by adding the corresponding interval step to the previous pitch. The first
+/// yielded value is always the root note, followed by notes calculated from the interval steps.
+///
+/// # Arguments
+/// * `root` - The starting pitch (tonic) of the scale
+/// * `steps` - A slice of intervals defining the pattern between adjacent notes in the scale
+///
+/// # Returns
+/// An iterator yielding pitches starting with the root, followed by each subsequent pitch
+/// calculated by adding the interval steps to the previous pitch.
+///
+/// # Examples
+/// ```ignore
+/// use mozzart_std::{Pitch, Interval, SEMITONE, TONE, C4};
+/// use mozzart_std::scale::pitches_from_steps;
+///
+/// // Major scale pattern: whole, whole, half, whole, whole, whole, half
+/// let steps = [TONE, TONE, SEMITONE, TONE, TONE, TONE, SEMITONE];
+/// let c_major_pitches: Vec<Pitch> = pitches_from_steps(C4, &steps).collect();
+/// // C4, D4, E4, F4, G4, A4, B4, C5
+/// ```
 fn pitches_from_steps(root: Pitch, steps: &[Interval]) -> impl Iterator<Item = Pitch> + '_ {
     std::iter::once(root).chain(steps.iter().scan(root, |pitch, interval| {
         *pitch += interval;
@@ -16,23 +40,108 @@ fn pitches_from_steps(root: Pitch, steps: &[Interval]) -> impl Iterator<Item = P
     }))
 }
 
+/// Generates the sequence of pitches for a major scale starting from a given root note.
+///
+/// This function creates an iterator that yields the 8 pitches of a major scale (including the octave),
+/// following the standard major scale pattern: Whole, Whole, Half, Whole, Whole, Whole, Half.
+///
+/// # Arguments
+/// * `root` - The starting pitch (tonic) of the major scale
+///
+/// # Returns
+/// An iterator yielding the 8 pitches of the major scale, starting with the root note
+/// and ending with the same note an octave higher.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Pitch, C4, D4, E4, F4, G4, A4, B4, C5, major_pitches};
+///
+/// let c_major: Vec<Pitch> = major_pitches(C4).collect();
+/// assert_eq!(c_major, vec![C4, D4, E4, F4, G4, A4, B4, C5]);
+/// ```
 #[inline]
-fn major_pitches(root: Pitch) -> impl Iterator<Item = Pitch> + 'static {
+pub fn major_pitches(root: Pitch) -> impl Iterator<Item = Pitch> + 'static {
     pitches_from_steps(root, &MAJOR_SCALE_STEPS)
 }
 
+/// Generates the sequence of pitches for a natural minor scale starting from a given root note.
+///
+/// This function creates an iterator that yields the 8 pitches of a natural minor scale
+/// (including the octave), following the minor scale pattern: Whole, Half, Whole, Whole, Half, Whole, Whole.
+///
+/// # Arguments
+/// * `root` - The starting pitch (tonic) of the minor scale
+///
+/// # Returns
+/// An iterator yielding the 8 pitches of the natural minor scale, starting with the root note
+/// and ending with the same note an octave higher.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Pitch, A4, B4, C5, D5, E5, F5, G5, A5, minor_pitches};
+///
+/// let a_minor: Vec<Pitch> = minor_pitches(A4).collect();
+/// assert_eq!(a_minor, vec![A4, B4, C5, D5, E5, F5, G5, A5]);
+/// ```
 #[inline]
-fn minor_pitches(root: Pitch) -> impl Iterator<Item = Pitch> + 'static {
+pub fn minor_pitches(root: Pitch) -> impl Iterator<Item = Pitch> + 'static {
     pitches_from_steps(root, &MINOR_SCALE_STEPS)
 }
 
+/// Generates the sequence of pitches for a harmonic minor scale starting from a given root note.
+///
+/// This function creates an iterator that yields the 8 pitches of a harmonic minor scale
+/// (including the octave), following the harmonic minor scale pattern:
+/// Whole, Half, Whole, Whole, Half, Whole+Half, Half.
+///
+/// The harmonic minor scale is characterized by its raised 7th degree, creating an augmented
+/// second between the 6th and 7th scale degrees, which gives it its distinctive exotic sound.
+///
+/// # Arguments
+/// * `root` - The starting pitch (tonic) of the harmonic minor scale
+///
+/// # Returns
+/// An iterator yielding the 8 pitches of the harmonic minor scale, starting with the root note
+/// and ending with the same note an octave higher.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Pitch, E4, FSHARP4, G4, A4, B4, C5, DSHARP5, E5, harmonic_pitches};
+///
+/// let e_harmonic: Vec<Pitch> = harmonic_pitches(E4).collect();
+/// assert_eq!(e_harmonic, vec![E4, FSHARP4, G4, A4, B4, C5, DSHARP5, E5]);
+/// ```
 #[inline]
-fn harmonic_pitches(root: Pitch) -> impl Iterator<Item = Pitch> + 'static {
+pub fn harmonic_pitches(root: Pitch) -> impl Iterator<Item = Pitch> + 'static {
     pitches_from_steps(root, &HARMONIC_SCALE_STEPS)
 }
 
+/// Generates the sequence of pitches for a melodic minor scale (ascending) starting from a given root note.
+///
+/// This function creates an iterator that yields the 8 pitches of an ascending melodic minor scale
+/// (including the octave), following the melodic minor scale pattern:
+/// Whole, Half, Whole, Whole, Whole, Whole, Half.
+///
+/// The melodic minor scale is characterized by its raised 6th and 7th degrees when ascending,
+/// which creates a smoother melodic line than the harmonic minor scale. Traditionally, the descending
+/// form uses the natural minor scale, though this function returns only the ascending form.
+///
+/// # Arguments
+/// * `root` - The starting pitch (tonic) of the melodic minor scale
+///
+/// # Returns
+/// An iterator yielding the 8 pitches of the ascending melodic minor scale, starting with the root note
+/// and ending with the same note an octave higher.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Pitch, D4, E4, F4, G4, A4, B4, CSHARP5, D5, melodic_pitches};
+///
+/// let d_melodic: Vec<Pitch> = melodic_pitches(D4).collect();
+/// assert_eq!(d_melodic, vec![D4, E4, F4, G4, A4, B4, CSHARP5, D5]);
+/// ```
 #[inline]
-fn melodic_pitches(root: Pitch) -> impl Iterator<Item = Pitch> + 'static {
+pub fn melodic_pitches(root: Pitch) -> impl Iterator<Item = Pitch> + 'static {
     pitches_from_steps(root, &MELODIC_SCALE_STEPS)
 }
 
@@ -219,24 +328,137 @@ impl<const N: usize> Shr<u8> for Scale<N> {
     }
 }
 
+/// Creates a major scale starting from the specified root pitch.
+///
+/// This function constructs an 8-note major scale (including the octave) with the given
+/// root as the tonic, following the standard major scale pattern:
+/// Whole, Whole, Half, Whole, Whole, Whole, Half.
+///
+/// Major scales are characterized by their bright, happy sound quality, making them
+/// fundamental in Western music for expressing joy, triumph, and brightness.
+///
+/// # Arguments
+/// * `root` - The starting pitch (tonic) of the major scale
+///
+/// # Returns
+/// A `Scale<8>` representing the major scale, containing 8 pitches from the root to the octave above
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Scale, ScaleQuality, C4, major_scale};
+///
+/// let c_major = major_scale(C4);
+///
+/// // Check scale quality
+/// assert_eq!(c_major.quality(), ScaleQuality::Major);
+///
+/// // Check root note
+/// assert_eq!(c_major.tonic(), C4);
+/// ```
 #[inline]
 pub fn major_scale(root: Pitch) -> Scale<8> {
     let pitches = major_pitches(root);
     Scale::new(ScaleQuality::Major, pitches)
 }
 
+/// Creates a natural minor scale starting from the specified root pitch.
+///
+/// This function constructs an 8-note natural minor scale (including the octave) with the given
+/// root as the tonic, following the minor scale pattern:
+/// Whole, Half, Whole, Whole, Half, Whole, Whole.
+///
+/// Minor scales are known for their melancholic, darker sound quality, making them
+/// essential in Western music for expressing sadness, introspection, and tension.
+///
+/// # Arguments
+/// * `root` - The starting pitch (tonic) of the minor scale
+///
+/// # Returns
+/// A `Scale<8>` representing the natural minor scale, containing 8 pitches from the root to the octave above
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Scale, ScaleQuality, A4, minor_scale};
+///
+/// let a_minor = minor_scale(A4);
+///
+/// // Check scale quality
+/// assert_eq!(a_minor.quality(), ScaleQuality::Minor);
+///
+/// // Check root note
+/// assert_eq!(a_minor.tonic(), A4);
+/// ```
 #[inline]
 pub fn minor_scale(root: Pitch) -> Scale<8> {
     let pitches = minor_pitches(root);
     Scale::new(ScaleQuality::Minor, pitches)
 }
 
+/// Creates a harmonic minor scale starting from the specified root pitch.
+///
+/// This function constructs an 8-note harmonic minor scale (including the octave) with the given
+/// root as the tonic, following the harmonic minor scale pattern:
+/// Whole, Half, Whole, Whole, Half, Whole+Half, Half.
+///
+/// The harmonic minor scale is distinguished by its raised 7th degree (compared to the natural minor),
+/// creating an augmented second interval between the 6th and 7th scale degrees. This distinctive
+/// interval gives harmonic minor scales their exotic, Middle Eastern sound quality that has been used
+/// extensively in classical, flamenco, and metal music to create tension and drama.
+///
+/// # Arguments
+/// * `root` - The starting pitch (tonic) of the harmonic minor scale
+///
+/// # Returns
+/// A `Scale<8>` representing the harmonic minor scale, containing 8 pitches from the root to the octave above
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Scale, ScaleQuality, E4, harmonic_scale};
+///
+/// let e_harmonic = harmonic_scale(E4);
+///
+/// // Check scale quality
+/// assert_eq!(e_harmonic.quality(), ScaleQuality::Harmonic);
+///
+/// // Check root note
+/// assert_eq!(e_harmonic.tonic(), E4);
+/// ```
 #[inline]
 pub fn harmonic_scale(root: Pitch) -> Scale<8> {
     let pitches = harmonic_pitches(root);
     Scale::new(ScaleQuality::Harmonic, pitches)
 }
 
+/// Creates a melodic minor scale (ascending form) starting from the specified root pitch.
+///
+/// This function constructs an 8-note melodic minor scale (including the octave) with the given
+/// root as the tonic, following the ascending melodic minor scale pattern:
+/// Whole, Half, Whole, Whole, Whole, Whole, Half.
+///
+/// The melodic minor scale is characterized by both its raised 6th and 7th degrees when ascending
+/// (compared to the natural minor). Traditionally, the descending form reverts to the natural minor,
+/// though this function implements only the ascending form. This scale creates smoother melodic lines
+/// than the harmonic minor and has become particularly important in jazz and modal composition.
+///
+/// # Arguments
+/// * `root` - The starting pitch (tonic) of the melodic minor scale
+///
+/// # Returns
+/// A `Scale<8>` representing the melodic minor scale (ascending form), containing 8 pitches from
+/// the root to the octave above
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Scale, ScaleQuality, D4, melodic_scale};
+///
+/// let d_melodic = melodic_scale(D4);
+///
+/// // Check scale quality
+/// assert_eq!(d_melodic.quality(), ScaleQuality::Melodic);
+///
+/// // Check root note
+/// assert_eq!(d_melodic.tonic(), D4);
+/// ```
 #[inline]
 pub fn melodic_scale(root: Pitch) -> Scale<8> {
     let pitches = melodic_pitches(root);

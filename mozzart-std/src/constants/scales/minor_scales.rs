@@ -664,9 +664,9 @@ lazy_static! {
     /// Frequency range: ~311.13 Hz to ~622.25 Hz
     ///
     /// D# minor in octave 4 (more commonly notated as E♭ minor) spans a versatile middle-to-upper range.
-    /// In this octave, the scale demonstrates excellent clarity with substantial projection. While less 
+    /// In this octave, the scale demonstrates excellent clarity with substantial projection. While less
     /// common than E♭ major, E♭ minor appears in Chopin's "Raindrop" Prelude and other Romantic works.
-    /// This range provides ideal balance for piano, woodwinds, and strings, with each note articulating 
+    /// This range provides ideal balance for piano, woodwinds, and strings, with each note articulating
     /// clearly while maintaining the scale's solemn, introspective character.
     pub static ref DSHARP4_MINOR_SCALE: Scale<8> = minor_scale(DSHARP4);
 
@@ -1012,7 +1012,7 @@ lazy_static! {
     /// in this scale exceed 2.4kHz, approaching the range where pitch perception becomes increasingly
     /// difficult for many listeners. This scale can only be realized on instruments like piccolo,
     /// highest piano notes, or string harmonics, and typically functions as spectral color rather
-    /// than traditional melodic material. Used almost exclusively in avant-garde compositions, 
+    /// than traditional melodic material. Used almost exclusively in avant-garde compositions,
     /// electronic music, or acoustic research exploring the extreme upper threshold of musical sound.
     pub static ref DSHARP6_MINOR_SCALE: Scale<8> = minor_scale(DSHARP6);
 
@@ -1359,7 +1359,7 @@ lazy_static! {
     /// Frequency range: ~4186.01 Hz to ~8372.02 Hz
     ///
     /// C minor in octave 8 exists at the absolute upper threshold of human pitch perception and MIDI
-    /// representation. These frequencies, spanning from ~4.2kHz to ~8.4kHz, operate in a domain where 
+    /// representation. These frequencies, spanning from ~4.2kHz to ~8.4kHz, operate in a domain where
     /// traditional musical perception completely dissolves into pure acoustic sensation for virtually all
     /// listeners. C8 (MIDI 108) represents the highest C on a standard piano, with notes beyond this point
     /// existing primarily in electronic contexts and specialized acoustic research. At these extreme frequencies,

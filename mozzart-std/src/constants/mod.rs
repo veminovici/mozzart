@@ -30,10 +30,10 @@
 //! let intervals = [MAJOR_THIRD, MINOR_THIRD];  // Major third, minor third
 //!
 //! // Using scale constants
-//! let a_major = A4_MAJOR_SCALE;
-//! let c_minor = C4_MINOR_SCALE;
-//! let g_harmonic_minor = G4_HARMONIC_SCALE;
-//! let d_melodic_minor = D4_MELODIC_SCALE;
+//! let a_major = &A4_MAJOR_SCALE;
+//! let c_minor = &C4_MINOR_SCALE;
+//! let g_harmonic_minor = &G4_HARMONIC_SCALE;
+//! let d_melodic_minor = &D4_MELODIC_SCALE;
 //! ```
 
 mod intervals;

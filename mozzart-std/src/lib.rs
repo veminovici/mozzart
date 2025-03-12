@@ -41,7 +41,7 @@
 //!
 //! # Examples
 //! ```
-//! use mozzart_std::{Pitch, Interval, A4, C4, C5, C6, D4, F4, E4, MAJOR_THIRD, MINOR_THIRD, C5_MAJOR_SCALE, C3_MAJOR_SCALE, C4_MAJOR_SCALE};
+//! use mozzart_std::{Pitch, Interval, A4, C3, C4, C5, C6, D4, F4, E4, MAJOR_THIRD, MINOR_THIRD, major_scale};
 //!
 //! // Working with individual pitches and intervals
 //! let middle_c = C4;
@@ -59,12 +59,12 @@
 //! assert_eq!(C5 >> 1, C6); // octave up
 //!
 //! // Shifting scales
-//! let c4_major = C4_MAJOR_SCALE;
+//! let c4_major = major_scale(C4);
 //! let c5_major = c4_major >> 1; // octave up
-//! assert_eq!(c5_major, C5_MAJOR_SCALE);
+//! assert_eq!(c5_major, major_scale(C5));
 //!
 //! let c3_major = c4_major << 1; // octave down
-//! assert_eq!(c3_major, C3_MAJOR_SCALE);
+//! assert_eq!(c3_major, major_scale(C3));
 //! ```
 
 mod constants;

@@ -5,8 +5,36 @@
 //! - Scale construction and manipulation
 //! - Access to scale degrees and pitches
 
+use crate::constants::*;
 use crate::{Interval, Pitch, UNISON};
 use std::ops::{Shl, ShlAssign, Shr, ShrAssign};
+
+fn pitches_from_steps(root: Pitch, steps: &[Interval]) -> impl Iterator<Item = Pitch> + '_ {
+    std::iter::once(root).chain(steps.iter().scan(root, |pitch, interval| {
+        *pitch += interval;
+        Some(*pitch)
+    }))
+}
+
+#[inline]
+fn major_pitches(root: Pitch) -> impl Iterator<Item = Pitch> + 'static {
+    pitches_from_steps(root, &MAJOR_SCALE_STEPS)
+}
+
+#[inline]
+fn minor_pitches(root: Pitch) -> impl Iterator<Item = Pitch> + 'static {
+    pitches_from_steps(root, &MINOR_SCALE_STEPS)
+}
+
+#[inline]
+fn harmonic_pitches(root: Pitch) -> impl Iterator<Item = Pitch> + 'static {
+    pitches_from_steps(root, &HARMONIC_SCALE_STEPS)
+}
+
+#[inline]
+fn melodic_pitches(root: Pitch) -> impl Iterator<Item = Pitch> + 'static {
+    pitches_from_steps(root, &MELODIC_SCALE_STEPS)
+}
 
 /// Represents the quality (or type) of a musical scale.
 ///
@@ -25,6 +53,8 @@ pub enum ScaleQuality {
     Harmonic,
     /// The melodic minor scale, traditionally different ascending and descending
     Melodic,
+    /// The blues scale, characterized by its characteristic 7th degree
+    Blues,
 }
 
 /// A musical scale consisting of N ordered pitches with a specific quality.
@@ -38,7 +68,7 @@ pub enum ScaleQuality {
 /// use mozzart_std::{Scale, ScaleQuality, C4, C4_MAJOR_SCALE};
 ///
 /// // Create a C major scale
-/// let c_major = C4_MAJOR_SCALE;
+/// let c_major = &C4_MAJOR_SCALE;
 ///
 /// assert_eq!(c_major.quality(), ScaleQuality::Major);
 /// assert_eq!(c_major.pitches()[0], C4); // Root note
@@ -63,132 +93,23 @@ impl<const N: usize> Scale<N> {
     /// let c_major = C4_MAJOR_SCALE;
     /// assert_eq!(c_major.quality(), ScaleQuality::Major);
     /// ```
-    pub(crate) const fn new(quality: ScaleQuality, pitches: [Pitch; N]) -> Self {
-        Self { quality, pitches }
-    }
-
-    /// Creates a new scale from a root pitch and an array of intervals.
-    ///
-    /// This method constructs a scale by:
-    /// 1. Starting with a root pitch
-    /// 2. Adding successive intervals to create each scale degree
-    ///
-    /// The interval steps represent the distance from the root to each scale degree,
-    /// not the distance between adjacent notes (which would be returned by `steps()`).
-    ///
-    /// # Arguments
-    /// * `quality` - The scale quality (major, minor, harmonic, melodic)
-    /// * `root` - The starting pitch of the scale
-    /// * `steps` - An array of intervals from the root to each scale degree
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::{Scale, ScaleQuality, C4, UNISON, MAJOR_SECOND, MAJOR_THIRD,
-    ///                   PERFECT_FOURTH, PERFECT_FIFTH, MAJOR_SIXTH, MAJOR_SEVENTH, PERFECT_OCTAVE};
-    ///
-    /// // Create a C major scale using intervals from the root
-    /// let major_steps = [UNISON, MAJOR_SECOND, MAJOR_THIRD, PERFECT_FOURTH,
-    ///                    PERFECT_FIFTH, MAJOR_SIXTH, MAJOR_SEVENTH, PERFECT_OCTAVE];
-    /// let c_major = Scale::from_steps(ScaleQuality::Major, C4, major_steps);
-    ///
-    /// // First note is the root
-    /// assert_eq!(c_major.pitches()[0], C4);
-    /// ```
-    ///
-    /// # Musical Context
-    /// This method is useful for:
-    /// - Creating custom scales from interval patterns
-    /// - Building scales from mode patterns (e.g., Dorian, Phrygian)
-    /// - Implementing exotic or non-Western scales
-    pub fn from_steps(quality: ScaleQuality, root: Pitch, steps: [Interval; N]) -> Self {
-        let mut pitches = [root; N];
-        for (i, step) in steps.iter().enumerate() {
-            pitches[i] = root + step;
+    pub(crate) fn new<I>(quality: ScaleQuality, pitches: I) -> Self
+    where
+        I: IntoIterator<Item = Pitch>,
+    {
+        let mut ps = [C; N];
+        for (i, p) in pitches.into_iter().take(N).enumerate() {
+            ps[i] = p;
         }
+        Self {
+            quality,
+            pitches: ps,
+        }
+    }
+
+    pub fn from_steps(root: Pitch, quality: ScaleQuality, steps: &[Interval]) -> Self {
+        let pitches = pitches_from_steps(root, steps);
         Self::new(quality, pitches)
-    }
-
-    /// Creates a new major scale from the given pitches.
-    ///
-    /// A major scale follows the whole-whole-half-whole-whole-whole-half step pattern (W-W-H-W-W-W-H).
-    ///
-    /// # Arguments
-    /// * `pitches` - An array of N pitches representing the scale degrees
-    ///
-    /// # Examples
-    /// ```ignore
-    /// use mozzart_std::{Scale, ScaleQuality, C4, D4, E4, F4, G4, A4, B4, C5};
-    ///
-    /// let c_major = Scale::major([C4, D4, E4, F4, G4, A4, B4, C5]);
-    /// assert_eq!(c_major.quality(), ScaleQuality::Major);
-    /// assert_eq!(c_major.root(), C4);
-    /// ```
-    pub(crate) const fn major(pitches: [Pitch; N]) -> Self {
-        Self::new(ScaleQuality::Major, pitches)
-    }
-
-    /// Creates a new natural minor scale from the given pitches.
-    ///
-    /// A natural minor scale follows the whole-half-whole-whole-half-whole-whole step pattern
-    /// (W-H-W-W-H-W-W). Also known as the Aeolian mode.
-    ///
-    /// # Arguments
-    /// * `pitches` - An array of N pitches representing the scale degrees
-    ///
-    /// # Examples
-    /// ```ignore
-    /// use mozzart_std::{Scale, ScaleQuality, A4, B4, C5, D5, E5, F5, G5, A5};
-    ///
-    /// let a_minor = Scale::minor([A4, B4, C5, D5, E5, F5, G5, A5]);
-    /// assert_eq!(a_minor.quality(), ScaleQuality::Minor);
-    /// assert_eq!(a_minor.root(), A4);
-    /// ```
-    pub(crate) const fn minor(pitches: [Pitch; N]) -> Self {
-        Self::new(ScaleQuality::Minor, pitches)
-    }
-
-    /// Creates a new harmonic minor scale from the given pitches.
-    ///
-    /// A harmonic minor scale is like the natural minor scale but with a raised 7th degree.
-    /// It follows the whole-half-whole-whole-half-whole+half-half step pattern (W-H-W-W-H-W+H-H),
-    /// creating a characteristic augmented second interval between ♭6 and ♮7.
-    ///
-    /// # Arguments
-    /// * `pitches` - An array of N pitches representing the scale degrees
-    ///
-    /// # Examples
-    /// ```ignore
-    /// use mozzart_std::{Scale, ScaleQuality, A4, B4, C5, D5, E5, F5, G5, A5};
-    ///
-    /// let a_harmonic = Scale::harmonic([A4, B4, C5, D5, E5, F5, G5, A5]);
-    /// assert_eq!(a_harmonic.quality(), ScaleQuality::Harmonic);
-    /// assert_eq!(a_harmonic.root(), A4);
-    /// ```
-    pub(crate) const fn harmonic(pitches: [Pitch; N]) -> Self {
-        Self::new(ScaleQuality::Harmonic, pitches)
-    }
-
-    /// Creates a new melodic minor scale from the given pitches.
-    ///
-    /// A melodic minor scale traditionally has different ascending and descending forms:
-    /// - Ascending: whole-half-whole-whole-whole-whole-half (W-H-W-W-W-W-H)
-    /// - Descending: same as natural minor
-    ///
-    /// This implementation represents the ascending form, which raises both the 6th and 7th degrees.
-    ///
-    /// # Arguments
-    /// * `pitches` - An array of N pitches representing the scale degrees
-    ///
-    /// # Examples
-    /// ```ignore
-    /// use mozzart_std::{Scale, ScaleQuality, A4, B4, C5, D5, E5, F5, G5, A5};
-    ///
-    /// let a_melodic = Scale::melodic([A4, B4, C5, D5, E5, F5, G5, A5]);
-    /// assert_eq!(a_melodic.quality(), ScaleQuality::Melodic);
-    /// assert_eq!(a_melodic.root(), A4);
-    /// ```
-    pub(crate) const fn melodic(pitches: [Pitch; N]) -> Self {
-        Self::new(ScaleQuality::Melodic, pitches)
     }
 
     /// Returns the quality of the scale.
@@ -197,26 +118,28 @@ impl<const N: usize> Scale<N> {
     /// ```
     /// use mozzart_std::{Scale, ScaleQuality, C4_MAJOR_SCALE};
     ///
-    /// let scale = C4_MAJOR_SCALE;
+    /// let scale = &C4_MAJOR_SCALE;
     /// assert_eq!(scale.quality(), ScaleQuality::Major);
     /// ```
-    pub fn quality(&self) -> ScaleQuality {
+    #[inline]
+    pub const fn quality(&self) -> ScaleQuality {
         self.quality
     }
 
-    /// Returns the root pitch of the scale.
+    /// Returns the tonic pitch of the scale.
     ///
-    /// The root pitch is the first note of the scale, which defines its key.
-    /// For example, in C major scale, C is the root pitch.
+    /// The tonic pitch is the first note of the scale, which defines its key.
+    /// For example, in C major scale, C is the tonic pitch.
     ///
     /// # Examples
     /// ```
     /// use mozzart_std::{C4_MAJOR_SCALE, C4};
     ///
-    /// let scale = C4_MAJOR_SCALE;
-    /// assert_eq!(scale.root(), C4);  // C4 is the root of C major scale
+    /// let scale = &C4_MAJOR_SCALE;
+    /// assert_eq!(scale.tonic(), C4);  // C4 is the tonic of C major scale
     /// ```
-    pub fn root(&self) -> Pitch {
+    #[inline]
+    pub const fn tonic(&self) -> Pitch {
         self.pitches[0]
     }
 
@@ -228,14 +151,16 @@ impl<const N: usize> Scale<N> {
     /// ```
     /// use mozzart_std::{Scale, ScaleQuality, C4_MAJOR_SCALE, C4, G4};
     ///
-    /// let scale = C4_MAJOR_SCALE;
+    /// let scale = &C4_MAJOR_SCALE;
     /// assert_eq!(scale.pitches()[0], C4); // Root note
     /// assert_eq!(scale.pitches()[4], G4); // Fifth scale degree
     /// ```
-    pub fn pitches(&self) -> &[Pitch; N] {
+    pub const fn pitches(&self) -> &[Pitch; N] {
         &self.pitches
     }
+}
 
+impl Scale<8> {
     /// Returns the intervals between consecutive pitches in the scale.
     ///
     /// This function calculates the interval (in semitones) between each adjacent pair
@@ -255,20 +180,19 @@ impl<const N: usize> Scale<N> {
     ///
     /// let steps = C4_MAJOR_SCALE.steps();
     /// // Major scale pattern: Whole, Whole, Half, Whole, Whole, Whole, Half
-    /// assert_eq!(steps[0], UNISON);      // C to D: whole step
-    /// assert_eq!(steps[1], TONE);      // C to D: whole step
-    /// assert_eq!(steps[2], TONE);      // D to E: whole step
-    /// assert_eq!(steps[3], SEMITONE);  // E to F: half step
-    /// assert_eq!(steps[4], TONE);      // F to G: whole step
-    /// assert_eq!(steps[5], TONE);      // G to A: whole step
-    /// assert_eq!(steps[6], TONE);      // A to B: whole step
-    /// assert_eq!(steps[7], SEMITONE);  // B to C: half step
+    /// assert_eq!(steps[0], TONE);      // C to D: whole step
+    /// assert_eq!(steps[1], TONE);      // D to E: whole step
+    /// assert_eq!(steps[2], SEMITONE);  // E to F: half step
+    /// assert_eq!(steps[3], TONE);      // F to G: whole step
+    /// assert_eq!(steps[4], TONE);      // G to A: whole step
+    /// assert_eq!(steps[5], TONE);      // A to B: whole step
+    /// assert_eq!(steps[6], SEMITONE);  // B to C: half step
     /// assert_eq!(steps, MAJOR_SCALE_STEPS);
     /// ```
-    pub fn steps(&self) -> [Interval; N] {
-        let mut steps = [UNISON; N];
-        for (i, step) in steps.iter_mut().enumerate().skip(1) {
-            *step = self.pitches[i] - self.pitches[i - 1];
+    pub fn steps(&self) -> [Interval; 7] {
+        let mut steps = [UNISON; 7];
+        for (i, step) in steps.iter_mut().enumerate() {
+            *step = self.pitches[i + 1] - self.pitches[i];
         }
         steps
     }
@@ -280,11 +204,11 @@ impl<const N: usize> Scale<N> {
 ///
 /// # Examples
 /// ```
-/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C5_MAJOR_SCALE};
+/// use mozzart_std::{Scale, C4, C5, major_scale};
 ///
 /// // Transpose C4 major scale up one octave to get C5 major scale
-/// let c5_scale = C4_MAJOR_SCALE >> 1;
-/// assert_eq!(c5_scale, C5_MAJOR_SCALE);
+/// let c5_scale = major_scale(C4) >> 1;
+/// assert_eq!(c5_scale, major_scale(C5));
 /// ```
 impl<const N: usize> Shr<u8> for Scale<N> {
     type Output = Self;
@@ -295,20 +219,44 @@ impl<const N: usize> Shr<u8> for Scale<N> {
     }
 }
 
+#[inline]
+pub fn major_scale(root: Pitch) -> Scale<8> {
+    let pitches = major_pitches(root);
+    Scale::new(ScaleQuality::Major, pitches)
+}
+
+#[inline]
+pub fn minor_scale(root: Pitch) -> Scale<8> {
+    let pitches = minor_pitches(root);
+    Scale::new(ScaleQuality::Minor, pitches)
+}
+
+#[inline]
+pub fn harmonic_scale(root: Pitch) -> Scale<8> {
+    let pitches = harmonic_pitches(root);
+    Scale::new(ScaleQuality::Harmonic, pitches)
+}
+
+#[inline]
+pub fn melodic_scale(root: Pitch) -> Scale<8> {
+    let pitches = melodic_pitches(root);
+    Scale::new(ScaleQuality::Melodic, pitches)
+}
+
 /// Implements right shift assignment operator (`>>=`) for scales, which transposes the scale up by the specified number of octaves in place.
 ///
 /// Each octave shift up decreases each pitch in the scale by 12 semitones.
 ///
 /// # Examples
 /// ```
-/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C5_MAJOR_SCALE};
+/// use mozzart_std::{Scale, C4, C5, major_scale};
 ///
 /// // Create a mutable C4 major scale
-/// let mut scale = C4_MAJOR_SCALE;
+/// let mut scale = major_scale(C4);
 ///
 /// // Transpose up one octave in place
 /// scale >>= 1;
-/// assert_eq!(scale, C5_MAJOR_SCALE);
+/// assert_eq!(scale, major_scale(C5));
 /// ```
 impl<const N: usize> ShrAssign<u8> for Scale<N> {
     fn shr_assign(&mut self, shift: u8) {
@@ -322,11 +270,11 @@ impl<const N: usize> ShrAssign<u8> for Scale<N> {
 ///
 /// # Examples
 /// ```
-/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C3_MAJOR_SCALE};
+/// use mozzart_std::{Scale, major_scale, C3, C4};
 ///
 /// // Transpose C4 major scale up one octave to get C5 major scale
-/// let c3_scale = C4_MAJOR_SCALE << 1;
-/// assert_eq!(c3_scale, C3_MAJOR_SCALE);
+/// let c3_scale = major_scale(C4) << 1;
+/// assert_eq!(c3_scale, major_scale(C3));
 /// ```
 impl<const N: usize> Shl<u8> for Scale<N> {
     type Output = Self;
@@ -343,14 +291,14 @@ impl<const N: usize> Shl<u8> for Scale<N> {
 ///
 /// # Examples
 /// ```
-/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C3_MAJOR_SCALE};
+/// use mozzart_std::{Scale, major_scale, C4, C3};
 ///
 /// // Create a mutable C4 major scale
-/// let mut scale = C4_MAJOR_SCALE;
+/// let mut scale = major_scale(C4);
 ///
 /// // Transpose up one octave in place
 /// scale <<= 1;
-/// assert_eq!(scale, C3_MAJOR_SCALE);
+/// assert_eq!(scale, major_scale(C3));
 /// ```
 impl<const N: usize> ShlAssign<u8> for Scale<N> {
     fn shl_assign(&mut self, shift: u8) {
@@ -365,12 +313,12 @@ impl<const N: usize> ShlAssign<u8> for Scale<N> {
 ///
 /// # Examples
 /// ```
-/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C5_MAJOR_SCALE};
+/// use mozzart_std::{Scale, C4, C5, major_scale};
 ///
 /// // Transpose C4 major scale up one octave to get C5 major scale
-/// let c4_scale_ref = &C4_MAJOR_SCALE;
-/// let c5_scale = c4_scale_ref >> 1;
-/// assert_eq!(c5_scale, C5_MAJOR_SCALE);
+/// let c4_scale = major_scale(C4);
+/// let c5_scale = c4_scale >> 1;
+/// assert_eq!(c5_scale, major_scale(C5));
 /// ```
 impl<const N: usize> Shr<u8> for &Scale<N> {
     type Output = Scale<N>;
@@ -388,15 +336,14 @@ impl<const N: usize> Shr<u8> for &Scale<N> {
 ///
 /// # Examples
 /// ```
-/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C5_MAJOR_SCALE};
+/// use mozzart_std::{Scale, C4, C5, major_scale};
 ///
 /// // Create a mutable scale
-/// let mut scale = C4_MAJOR_SCALE;
-/// let mut scale_ref = &mut scale;
+/// let mut scale = major_scale(C4);
 ///
 /// // Transpose up one octave in place
-/// scale_ref >>= 1;
-/// assert_eq!(scale, C5_MAJOR_SCALE);
+/// scale >>= 1;
+/// assert_eq!(scale, major_scale(C5));
 /// ```
 impl<const N: usize> ShrAssign<u8> for &mut Scale<N> {
     fn shr_assign(&mut self, shift: u8) {
@@ -411,12 +358,12 @@ impl<const N: usize> ShrAssign<u8> for &mut Scale<N> {
 ///
 /// # Examples
 /// ```
-/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C3_MAJOR_SCALE};
+/// use mozzart_std::{Scale, C3, C4, major_scale};
 ///
 /// // Transpose C4 major scale down one octave to get C3 major scale
-/// let c4_scale_ref = &C4_MAJOR_SCALE;
-/// let c3_scale = c4_scale_ref << 1;
-/// assert_eq!(c3_scale, C3_MAJOR_SCALE);
+/// let c4_scale = major_scale(C4);
+/// let c3_scale = c4_scale << 1;
+/// assert_eq!(c3_scale, major_scale(C3));
 /// ```
 impl<const N: usize> Shl<u8> for &Scale<N> {
     type Output = Scale<N>;
@@ -434,15 +381,14 @@ impl<const N: usize> Shl<u8> for &Scale<N> {
 ///
 /// # Examples
 /// ```
-/// use mozzart_std::{Scale, C4_MAJOR_SCALE, C3_MAJOR_SCALE};
+/// use mozzart_std::{Scale, C3, C4, major_scale};
 ///
 /// // Create a mutable scale
-/// let mut scale = C4_MAJOR_SCALE;
-/// let mut scale_ref = &mut scale;
+/// let mut scale = major_scale(C4);
 ///
 /// // Transpose down one octave in place
-/// scale_ref <<= 1;
-/// assert_eq!(scale, C3_MAJOR_SCALE);
+/// scale <<= 1;
+/// assert_eq!(scale, major_scale(C3));
 /// ```
 impl<const N: usize> ShlAssign<u8> for &mut Scale<N> {
     fn shl_assign(&mut self, shift: u8) {
@@ -453,343 +399,208 @@ impl<const N: usize> ShlAssign<u8> for &mut Scale<N> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::constants::*;
-
-    #[test]
-    fn test_major_scale() {
-        let c_major = Scale::<7>::new(ScaleQuality::Major, [C4, D4, E4, F4, G4, A4, B4]);
-        assert_eq!(c_major.quality(), ScaleQuality::Major);
-        assert_eq!(c_major.pitches()[0], C4);
-        assert_eq!(c_major.pitches()[4], G4);
-    }
-
-    #[test]
-    fn test_minor_scale() {
-        let a_minor = Scale::<7>::new(ScaleQuality::Minor, [A4, B4, C5, D5, E5, F5, G5]);
-        assert_eq!(a_minor.quality(), ScaleQuality::Minor);
-        assert_eq!(a_minor.pitches()[0], A4);
-        assert_eq!(a_minor.pitches()[2], C5);
-    }
-
-    #[test]
-    fn test_scale_quality() {
-        // Test all scale qualities using basic pitch constants
-        let major = Scale::<7>::new(ScaleQuality::Major, [C4, D4, E4, F4, G4, A4, B4]);
-        assert_eq!(major.quality(), ScaleQuality::Major);
-
-        let minor = Scale::<7>::new(ScaleQuality::Minor, [A4, B4, C5, D5, E5, F5, G5]);
-        assert_eq!(minor.quality(), ScaleQuality::Minor);
-
-        let harmonic = Scale::<7>::new(
-            ScaleQuality::Harmonic,
-            [A4, B4, C5, D5, E5, F5, G5], // Using natural notes for simplicity
-        );
-        assert_eq!(harmonic.quality(), ScaleQuality::Harmonic);
-
-        let melodic = Scale::<7>::new(
-            ScaleQuality::Melodic,
-            [A4, B4, C5, D5, E5, F5, G5], // Using natural notes for simplicity
-        );
-        assert_eq!(melodic.quality(), ScaleQuality::Melodic);
-    }
-
-    #[test]
-    fn test_scale_root() {
-        // Test root of major scale
-        let c_major = Scale::<7>::new(ScaleQuality::Major, [C4, D4, E4, F4, G4, A4, B4]);
-        assert_eq!(c_major.root(), C4);
-
-        // Test root of minor scale
-        let a_minor = Scale::<7>::new(ScaleQuality::Minor, [A4, B4, C5, D5, E5, F5, G5]);
-        assert_eq!(a_minor.root(), A4);
-
-        // Test that root is always first pitch regardless of scale quality
-        let harmonic_minor = Scale::<7>::new(ScaleQuality::Harmonic, [E4, F4, G4, A4, B4, C5, D5]);
-        assert_eq!(harmonic_minor.root(), E4);
-    }
 
     #[test]
     fn test_scale_constructors() {
         // Test major scale constructor
-        let c_major = Scale::<8>::major([C4, D4, E4, F4, G4, A4, B4, C5]);
+
+        // C4, D4, E4, F4, G4, A4, B4, C5
+        let c_major = major_scale(C4);
         assert_eq!(c_major.quality(), ScaleQuality::Major);
-        assert_eq!(c_major.root(), C4);
+        assert_eq!(c_major.tonic(), C4);
         assert_eq!(c_major.pitches(), &[C4, D4, E4, F4, G4, A4, B4, C5]);
+        assert_eq!(c_major.steps(), MAJOR_SCALE_STEPS);
 
         // Test minor scale constructor
-        let a_minor = Scale::<8>::minor([A4, B4, C5, D5, E5, F5, G5, A5]);
+
+        // A4, B4, C5, D5, E5, F5, G5, A5
+        let a_minor = minor_scale(A4);
         assert_eq!(a_minor.quality(), ScaleQuality::Minor);
-        assert_eq!(a_minor.root(), A4);
+        assert_eq!(a_minor.tonic(), A4);
         assert_eq!(a_minor.pitches(), &[A4, B4, C5, D5, E5, F5, G5, A5]);
+        assert_eq!(a_minor.steps(), MINOR_SCALE_STEPS);
 
         // Test harmonic minor scale constructor
-        let e_harmonic = Scale::<8>::harmonic([E4, F4, G4, A4, B4, C5, D5, E5]);
+
+        // E4, FSHARP4, G4, A4, B4, C5, DSHARP5, E5
+        let e_harmonic = harmonic_scale(E4);
         assert_eq!(e_harmonic.quality(), ScaleQuality::Harmonic);
-        assert_eq!(e_harmonic.root(), E4);
-        assert_eq!(e_harmonic.pitches(), &[E4, F4, G4, A4, B4, C5, D5, E5]);
+        assert_eq!(e_harmonic.tonic(), E4);
+        assert_eq!(
+            e_harmonic.pitches(),
+            &[E4, FSHARP4, G4, A4, B4, C5, DSHARP5, E5]
+        );
+        assert_eq!(e_harmonic.steps(), HARMONIC_SCALE_STEPS);
 
         // Test melodic minor scale constructor
-        let d_melodic = Scale::<8>::melodic([D4, E4, F4, G4, A4, B4, C5, D5]);
+
+        // D4, E4, F4, G4, A4, B4, CSHARP5, D5
+        let d_melodic = melodic_scale(D4);
         assert_eq!(d_melodic.quality(), ScaleQuality::Melodic);
-        assert_eq!(d_melodic.root(), D4);
-        assert_eq!(d_melodic.pitches(), &[D4, E4, F4, G4, A4, B4, C5, D5]);
+        assert_eq!(d_melodic.tonic(), D4);
+        assert_eq!(d_melodic.pitches(), &[D4, E4, F4, G4, A4, B4, CSHARP5, D5]);
+        assert_eq!(d_melodic.steps(), MELODIC_SCALE_STEPS);
     }
 
     #[test]
-    fn test_scale_octave_span() {
+    fn test_scale_from_steps() {
+        let scale = Scale::from_steps(C0, ScaleQuality::Major, &MAJOR_SCALE_STEPS);
+        assert_eq!(scale, major_scale(C0));
+
+        let scale = Scale::from_steps(C0, ScaleQuality::Minor, &MINOR_SCALE_STEPS);
+        assert_eq!(scale, minor_scale(C0));
+
+        let scale = Scale::from_steps(C0, ScaleQuality::Harmonic, &HARMONIC_SCALE_STEPS);
+        assert_eq!(scale, harmonic_scale(C0));
+
+        let scale = Scale::from_steps(C0, ScaleQuality::Melodic, &MELODIC_SCALE_STEPS);
+        assert_eq!(scale, melodic_scale(C0));
+    }
+
+    #[test]
+    fn test_scale_ascends() {
         // Test that all scale constructors handle octave-spanning scales correctly
         let scales = [
-            Scale::<8>::major([C4, D4, E4, F4, G4, A4, B4, C5]),
-            Scale::<8>::minor([A4, B4, C5, D5, E5, F5, G5, A5]),
-            Scale::<8>::harmonic([E4, F4, G4, A4, B4, C5, D5, E5]),
-            Scale::<8>::melodic([D4, E4, F4, G4, A4, B4, C5, D5]),
+            major_scale(C4),
+            minor_scale(A4),
+            harmonic_scale(E4),
+            melodic_scale(D4),
         ];
 
-        for scale in scales.iter() {
-            // Verify that the scale spans an octave (each note higher than the previous)
-            let pitches = scale.pitches();
+        let _ = scales.iter().inspect(|s| {
+            let pitches = s.pitches();
+            assert_eq!(pitches[0] >> 1, pitches[7]);
             for i in 0..7 {
                 assert!(pitches[i + 1] > pitches[i], "Scale notes should ascend");
             }
-        }
+        });
     }
 
     #[test]
     fn test_scale_right_shift() {
         // Test shifting C4 major scale down one octave
-        let c4_scale = C4_MAJOR_SCALE;
+        let c4_scale = major_scale(C4);
         let c5_scale = c4_scale >> 1;
-        assert_eq!(c5_scale, C5_MAJOR_SCALE);
+        assert_eq!(c5_scale, major_scale(C5));
 
         // Test shifting C4 major scale down two octaves
         let c6_scale = c4_scale >> 2;
-        assert_eq!(c6_scale, C6_MAJOR_SCALE);
-
-        // Test that original scale is unchanged
-        assert_eq!(c4_scale, C4_MAJOR_SCALE);
+        assert_eq!(c6_scale, major_scale(C6));
     }
 
     #[test]
     fn test_scale_right_shift_assign() {
         // Test shifting C4 major scale down one octave in place
-        let mut scale = C4_MAJOR_SCALE;
+        let mut scale = major_scale(C4);
         scale >>= 1;
-        assert_eq!(scale, C5_MAJOR_SCALE);
+        assert_eq!(scale, major_scale(C5));
 
         // Test shifting down another octave
         scale >>= 1;
-        assert_eq!(scale, C6_MAJOR_SCALE);
+        assert_eq!(scale, major_scale(C6));
     }
 
     #[test]
     fn test_scale_left_shift() {
         // Test shifting C4 major scale up one octave
-        let c4_scale = C4_MAJOR_SCALE;
+        let c4_scale = major_scale(C4);
         let c3_scale = c4_scale << 1;
-        assert_eq!(c3_scale, C3_MAJOR_SCALE);
+        assert_eq!(c3_scale, major_scale(C3));
 
         // Test shifting C4 major scale up two octaves
         let c1_scale = c3_scale << 2;
-        assert_eq!(c1_scale, C1_MAJOR_SCALE);
-
-        // Test that original scale is unchanged
-        assert_eq!(c4_scale, C4_MAJOR_SCALE);
+        assert_eq!(c1_scale, major_scale(C1));
     }
 
     #[test]
     fn test_scale_left_shift_assign() {
         // Test shifting C4 major scale up one octave in place
-        let mut scale = C4_MAJOR_SCALE;
+        let mut scale = major_scale(C4);
         scale <<= 1;
-        assert_eq!(scale, C3_MAJOR_SCALE);
+        assert_eq!(scale, major_scale(C3));
 
         // Test shifting up another octave
         scale <<= 1;
-        assert_eq!(scale, C2_MAJOR_SCALE);
+        assert_eq!(scale, major_scale(C2));
     }
 
     #[test]
-    fn test_scale_shift_preserves_quality() {
-        // Test that shifting preserves scale quality for different scale types
-        let major_scale = C4_MAJOR_SCALE;
-        let minor_scale = A4_MELODIC_SCALE;
-        let harmonic_scale = E4_HARMONIC_SCALE;
+    fn test_scale_right_shift_preserves_quality() {
+        let scale = major_scale(C4) >> 1;
+        assert_eq!(scale.quality(), ScaleQuality::Major);
 
-        // Test right shift
-        assert_eq!((major_scale >> 1).quality(), ScaleQuality::Major);
-        assert_eq!((minor_scale >> 1).quality(), ScaleQuality::Melodic);
-        assert_eq!((harmonic_scale >> 1).quality(), ScaleQuality::Harmonic);
+        let scale = minor_scale(C4) >> 1;
+        assert_eq!(scale.quality(), ScaleQuality::Minor);
 
-        // Test left shift
-        assert_eq!((major_scale << 1).quality(), ScaleQuality::Major);
-        assert_eq!((minor_scale << 1).quality(), ScaleQuality::Melodic);
-        assert_eq!((harmonic_scale << 1).quality(), ScaleQuality::Harmonic);
+        let scale = harmonic_scale(C4) >> 1;
+        assert_eq!(scale.quality(), ScaleQuality::Harmonic);
+
+        let scale = melodic_scale(C4) >> 1;
+        assert_eq!(scale.quality(), ScaleQuality::Melodic);
+    }
+
+    #[test]
+    fn test_scale_left_shift_preserves_quality() {
+        let scale = major_scale(C4) << 1;
+        assert_eq!(scale.quality(), ScaleQuality::Major);
+
+        let scale = minor_scale(C4) << 1;
+        assert_eq!(scale.quality(), ScaleQuality::Minor);
+
+        let scale = harmonic_scale(C4) << 1;
+        assert_eq!(scale.quality(), ScaleQuality::Harmonic);
+
+        let scale = melodic_scale(C4) << 1;
+        assert_eq!(scale.quality(), ScaleQuality::Melodic);
     }
 
     #[test]
     fn test_scale_shift_multiple_octaves() {
-        let c4_scale = C4_MAJOR_SCALE;
+        let c4_scale = major_scale(C4);
 
         // Test multiple octave shifts up and down
-        assert_eq!(c4_scale >> 3, C7_MAJOR_SCALE); // Down 3 octaves
-        assert_eq!(c4_scale << 3, C1_MAJOR_SCALE); // Up 3 octaves
+        assert_eq!(c4_scale >> 3, major_scale(C7)); // Up 3 octaves
+        assert_eq!(c4_scale << 3, major_scale(C1)); // Down 3 octaves
 
-        // Test that shifting up then down returns to original
+        // Test that shifting down then up returns to original
         let shifted = (c4_scale << 2) >> 2;
         assert_eq!(shifted, c4_scale);
 
-        // Test that shifting down then up returns to original
+        // Test that shifting up then down returns to original
         let shifted = (c4_scale >> 2) << 2;
         assert_eq!(shifted, c4_scale);
     }
 
     #[test]
-    fn test_scale_steps() {
-        // Test major scale steps (Whole-Whole-Half-Whole-Whole-Whole-Half)
-        let major_scale = C0_MAJOR_SCALE;
-        let major_steps = major_scale.steps();
-        assert_eq!(major_steps, MAJOR_SCALE_STEPS);
-
-        // Test natural minor scale steps (Whole-Half-Whole-Whole-Half-Whole-Whole)
-        // let minor_scale = A4_MINOR_SCALE;
-        // let minor_steps = minor_scale.steps();
-        // assert_eq!(minor_steps[0], TONE); // A-B: 2 semitones
-        // assert_eq!(minor_steps[1], SEMITONE); // B-C: 1 semitone
-        // assert_eq!(minor_steps[2], TONE); // C-D: 2 semitones
-        // assert_eq!(minor_steps[3], TONE); // D-E: 2 semitones
-        // assert_eq!(minor_steps[4], SEMITONE); // E-F: 1 semitone
-        // assert_eq!(minor_steps[5], TONE); // F-G: 2 semitones
-        // assert_eq!(minor_steps[6], TONE); // G-A: 2 semitones
-
-        // Test harmonic minor scale steps (Whole-Half-Whole-Whole-Half-Whole+Half-Half)
-        // G# is 1 semitone higher than G
-        // let g_sharp_5 = G5 + SEMITONE;
-        // let harmonic_scale = Scale::harmonic([A4, B4, C5, D5, E5, F5, g_sharp_5, A5]);
-        // let harmonic_steps = harmonic_scale.steps();
-        // assert_eq!(harmonic_steps[0], TONE); // A-B: 2 semitones
-        // assert_eq!(harmonic_steps[1], SEMITONE); // B-C: 1 semitone
-        // assert_eq!(harmonic_steps[2], TONE); // C-D: 2 semitones
-        // assert_eq!(harmonic_steps[3], TONE); // D-E: 2 semitones
-        // assert_eq!(harmonic_steps[4], SEMITONE); // E-F: 1 semitone
-
-        // The augmented 2nd is 3 semitones (TONE + SEMITONE)
-        // let aug_second = Interval::new(3); // 3 semitones
-        // assert_eq!(harmonic_steps[5], aug_second); // F-G#: 3 semitones (augmented 2nd)
-        // assert_eq!(harmonic_steps[6], SEMITONE); // G#-A: 1 semitone
-
-        // Test that steps don't exceed array bounds
-        // let short_scale = Scale::major([C4, D4, E4]);
-        // let short_steps = short_scale.steps();
-        // assert_eq!(short_steps[0], TONE); // C-D: 2 semitones
-        // assert_eq!(short_steps[1], TONE); // D-E: 2 semitones
-    }
-
-    #[test]
-    fn test_scale_from_steps() {
-        use crate::{
-            ScaleQuality, MAJOR_SECOND, MAJOR_SEVENTH, MAJOR_SIXTH, MAJOR_THIRD, PERFECT_FIFTH,
-            PERFECT_FOURTH, PERFECT_OCTAVE, UNISON,
-        };
-        use crate::{MINOR_SEVENTH, MINOR_SIXTH, MINOR_THIRD};
-
-        // Test creating a major scale using from_steps
-        let major_steps = [
-            UNISON,         // Root
-            MAJOR_SECOND,   // 2nd
-            MAJOR_THIRD,    // 3rd
-            PERFECT_FOURTH, // 4th
-            PERFECT_FIFTH,  // 5th
-            MAJOR_SIXTH,    // 6th
-            MAJOR_SEVENTH,  // 7th
-            PERFECT_OCTAVE, // Octave
-        ];
-        let c4_major = Scale::from_steps(ScaleQuality::Major, C4, major_steps);
-
-        // Verify the pitches match C4 major scale
-        assert_eq!(c4_major.root(), C4);
-        assert_eq!(c4_major.pitches()[0], C4);
-        assert_eq!(c4_major.pitches()[1], D4);
-        assert_eq!(c4_major.pitches()[2], E4);
-        assert_eq!(c4_major.pitches()[3], F4);
-        assert_eq!(c4_major.pitches()[4], G4);
-        assert_eq!(c4_major.pitches()[5], A4);
-        assert_eq!(c4_major.pitches()[6], B4);
-        assert_eq!(c4_major.pitches()[7], C5);
-
-        // Test creating a natural minor scale using from_steps
-        let minor_steps = [
-            UNISON,         // Root
-            MAJOR_SECOND,   // 2nd
-            MINOR_THIRD,    // ♭3rd
-            PERFECT_FOURTH, // 4th
-            PERFECT_FIFTH,  // 5th
-            MINOR_SIXTH,    // ♭6th
-            MINOR_SEVENTH,  // ♭7th
-            PERFECT_OCTAVE, // Octave
-        ];
-        let a4_minor = Scale::from_steps(ScaleQuality::Minor, A4, minor_steps);
-
-        // Verify the pitches match A4 minor scale
-        assert_eq!(a4_minor.root(), A4);
-        assert_eq!(a4_minor.pitches()[0], A4);
-        assert_eq!(a4_minor.pitches()[1], B4);
-        assert_eq!(a4_minor.pitches()[2], C5);
-        assert_eq!(a4_minor.pitches()[3], D5);
-        assert_eq!(a4_minor.pitches()[4], E5);
-        assert_eq!(a4_minor.pitches()[5], F5);
-        assert_eq!(a4_minor.pitches()[6], G5);
-        assert_eq!(a4_minor.pitches()[7], A5);
-
-        // Test that scales created with different step patterns are different
-        assert_ne!(c4_major.steps(), a4_minor.steps());
-
-        // Test with a smaller scale (pentatonic-like structure)
-        let pentatonic_steps = [
-            UNISON,
-            MAJOR_SECOND,
-            MAJOR_THIRD,
-            PERFECT_FIFTH,
-            MAJOR_SIXTH,
-        ];
-        let penta = Scale::from_steps(ScaleQuality::Major, G4, pentatonic_steps);
-
-        assert_eq!(penta.pitches()[0], G4);
-        assert_eq!(penta.pitches()[1], A4);
-        assert_eq!(penta.pitches()[2], B4);
-        assert_eq!(penta.pitches()[3], D5);
-        assert_eq!(penta.pitches()[4], E5);
-    }
-
-    #[test]
     fn test_scale_right_shift_reference() {
         // Test right-shift on a scale reference
-        let c4_scale = C4_MAJOR_SCALE;
+        let c4_scale = major_scale(C4);
         let c4_ref = &c4_scale;
 
         // Shift up one octave
         let c5_scale = c4_ref >> 1;
 
         // Verify that shift worked correctly
-        assert_eq!(c5_scale.root(), C5);
+        assert_eq!(c5_scale.tonic(), C5);
         assert_eq!(c5_scale.pitches()[0], C5);
         assert_eq!(c5_scale.pitches()[4], G5);
 
         // Verify that original scale is unchanged
-        assert_eq!(c4_scale.root(), C4);
+        assert_eq!(c4_scale.tonic(), C4);
 
         // Test with melodic scale
-        let e3_melodic = E3_MELODIC_SCALE;
+        let e3_melodic = melodic_scale(E3);
         let e3_ref = &e3_melodic;
         let e4_melodic = e3_ref >> 1;
 
         assert_eq!(e4_melodic.quality(), ScaleQuality::Melodic);
-        assert_eq!(e4_melodic.root(), E4);
+        assert_eq!(e4_melodic.tonic(), E4);
     }
 
     #[test]
     fn test_scale_right_shift_assign_mut_reference() {
         // Test right-shift assignment with a separate mutable reference
-        let mut scale = C4_MAJOR_SCALE.clone();
+        let mut scale = major_scale(C4).clone();
 
         // Create a mutable reference and shift it
         {
@@ -798,11 +609,11 @@ mod tests {
         }
 
         // Verify that shift worked correctly
-        assert_eq!(scale.root(), C5);
+        assert_eq!(scale.tonic(), C5);
         assert_eq!(scale.pitches()[0], C5);
 
         // Test with multiple octaves
-        let mut d_scale = D3_HARMONIC_SCALE.clone();
+        let mut d_scale = harmonic_scale(D3).clone();
 
         // Create a mutable reference and shift it two octaves
         {
@@ -811,40 +622,40 @@ mod tests {
         }
 
         // Verify results
-        assert_eq!(d_scale.root(), D5);
+        assert_eq!(d_scale.tonic(), D5);
         assert_eq!(d_scale.quality(), ScaleQuality::Harmonic);
     }
 
     #[test]
     fn test_scale_left_shift_reference() {
         // Test left-shift on a scale reference
-        let c4_scale = C4_MAJOR_SCALE;
+        let c4_scale = major_scale(C4);
         let c4_ref = &c4_scale;
 
         // Shift down one octave
         let c3_scale = c4_ref << 1;
 
         // Verify that shift worked correctly
-        assert_eq!(c3_scale.root(), C3);
+        assert_eq!(c3_scale.tonic(), C3);
         assert_eq!(c3_scale.pitches()[0], C3);
         assert_eq!(c3_scale.pitches()[4], G3);
 
         // Verify that original scale is unchanged
-        assert_eq!(c4_scale.root(), C4);
+        assert_eq!(c4_scale.tonic(), C4);
 
         // Test with melodic scale
-        let e5_melodic = E5_MELODIC_SCALE;
+        let e5_melodic = melodic_scale(E5);
         let e5_ref = &e5_melodic;
         let e4_melodic = e5_ref << 1;
 
         assert_eq!(e4_melodic.quality(), ScaleQuality::Melodic);
-        assert_eq!(e4_melodic.root(), E4);
+        assert_eq!(e4_melodic.tonic(), E4);
     }
 
     #[test]
     fn test_scale_left_shift_assign_mut_reference() {
         // Test left-shift assignment with a separate mutable reference
-        let mut scale = C4_MAJOR_SCALE.clone();
+        let mut scale = major_scale(C4).clone();
 
         // Create a mutable reference and shift it
         {
@@ -853,11 +664,11 @@ mod tests {
         }
 
         // Verify that shift worked correctly
-        assert_eq!(scale.root(), C3);
+        assert_eq!(scale.tonic(), C3);
         assert_eq!(scale.pitches()[0], C3);
 
         // Test with multiple octaves
-        let mut a_scale = A5_MINOR_SCALE.clone();
+        let mut a_scale = minor_scale(A5).clone();
 
         // Create a mutable reference and shift it two octaves
         {
@@ -866,14 +677,14 @@ mod tests {
         }
 
         // Verify results
-        assert_eq!(a_scale.root(), A3);
+        assert_eq!(a_scale.tonic(), A3);
         assert_eq!(a_scale.quality(), ScaleQuality::Minor);
     }
 
     #[test]
     fn test_scale_mixed_reference_operations() {
         // Test a combination of reference and value operations
-        let c4_scale = C4_MAJOR_SCALE;
+        let c4_scale = major_scale(C4);
 
         // Reference shift
         let c5_scale = &c4_scale >> 1;
@@ -882,19 +693,19 @@ mod tests {
         let c6_scale = c5_scale >> 1;
 
         // Verify double shift
-        assert_eq!(c6_scale.root(), C6);
+        assert_eq!(c6_scale.tonic(), C6);
 
         // Original remains unchanged
-        assert_eq!(c4_scale.root(), C4);
+        assert_eq!(c4_scale.tonic(), C4);
 
         // Test reference shift in both directions
-        let b4_scale = B4_MELODIC_SCALE;
+        let b4_scale = melodic_scale(B4);
         let b3_scale = &b4_scale << 1;
         let b5_scale = &b3_scale >> 2;
 
         // Verify shifts worked correctly
-        assert_eq!(b3_scale.root(), B3);
-        assert_eq!(b5_scale.root(), B5);
+        assert_eq!(b3_scale.tonic(), B3);
+        assert_eq!(b5_scale.tonic(), B5);
         assert_eq!(b5_scale.quality(), ScaleQuality::Melodic);
     }
 }

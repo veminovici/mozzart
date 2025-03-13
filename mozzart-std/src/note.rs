@@ -1,4 +1,4 @@
-use crate::{Interval, Step};
+use crate::{major_scale, Interval, Scale, Step};
 use std::ops::{Add, AddAssign, Shl, ShlAssign, Shr, ShrAssign, Sub, SubAssign};
 
 /// Represents a musical note using MIDI note numbering
@@ -218,6 +218,23 @@ impl Note {
     #[inline]
     pub fn midi_number(&self) -> u8 {
         self.0
+    }
+
+    /// Returns a major scale starting from this note
+    ///
+    /// # Returns
+    /// A `Scale<8>` representing the major scale starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_major_scale = C4.major_scale();
+    /// assert_eq!(c_major_scale.notes(), &[C4, D4, E4, F4, G4, A4, B4, C5]);
+    /// ```
+    pub fn major_scale(&self) -> Scale<8> {
+        major_scale(*self)
     }
 }
 

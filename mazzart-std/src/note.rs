@@ -506,6 +506,14 @@ mod tests {
     }
 
     #[test]
+    fn test_adding_step() {
+        let c4 = C4;
+        let d4 = c4 + WHOLE;
+        assert_eq!(62u8, d4.into());
+        assert_eq!(D4, d4);
+    }
+
+    #[test]
     fn test_adding_interval_in_place() {
         let mut note = C4; // C4
 
@@ -519,10 +527,26 @@ mod tests {
     }
 
     #[test]
+    fn test_adding_step_in_place() {
+        let mut note = C4;
+        note += WHOLE;
+        assert_eq!(62u8, note.into());
+        assert_eq!(D4, note);
+    }
+
+    #[test]
     fn test_subtracting_interval() {
         let a4 = A4;
 
         // Test subtraction
+        let g4 = a4 - WHOLE;
+        assert_eq!(67u8, g4.into());
+        assert_eq!(G4, g4);
+    }
+
+    #[test]
+    fn test_subtracting_step() {
+        let a4 = A4;
         let g4 = a4 - WHOLE;
         assert_eq!(67u8, g4.into());
         assert_eq!(G4, g4);
@@ -540,6 +564,14 @@ mod tests {
         note -= HALF;
         assert_eq!(66u8, note.into()); // F#4/Gb4
         assert_eq!(FSHARP4, note);
+    }
+
+    #[test]
+    fn test_subtracting_step_in_place() {
+        let mut note = A4;
+        note -= WHOLE;
+        assert_eq!(67u8, note.into());
+        assert_eq!(G4, note);
     }
 
     #[test]

@@ -1,5 +1,6 @@
 use crate::constants::*;
 use crate::Note;
+use std::fmt;
 
 /// Represents the quality of a chord
 ///
@@ -722,6 +723,71 @@ pub fn major_thirteenth(root: Note) -> Chord<7> {
     Chord::new(ChordQuality::MajorThirteenth, notes)
 }
 
+fn chord_suffix(quality: ChordQuality) -> &'static str {
+    match quality {
+        ChordQuality::MajorTriad => "",
+        ChordQuality::MinorTriad => "m",
+        ChordQuality::DominantSeventh => "7",
+        ChordQuality::MinorSeventh => "m7",
+        ChordQuality::MajorSeventh => "maj7",
+        ChordQuality::MinorMajorSeventh => "mM7",
+        ChordQuality::MajorSixth => "6",
+        ChordQuality::MinorSixth => "m6",
+        ChordQuality::MajorSixthNinth => "6/9",
+        ChordQuality::MinorSixthNinth => "m6/9",
+        ChordQuality::Sus2 => "sus2",
+        ChordQuality::Sus4 => "sus4",
+        ChordQuality::DiminishedTriad => "dim",
+        ChordQuality::DiminishedSeventh => "dim7",
+        ChordQuality::DominantSeventhNinth => "7/9",
+        ChordQuality::MinorSeventhNinth => "m7/9",
+        ChordQuality::HalfDiminishedSeventh => "hdim7",
+        ChordQuality::AugmentedTriad => "aug",
+        ChordQuality::AugmentedSeventh => "aug7",
+        ChordQuality::DominantNinth => "9",
+        ChordQuality::MinorNinth => "m9",
+        ChordQuality::MajorNinth => "maj9",
+        ChordQuality::DominantEleventh => "11",
+        ChordQuality::MinorEleventh => "m11",
+        ChordQuality::MajorEleventh => "maj11",
+        ChordQuality::DominantThirteenth => "13",
+        ChordQuality::MinorThirteenth => "m13",
+        ChordQuality::MajorThirteenth => "maj13",
+    }
+}
+
+impl<const N: usize> fmt::UpperHex for Chord<N> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
+        let root = self.root();
+        let suffix = chord_suffix(self.quality());
+        write!(f, "{root:X}{suffix}")
+    }
+}
+
+impl<const N: usize> fmt::LowerHex for Chord<N> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
+        let root = self.root();
+        let suffix = chord_suffix(self.quality());
+        write!(f, "{root:x}{suffix}")
+    }
+}
+
+impl<const N: usize> fmt::Display for Chord<N> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
+        let root = self.root();
+        let suffix = chord_suffix(self.quality());
+        write!(f, "{root}{suffix}")
+    }
+}
+
+impl<const N: usize> fmt::Debug for Chord<N> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
+        let root = self.root();
+        let suffix = chord_suffix(self.quality());
+        write!(f, "{root:?}{suffix}")
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -732,6 +798,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MajorTriad);
         assert_eq!(scale.notes().len(), 3);
         assert_eq!(scale.notes(), &[C4, E4, G4]);
+        assert_eq!(format!("{}", scale), "C");
     }
 
     #[test]
@@ -740,6 +807,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MinorTriad);
         assert_eq!(scale.notes().len(), 3);
         assert_eq!(scale.notes(), &[C4, DSHARP4, G4]);
+        assert_eq!(format!("{}", scale), "Cm");
     }
 
     #[test]
@@ -748,6 +816,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::DominantSeventh);
         assert_eq!(scale.notes().len(), 4);
         assert_eq!(scale.notes(), &[C4, E4, G4, BFLAT4]);
+        assert_eq!(format!("{}", scale), "C7");
     }
 
     #[test]
@@ -756,6 +825,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::DominantSeventhNinth);
         assert_eq!(scale.notes().len(), 5);
         assert_eq!(scale.notes(), &[C4, E4, G4, BFLAT4, D5]);
+        assert_eq!(format!("{}", scale), "C7/9");
     }
 
     #[test]
@@ -764,6 +834,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MinorSeventh);
         assert_eq!(scale.notes().len(), 4);
         assert_eq!(scale.notes(), &[C4, EFLAT4, G4, BFLAT4]);
+        assert_eq!(format!("{}", scale), "Cm7");
     }
 
     #[test]
@@ -772,6 +843,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MinorSeventhNinth);
         assert_eq!(scale.notes().len(), 5);
         assert_eq!(scale.notes(), &[C4, EFLAT4, G4, BFLAT4, D5]);
+        assert_eq!(format!("{}", scale), "Cm7/9");
     }
 
     #[test]
@@ -780,6 +852,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MajorSeventh);
         assert_eq!(scale.notes().len(), 4);
         assert_eq!(scale.notes(), &[C4, E4, G4, B4]);
+        assert_eq!(format!("{}", scale), "Cmaj7");
     }
 
     #[test]
@@ -788,6 +861,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MinorMajorSeventh);
         assert_eq!(scale.notes().len(), 4);
         assert_eq!(scale.notes(), &[C4, EFLAT4, G4, B4]);
+        assert_eq!(format!("{}", scale), "CmM7");
     }
 
     #[test]
@@ -796,6 +870,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MajorSixth);
         assert_eq!(scale.notes().len(), 4);
         assert_eq!(scale.notes(), &[C4, E4, G4, A4]);
+        assert_eq!(format!("{}", scale), "C6");
     }
 
     #[test]
@@ -804,6 +879,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MinorSixth);
         assert_eq!(scale.notes().len(), 4);
         assert_eq!(scale.notes(), &[C4, EFLAT4, G4, A4]);
+        assert_eq!(format!("{}", scale), "Cm6");
     }
 
     #[test]
@@ -812,6 +888,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MajorSixthNinth);
         assert_eq!(scale.notes().len(), 5);
         assert_eq!(scale.notes(), &[C4, E4, G4, A4, D5]);
+        assert_eq!(format!("{}", scale), "C6/9");
     }
 
     #[test]
@@ -820,6 +897,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MinorSixthNinth);
         assert_eq!(scale.notes().len(), 5);
         assert_eq!(scale.notes(), &[C4, EFLAT4, G4, A4, D5]);
+        assert_eq!(format!("{}", scale), "Cm6/9");
     }
 
     #[test]
@@ -828,6 +906,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::Sus2);
         assert_eq!(scale.notes().len(), 3);
         assert_eq!(scale.notes(), &[C4, D4, G4]);
+        assert_eq!(format!("{}", scale), "Csus2");
     }
 
     #[test]
@@ -836,6 +915,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::Sus4);
         assert_eq!(scale.notes().len(), 3);
         assert_eq!(scale.notes(), &[C4, F4, G4]);
+        assert_eq!(format!("{}", scale), "Csus4");
     }
 
     #[test]
@@ -844,6 +924,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::DiminishedTriad);
         assert_eq!(scale.notes().len(), 3);
         assert_eq!(scale.notes(), &[C4, EFLAT4, GFLAT4]);
+        assert_eq!(format!("{}", scale), "Cdim");
     }
 
     #[test]
@@ -852,6 +933,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::DiminishedSeventh);
         assert_eq!(scale.notes().len(), 4);
         assert_eq!(scale.notes(), &[C4, EFLAT4, GFLAT4, A4]);
+        assert_eq!(format!("{}", scale), "Cdim7");
     }
 
     #[test]
@@ -860,6 +942,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::HalfDiminishedSeventh);
         assert_eq!(scale.notes().len(), 4);
         assert_eq!(scale.notes(), &[C4, EFLAT4, GFLAT4, BFLAT4]);
+        assert_eq!(format!("{}", scale), "Chdim7");
     }
 
     #[test]
@@ -868,6 +951,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::AugmentedTriad);
         assert_eq!(scale.notes().len(), 3);
         assert_eq!(scale.notes(), &[C4, E4, GSHARP4]);
+        assert_eq!(format!("{}", scale), "Caug");
     }
 
     #[test]
@@ -876,6 +960,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::AugmentedSeventh);
         assert_eq!(scale.notes().len(), 4);
         assert_eq!(scale.notes(), &[C4, E4, GSHARP4, BFLAT4]);
+        assert_eq!(format!("{}", scale), "Caug7");
     }
 
     #[test]
@@ -884,6 +969,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::DominantNinth);
         assert_eq!(scale.notes().len(), 5);
         assert_eq!(scale.notes(), &[C4, E4, G4, BFLAT4, D5]);
+        assert_eq!(format!("{}", scale), "C9");
     }
 
     #[test]
@@ -892,6 +978,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MinorNinth);
         assert_eq!(scale.notes().len(), 5);
         assert_eq!(scale.notes(), &[C4, EFLAT4, G4, BFLAT4, D5]);
+        assert_eq!(format!("{}", scale), "Cm9");
     }
 
     #[test]
@@ -900,6 +987,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MajorNinth);
         assert_eq!(scale.notes().len(), 5);
         assert_eq!(scale.notes(), &[C4, E4, G4, B4, D5]);
+        assert_eq!(format!("{}", scale), "Cmaj9");
     }
 
     #[test]
@@ -908,6 +996,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::DominantEleventh);
         assert_eq!(scale.notes().len(), 6);
         assert_eq!(scale.notes(), &[C4, E4, G4, BFLAT4, D5, F5]);
+        assert_eq!(format!("{}", scale), "C11");
     }
 
     #[test]
@@ -916,6 +1005,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MinorEleventh);
         assert_eq!(scale.notes().len(), 6);
         assert_eq!(scale.notes(), &[C4, EFLAT4, G4, BFLAT4, D5, F5]);
+        assert_eq!(format!("{}", scale), "Cm11");
     }
 
     #[test]
@@ -924,6 +1014,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MajorEleventh);
         assert_eq!(scale.notes().len(), 6);
         assert_eq!(scale.notes(), &[C4, E4, G4, B4, D5, F5]);
+        assert_eq!(format!("{}", scale), "Cmaj11");
     }
 
     #[test]
@@ -932,6 +1023,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::DominantThirteenth);
         assert_eq!(scale.notes().len(), 7);
         assert_eq!(scale.notes(), &[C4, E4, G4, BFLAT4, D5, F5, A5]);
+        assert_eq!(format!("{}", scale), "C13");
     }
 
     #[test]
@@ -940,6 +1032,7 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MinorThirteenth);
         assert_eq!(scale.notes().len(), 7);
         assert_eq!(scale.notes(), &[C4, EFLAT4, G4, BFLAT4, D5, F5, A5]);
+        assert_eq!(format!("{}", scale), "Cm13");
     }
 
     #[test]
@@ -948,5 +1041,6 @@ mod tests {
         assert_eq!(scale.quality(), ChordQuality::MajorThirteenth);
         assert_eq!(scale.notes().len(), 7);
         assert_eq!(scale.notes(), &[C4, E4, G4, B4, D5, F5, A5]);
+        assert_eq!(format!("{}", scale), "Cmaj13");
     }
 }

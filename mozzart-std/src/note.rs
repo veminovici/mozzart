@@ -1,4 +1,5 @@
-use crate::*;
+use crate::{constants::SEMITONES_IN_OCTAVE, *};
+use std::fmt;
 use std::ops::{Add, AddAssign, Shl, ShlAssign, Shr, ShrAssign, Sub, SubAssign};
 
 /// Represents a musical note using MIDI note numbering
@@ -16,7 +17,7 @@ use std::ops::{Add, AddAssign, Shl, ShlAssign, Shr, ShrAssign, Sub, SubAssign};
 /// MIDI note numbers provide a convenient and standard way to represent
 /// pitches across all octaves without dealing with the complexities
 /// of frequency calculations or letter-based note naming.
-#[derive(Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Clone, Copy)]
+#[derive(PartialEq, Eq, Hash, PartialOrd, Ord, Clone, Copy)]
 pub struct Note(u8);
 
 impl Note {
@@ -1017,6 +1018,41 @@ impl ShlAssign<u8> for Note {
     fn shl_assign(&mut self, octaves: u8) {
         let interval = Interval::from_octave(octaves);
         self.sub_assign(interval);
+    }
+}
+
+impl fmt::UpperHex for Note {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        const NAMES: [&str; 12] = [
+            "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+        ];
+        let index = self.0 % SEMITONES_IN_OCTAVE;
+        let name = NAMES[index as usize];
+
+        write!(f, "{name}")
+    }
+}
+
+impl fmt::LowerHex for Note {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        const NAMES: [&str; 12] = [
+            "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B",
+        ];
+        let index = self.0 % SEMITONES_IN_OCTAVE;
+        let name = NAMES[index as usize];
+        write!(f, "{name}")
+    }
+}
+
+impl fmt::Display for Note {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:X}", self)
+    }
+}
+
+impl fmt::Debug for Note {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:X}[{}]", self, self.0)
     }
 }
 

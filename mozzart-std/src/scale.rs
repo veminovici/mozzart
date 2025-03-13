@@ -1,5 +1,6 @@
 use crate::constants::*;
 use crate::Note;
+use std::fmt;
 
 /// Represents the quality or type of a musical scale
 ///
@@ -136,6 +137,48 @@ impl<const N: usize> Scale<N> {
     #[inline]
     pub const fn quality(&self) -> ScaleQuality {
         self.quality
+    }
+}
+
+fn scale_suffix(quality: ScaleQuality) -> &'static str {
+    match quality {
+        ScaleQuality::Major => "major",
+        ScaleQuality::Minor => "minor",
+        ScaleQuality::HarmonicMinor => "harmonic minor",
+        ScaleQuality::MelodicMinor => "melodic minor",
+    }
+}
+
+impl<const N: usize> fmt::UpperHex for Scale<N> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
+        let root = self.root();
+        let suffix = scale_suffix(self.quality());
+
+        write!(f, "{root:X} {suffix}")
+    }
+}
+
+impl<const N: usize> fmt::LowerHex for Scale<N> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
+        let root = self.root();
+        let suffix = scale_suffix(self.quality());
+
+        write!(f, "{root:x} {suffix}")
+    }
+}
+
+impl<const N: usize> fmt::Debug for Scale<N> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
+        let root = self.root();
+        let suffix = scale_suffix(self.quality());
+
+        write!(f, "{root:?}{suffix}")
+    }
+}
+
+impl<const N: usize> fmt::Display for Scale<N> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
+        write!(f, "{:X}", self)
     }
 }
 
@@ -289,6 +332,8 @@ mod tests {
         assert_eq!(notes[5], A4); // A4
         assert_eq!(notes[6], B4); // B4
         assert_eq!(notes[7], C5); // C5 (octave)
+
+        assert_eq!(c4_major.to_string(), "C major");
     }
 
     #[test]
@@ -308,6 +353,8 @@ mod tests {
         assert_eq!(notes[5], F5); // F5
         assert_eq!(notes[6], G5); // G5
         assert_eq!(notes[7], A5); // A5 (octave)
+
+        assert_eq!(a4_minor.to_string(), "A minor");
     }
 
     #[test]
@@ -332,6 +379,8 @@ mod tests {
         let a4_natural_minor = natural_minor_scale(A4);
         assert_eq!(a4_natural_minor.notes()[6], G5); // G5 in natural minor
         assert_eq!(harmonic_minor_scale(A4).notes()[6], GSHARP5); // G#5 in harmonic minor
+
+        assert_eq!(a4_harmonic_minor.to_string(), "A harmonic minor");
     }
 
     #[test]
@@ -359,6 +408,8 @@ mod tests {
 
         assert_eq!(melodic_minor_scale(A4).notes()[5], FSHARP5); // F#5 in melodic minor
         assert_eq!(melodic_minor_scale(A4).notes()[6], GSHARP5); // G#5 in melodic minor
+
+        assert_eq!(a4_melodic_minor.to_string(), "A melodic minor");
     }
 
     #[test]

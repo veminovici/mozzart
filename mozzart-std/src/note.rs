@@ -233,6 +233,7 @@ impl Note {
     /// let c_major_scale = C4.major_scale();
     /// assert_eq!(c_major_scale.notes(), &[C4, D4, E4, F4, G4, A4, B4, C5]);
     /// ```
+    #[inline]
     pub fn major_scale(&self) -> Scale<8> {
         major_scale(*self)
     }
@@ -250,8 +251,45 @@ impl Note {
     /// let c_natural_minor_scale = C4.natural_minor_scale();
     /// assert_eq!(c_natural_minor_scale.notes(), &[C4, D4, EFLAT4, F4, G4, AFLAT4, BFLAT4, C5]);
     /// ```
+    #[inline]
     pub fn natural_minor_scale(&self) -> Scale<8> {
         natural_minor_scale(*self)
+    }
+
+    /// Returns a harmonic minor scale starting from this note
+    ///
+    /// # Returns
+    /// A `Scale<8>` representing the harmonic minor scale starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_harmonic_minor_scale = C4.harmonic_minor_scale();
+    /// assert_eq!(c_harmonic_minor_scale.notes(), &[C4, D4, EFLAT4, F4, G4, AFLAT4, B4, C5]);
+    /// ```
+    #[inline]
+    pub fn harmonic_minor_scale(&self) -> Scale<8> {
+        harmonic_minor_scale(*self)
+    }
+
+    /// Returns a melodic minor scale starting from this note
+    ///
+    /// # Returns
+    /// A `Scale<8>` representing the melodic minor scale starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_melodic_minor_scale = C4.melodic_minor_scale();
+    /// assert_eq!(c_melodic_minor_scale.notes(), &[C4, D4, EFLAT4, F4, G4, A4, B4, C5]);
+    /// ```
+    #[inline]
+    pub fn melodic_minor_scale(&self) -> Scale<8> {
+        melodic_minor_scale(*self)
     }
 
     /// Returns a major triad chord starting from this note
@@ -267,8 +305,482 @@ impl Note {
     /// let c_major_triad = C4.major_triad_chord();
     /// assert_eq!(c_major_triad.notes(), &[C4, E4, G4]);
     /// ```
+    #[inline]
     pub fn major_triad_chord(&self) -> Chord<3> {
         major_triad(*self)
+    }
+
+    /// Returns a minor triad chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<3>` representing the minor triad chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_minor_triad = C4.minor_triad_chord();
+    /// assert_eq!(c_minor_triad.notes(), &[C4, DSHARP4, G4]);
+    /// ```
+    #[inline]
+    pub fn minor_triad_chord(&self) -> Chord<3> {
+        minor_triad(*self)
+    }
+
+    #[inline]
+    pub fn dominant_seventh_chord(&self) -> Chord<4> {
+        dominant_seventh(*self)
+    }
+
+    /// Returns a dominant seventh chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<4>` representing the dominant seventh chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_dominant_seventh = C4.dominant_seventh_chord();
+    /// assert_eq!(c_dominant_seventh.notes(), &[C4, E4, G4, BFLAT4]);
+    /// ```
+    #[inline]
+    pub fn dominant_seventh_ninth_chord(&self) -> Chord<5> {
+        dominant_seventh_ninth(*self)
+    }
+
+    /// Returns a minor seventh chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<4>` representing the minor seventh chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_minor_seventh = C4.minor_seventh_chord();
+    /// assert_eq!(c_minor_seventh.notes(), &[C4, DSHARP4, G4, BFLAT4]);
+    /// ```
+    #[inline]
+    pub fn minor_seventh_chord(&self) -> Chord<4> {
+        minor_seventh(*self)
+    }
+
+    /// Returns a minor seventh ninth chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<5>` representing the minor seventh ninth chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_minor_seventh_ninth = C4.minor_seventh_ninth_chord();
+    /// assert_eq!(c_minor_seventh_ninth.notes(), &[C4, EFLAT4, G4, BFLAT4, D5]);
+    /// ```
+    #[inline]
+    pub fn minor_seventh_ninth_chord(&self) -> Chord<5> {
+        minor_seventh_ninth(*self)
+    }
+
+    /// Returns a major seventh chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<4>` representing the major seventh chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_major_seventh = C4.major_seventh_chord();
+    /// assert_eq!(c_major_seventh.notes(), &[C4, E4, G4, B4]);
+    /// ```
+    #[inline]
+    pub fn major_seventh_chord(&self) -> Chord<4> {
+        major_seventh(*self)
+    }
+
+    /// Returns a minor major seventh chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<4>` representing the minor major seventh chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_minor_major_seventh = C4.minor_major_seventh_chord();
+    /// assert_eq!(c_minor_major_seventh.notes(), &[C4, DSHARP4, G4, B4]);
+    /// ```
+    #[inline]
+    pub fn minor_major_seventh_chord(&self) -> Chord<4> {
+        minor_major_seventh(*self)
+    }
+
+    /// Returns a major sixth chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<4>` representing the major sixth chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_major_sixth = C4.major_sixth_chord();
+    /// assert_eq!(c_major_sixth.notes(), &[C4, E4, G4, A4]);
+    /// ```
+    #[inline]
+    pub fn major_sixth_chord(&self) -> Chord<4> {
+        major_sixth(*self)
+    }
+
+    /// Returns a minor sixth chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<4>` representing the minor sixth chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_minor_sixth = C4.minor_sixth_chord();
+    /// assert_eq!(c_minor_sixth.notes(), &[C4, DSHARP4, G4, A4]);
+    /// ```
+    #[inline]
+    pub fn minor_sixth_chord(&self) -> Chord<4> {
+        minor_sixth(*self)
+    }
+
+    /// Returns a major sixth ninth chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<5>` representing the major sixth ninth chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_major_sixth_ninth = C4.major_sixth_ninth_chord();
+    /// assert_eq!(c_major_sixth_ninth.notes(), &[C4, E4, G4, A4, D5]);
+    /// ```
+    #[inline]
+    pub fn major_sixth_ninth_chord(&self) -> Chord<5> {
+        major_sixth_ninth(*self)
+    }
+
+    /// Returns a minor sixth ninth chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<5>` representing the minor sixth ninth chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_minor_sixth_ninth = C4.minor_sixth_ninth_chord();
+    /// assert_eq!(c_minor_sixth_ninth.notes(), &[C4, EFLAT4, G4, A4, D5]);
+    /// ```
+    #[inline]
+    pub fn minor_sixth_ninth_chord(&self) -> Chord<5> {
+        minor_sixth_ninth(*self)
+    }
+
+    /// Returns a sus2 chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<3>` representing the sus2 chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_sus2 = C4.sus2_chord();
+    /// assert_eq!(c_sus2.notes(), &[C4, D4, G4]);
+    /// ```
+    #[inline]
+    pub fn sus2_chord(&self) -> Chord<3> {
+        sus2(*self)
+    }
+
+    /// Returns a sus4 chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<3>` representing the sus4 chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_sus4 = C4.sus4_chord();
+    /// assert_eq!(c_sus4.notes(), &[C4, F4, G4]);
+    /// ```
+    #[inline]
+    pub fn sus4_chord(&self) -> Chord<3> {
+        sus4(*self)
+    }
+
+    /// Returns a diminished triad chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<3>` representing the diminished triad chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_diminished_triad = C4.diminished_triad_chord();
+    /// assert_eq!(c_diminished_triad.notes(), &[C4, EFLAT4, GFLAT4]);
+    /// ```
+    #[inline]
+    pub fn diminished_triad_chord(&self) -> Chord<3> {
+        diminished_triad(*self)
+    }
+
+    /// Returns a diminished seventh chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<4>` representing the diminished seventh chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_diminished_seventh = C4.diminished_seventh_chord();
+    /// assert_eq!(c_diminished_seventh.notes(), &[C4, EFLAT4, GFLAT4, A4]);
+    /// ```
+    #[inline]
+    pub fn diminished_seventh_chord(&self) -> Chord<4> {
+        diminished_seventh(*self)
+    }
+
+    /// Returns a half diminished seventh chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<4>` representing the half diminished seventh chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_half_diminished_seventh = C4.half_diminished_seventh_chord();
+    /// assert_eq!(c_half_diminished_seventh.notes(), &[C4, EFLAT4, GFLAT4, BFLAT4]);
+    /// ```
+    #[inline]
+    pub fn half_diminished_seventh_chord(&self) -> Chord<4> {
+        half_diminished_seventh(*self)
+    }
+
+    /// Returns an augmented triad chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<3>` representing the augmented triad chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_augmented_triad = C4.augmented_triad_chord();
+    /// assert_eq!(c_augmented_triad.notes(), &[C4, E4, GSHARP4]);
+    /// ```
+    #[inline]
+    pub fn augmented_triad_chord(&self) -> Chord<3> {
+        augmented_triad(*self)
+    }
+
+    /// Returns an augmented seventh chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<4>` representing the augmented seventh chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_augmented_seventh = C4.augmented_seventh_chord();
+    /// assert_eq!(c_augmented_seventh.notes(), &[C4, E4, GSHARP4, BFLAT4]);
+    /// ```
+    #[inline]
+    pub fn augmented_seventh_chord(&self) -> Chord<4> {
+        augmented_seventh(*self)
+    }
+
+    /// Returns a dominant ninth chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<5>` representing the dominant ninth chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_dominant_ninth = C4.dominant_ninth_chord();
+    /// assert_eq!(c_dominant_ninth.notes(), &[C4, E4, G4, BFLAT4, D5]);
+    /// ```
+    #[inline]
+    pub fn dominant_ninth_chord(&self) -> Chord<5> {
+        dominant_ninth(*self)
+    }
+
+    /// Returns a minor ninth chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<5>` representing the minor ninth chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_minor_ninth = C4.minor_ninth_chord();
+    /// assert_eq!(c_minor_ninth.notes(), &[C4, EFLAT4, G4, BFLAT4, D5]);
+    /// ```
+    #[inline]
+    pub fn minor_ninth_chord(&self) -> Chord<5> {
+        minor_ninth(*self)
+    }
+
+    /// Returns a major ninth chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<5>` representing the major ninth chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_major_ninth = C4.major_ninth_chord();
+    /// assert_eq!(c_major_ninth.notes(), &[C4, E4, G4, B4, D5]);
+    /// ```
+    #[inline]
+    pub fn major_ninth_chord(&self) -> Chord<5> {
+        major_ninth(*self)
+    }
+
+    /// Returns a dominant eleventh chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<6>` representing the dominant eleventh chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_dominant_eleventh = C4.dominant_eleventh_chord();
+    /// assert_eq!(c_dominant_eleventh.notes(), &[C4, E4, G4, BFLAT4, D5, F5]);
+    /// ```
+    #[inline]
+    pub fn dominant_eleventh_chord(&self) -> Chord<6> {
+        dominant_eleventh(*self)
+    }
+
+    /// Returns a minor eleventh chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<6>` representing the minor eleventh chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_minor_eleventh = C4.minor_eleventh_chord();
+    /// assert_eq!(c_minor_eleventh.notes(), &[C4, EFLAT4, G4, BFLAT4, D5, F5]);
+    /// ```
+    #[inline]
+    pub fn minor_eleventh_chord(&self) -> Chord<6> {
+        minor_eleventh(*self)
+    }
+
+    /// Returns a major eleventh chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<6>` representing the major eleventh chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_major_eleventh = C4.major_eleventh_chord();
+    /// assert_eq!(c_major_eleventh.notes(), &[C4, E4, G4, B4, D5, F5]);
+    /// ```
+    #[inline]
+    pub fn major_eleventh_chord(&self) -> Chord<6> {
+        major_eleventh(*self)
+    }
+
+    /// Returns a dominant thirteenth chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<7>` representing the dominant thirteenth chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_dominant_thirteenth = C4.dominant_thirteenth_chord();
+    /// assert_eq!(c_dominant_thirteenth.notes(), &[C4, E4, G4, BFLAT4, D5, F5, A5]);
+    /// ```
+    #[inline]
+    pub fn dominant_thirteenth_chord(&self) -> Chord<7> {
+        dominant_thirteenth(*self)
+    }
+
+    /// Returns a minor thirteenth chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<7>` representing the minor thirteenth chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_minor_thirteenth = C4.minor_thirteenth_chord();
+    /// assert_eq!(c_minor_thirteenth.notes(), &[C4, EFLAT4, G4, BFLAT4, D5, F5, A5]);
+    /// ```
+    #[inline]
+    pub fn minor_thirteenth_chord(&self) -> Chord<7> {
+        minor_thirteenth(*self)
+    }
+
+    /// Returns a major thirteenth chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<7>` representing the major thirteenth chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_major_thirteenth = C4.major_thirteenth_chord();
+    /// assert_eq!(c_major_thirteenth.notes(), &[C4, E4, G4, B4, D5, F5, A5]);
+    /// ```
+    #[inline]
+    pub fn major_thirteenth_chord(&self) -> Chord<7> {
+        major_thirteenth(*self)
     }
 }
 

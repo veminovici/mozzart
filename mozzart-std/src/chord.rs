@@ -20,21 +20,32 @@ use crate::Note;
 pub enum ChordQuality {
     MajorTriad,
     MinorTriad,
-    DiminishedTriad,
-    AugmentedTriad,
-    Sus2,
-    Sus4,
-    MajorSixth,
-    MinorSixth,
-    MajorSixthNinth,
-    MinorSixthNinth,
-    MajorSeventh,
     DominantSeventh,
     DominantSeventhNinth,
     MinorSeventh,
     MinorSeventhNinth,
-    HalfDiminishedSeventh,
+    MajorSeventh,
+    MinorMajorSeventh,
+    MajorSixth,
+    MinorSixth,
+    MajorSixthNinth,
+    MinorSixthNinth,
+    Sus2,
+    Sus4,
+    DiminishedTriad,
     DiminishedSeventh,
+    HalfDiminishedSeventh,
+    AugmentedTriad,
+    AugmentedSeventh,
+    DominantNinth,
+    MinorNinth,
+    MajorNinth,
+    DominantEleventh,
+    MinorEleventh,
+    MajorEleventh,
+    DominantThirteenth,
+    MinorThirteenth,
+    MajorThirteenth,
 }
 
 /// Represents a chord
@@ -169,11 +180,11 @@ pub fn minor_triad(root: Note) -> Chord<3> {
     Chord::new(ChordQuality::MinorTriad, notes)
 }
 
-/// Creates a diminished triad chord
+/// Creates a dominant seventh chord
 ///
-/// This function takes a root note and returns a `Chord<3>` representing a diminished triad.
-/// The diminished triad is a three-note chord consisting of the root note, a minor third,
-/// and a minor third.
+/// This function takes a root note and returns a `Chord<4>` representing a dominant seventh chord.
+/// The dominant seventh chord is a four-note chord consisting of the root note, a major third,
+/// a perfect fifth, and a minor seventh.
 ///
 /// # Examples
 ///
@@ -181,20 +192,20 @@ pub fn minor_triad(root: Note) -> Chord<3> {
 /// use mozzart_std::*;
 /// use mozzart_std::constants::*;
 ///
-/// let b_diminished = diminished_triad(B4);
-/// assert_eq!(b_diminished.quality(), ChordQuality::DiminishedTriad);
+/// let c_dominant_seventh = dominant_seventh(C4);
+/// assert_eq!(c_dominant_seventh.quality(), ChordQuality::DominantSeventh);
 /// ```
-pub fn diminished_triad(root: Note) -> Chord<3> {
-    let intervals = DIMINISHED_TRIAD_INTERVALS;
+pub fn dominant_seventh(root: Note) -> Chord<4> {
+    let intervals = DOMINANT_SEVENTH_INTERVALS;
     let notes = root.into_notes_from_intervals(intervals);
-    Chord::new(ChordQuality::DiminishedTriad, notes)
+    Chord::new(ChordQuality::DominantSeventh, notes)
 }
 
-/// Creates an augmented triad chord
+/// Creates a dominant seventh ninth chord
 ///
-/// This function takes a root note and returns a `Chord<3>` representing an augmented triad.
-/// The augmented triad is a three-note chord consisting of the root note, a major third,
-/// and a major third.
+/// This function takes a root note and returns a `Chord<5>` representing a dominant seventh ninth chord.
+/// The dominant seventh ninth chord is a five-note chord consisting of the root note, a major third,
+/// a perfect fifth, a minor seventh, and a major ninth.
 ///
 /// # Examples
 ///
@@ -202,13 +213,13 @@ pub fn diminished_triad(root: Note) -> Chord<3> {
 /// use mozzart_std::*;
 /// use mozzart_std::constants::*;
 ///
-/// let c_augmented = augmented_triad(C4);
-/// assert_eq!(c_augmented.quality(), ChordQuality::AugmentedTriad);
+/// let c_dominant_seventh_ninth = dominant_seventh_ninth(C4);
+/// assert_eq!(c_dominant_seventh_ninth.quality(), ChordQuality::DominantSeventhNinth);
 /// ```
-pub fn augmented_triad(root: Note) -> Chord<3> {
-    let intervals = AUGMENTED_TRIAD_INTERVALS;
+pub fn dominant_seventh_ninth(root: Note) -> Chord<5> {
+    let intervals = DOMINANT_SEVENTH_NINTH_INTERVALS;
     let notes = root.into_notes_from_intervals(intervals);
-    Chord::new(ChordQuality::AugmentedTriad, notes)
+    Chord::new(ChordQuality::DominantSeventhNinth, notes)
 }
 
 /// Creates a major seventh chord
@@ -232,27 +243,6 @@ pub fn major_seventh(root: Note) -> Chord<4> {
     Chord::new(ChordQuality::MajorSeventh, notes)
 }
 
-/// Creates a dominant seventh chord
-///
-/// This function takes a root note and returns a `Chord<4>` representing a dominant seventh chord.
-/// The dominant seventh chord is a four-note chord consisting of the root note, a major third,
-/// a perfect fifth, and a minor seventh.
-///
-/// # Examples
-///
-/// ```rust
-/// use mozzart_std::*;
-/// use mozzart_std::constants::*;
-///
-/// let c_dominant_seventh = dominant_seventh(C4);
-/// assert_eq!(c_dominant_seventh.quality(), ChordQuality::DominantSeventh);
-/// ```
-pub fn dominant_seventh(root: Note) -> Chord<4> {
-    let intervals = DOMINANT_SEVENTH_INTERVALS;
-    let notes = root.into_notes_from_intervals(intervals);
-    Chord::new(ChordQuality::DominantSeventh, notes)
-}
-
 /// Creates a minor seventh chord
 ///
 /// This function takes a root note and returns a `Chord<4>` representing a minor seventh chord.
@@ -274,11 +264,11 @@ pub fn minor_seventh(root: Note) -> Chord<4> {
     Chord::new(ChordQuality::MinorSeventh, notes)
 }
 
-/// Creates a half-diminished seventh chord
+/// Creates a minor seventh ninth chord
 ///
-/// This function takes a root note and returns a `Chord<4>` representing a half-diminished seventh chord.
-/// The half-diminished seventh chord is a four-note chord consisting of the root note, a minor third,
-/// a diminished fifth, and a minor seventh.
+/// This function takes a root note and returns a `Chord<5>` representing a minor seventh ninth chord.
+/// The minor seventh ninth chord is a five-note chord consisting of the root note, a minor third,
+/// a perfect fifth, a minor seventh, and a major ninth.
 ///
 /// # Examples
 ///
@@ -286,20 +276,20 @@ pub fn minor_seventh(root: Note) -> Chord<4> {
 /// use mozzart_std::*;
 /// use mozzart_std::constants::*;
 ///
-/// let c_half_diminished_seventh = half_diminished_seventh(C4);
-/// assert_eq!(c_half_diminished_seventh.quality(), ChordQuality::HalfDiminishedSeventh);
+/// let c_minor_seventh_ninth = minor_seventh_ninth(C4);
+/// assert_eq!(c_minor_seventh_ninth.quality(), ChordQuality::MinorSeventhNinth);
 /// ```
-pub fn half_diminished_seventh(root: Note) -> Chord<4> {
-    let intervals = HALF_DIMINISHED_SEVENTH_INTERVALS;
+pub fn minor_seventh_ninth(root: Note) -> Chord<5> {
+    let intervals = MINOR_SEVENTH_NINTH_INTERVALS;
     let notes = root.into_notes_from_intervals(intervals);
-    Chord::new(ChordQuality::HalfDiminishedSeventh, notes)
+    Chord::new(ChordQuality::MinorSeventhNinth, notes)
 }
 
-/// Creates a diminished seventh chord
+/// Creates a minor major seventh chord
 ///
-/// This function takes a root note and returns a `Chord<4>` representing a diminished seventh chord.
-/// The diminished seventh chord is a four-note chord consisting of the root note, a minor third,
-/// a diminished fifth, and a major sixth.
+/// This function takes a root note and returns a `Chord<4>` representing a minor major seventh chord.
+/// The minor major seventh chord is a four-note chord consisting of the root note, a minor third,
+/// a perfect fifth, and a major seventh.
 ///
 /// # Examples
 ///
@@ -307,13 +297,96 @@ pub fn half_diminished_seventh(root: Note) -> Chord<4> {
 /// use mozzart_std::*;
 /// use mozzart_std::constants::*;
 ///
-/// let c_diminished_seventh = diminished_seventh(C4);
-/// assert_eq!(c_diminished_seventh.quality(), ChordQuality::DiminishedSeventh);
+/// let c_minor_major_seventh = minor_major_seventh(C4);
+/// assert_eq!(c_minor_major_seventh.quality(), ChordQuality::MinorMajorSeventh);
 /// ```
-pub fn diminished_seventh(root: Note) -> Chord<4> {
-    let intervals = DIMINISHED_SEVENTH_INTERVALS;
+pub fn minor_major_seventh(root: Note) -> Chord<4> {
+    let intervals = MINOR_MAJOR_SEVENTH_INTERVALS;
     let notes = root.into_notes_from_intervals(intervals);
-    Chord::new(ChordQuality::DiminishedSeventh, notes)
+    Chord::new(ChordQuality::MinorMajorSeventh, notes)
+}
+
+/// Creates a major sixth chord
+///
+/// This function takes a root note and returns a `Chord<3>` representing a major sixth chord.
+/// The major sixth chord is a three-note chord consisting of the root note, a major third,
+/// and a major sixth.
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+///
+/// let c_major_sixth = major_sixth(C4);
+/// assert_eq!(c_major_sixth.quality(), ChordQuality::MajorSixth);
+/// ```
+pub fn major_sixth(root: Note) -> Chord<4> {
+    let intervals = MAJOR_SIXTH_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::MajorSixth, notes)
+}
+
+/// Creates a minor sixth chord
+///
+/// This function takes a root note and returns a `Chord<3>` representing a minor sixth chord.
+/// The minor sixth chord is a three-note chord consisting of the root note, a minor third,
+/// and a major sixth.
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+///
+/// let c_minor_sixth = minor_sixth(C4);
+/// assert_eq!(c_minor_sixth.quality(), ChordQuality::MinorSixth);
+/// ```
+pub fn minor_sixth(root: Note) -> Chord<4> {
+    let intervals = MINOR_SIXTH_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::MinorSixth, notes)
+}
+
+/// Creates a major sixth ninth chord
+///
+/// This function takes a root note and returns a `Chord<4>` representing a major sixth ninth chord.
+/// The major sixth ninth chord is a four-note chord consisting of the root note, a major third,
+/// a major sixth, and a major ninth.
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+/// let c_major_sixth_ninth = major_sixth_ninth(C4);
+/// assert_eq!(c_major_sixth_ninth.quality(), ChordQuality::MajorSixthNinth);
+/// ```
+pub fn major_sixth_ninth(root: Note) -> Chord<5> {
+    let intervals = MAJOR_SIXTH_NINTH_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::MajorSixthNinth, notes)
+}
+
+/// Creates a minor sixth ninth chord
+///
+/// This function takes a root note and returns a `Chord<4>` representing a minor sixth ninth chord.
+/// The minor sixth ninth chord is a four-note chord consisting of the root note, a minor third,
+/// a major sixth, and a major ninth.
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+///
+/// let c_minor_sixth_ninth = minor_sixth_ninth(C4);
+/// assert_eq!(c_minor_sixth_ninth.quality(), ChordQuality::MinorSixthNinth);
+/// ```
+pub fn minor_sixth_ninth(root: Note) -> Chord<5> {
+    let intervals = MINOR_SIXTH_NINTH_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::MinorSixthNinth, notes)
 }
 
 /// Creates a suspended 2 chord
@@ -358,32 +431,11 @@ pub fn sus4(root: Note) -> Chord<3> {
     Chord::new(ChordQuality::Sus4, notes)
 }
 
-/// Creates a major sixth chord
+/// Creates a diminished triad chord
 ///
-/// This function takes a root note and returns a `Chord<3>` representing a major sixth chord.
-/// The major sixth chord is a three-note chord consisting of the root note, a major third,
-/// and a major sixth.
-///
-/// # Examples
-///
-/// ```rust
-/// use mozzart_std::*;
-/// use mozzart_std::constants::*;
-///
-/// let c_major_sixth = major_sixth(C4);
-/// assert_eq!(c_major_sixth.quality(), ChordQuality::MajorSixth);
-/// ```
-pub fn major_sixth(root: Note) -> Chord<3> {
-    let intervals = MAJOR_SIXTH_INTERVALS;
-    let notes = root.into_notes_from_intervals(intervals);
-    Chord::new(ChordQuality::MajorSixth, notes)
-}
-
-/// Creates a minor sixth chord
-///
-/// This function takes a root note and returns a `Chord<3>` representing a minor sixth chord.
-/// The minor sixth chord is a three-note chord consisting of the root note, a minor third,
-/// and a major sixth.
+/// This function takes a root note and returns a `Chord<3>` representing a diminished triad.
+/// The diminished triad is a three-note chord consisting of the root note, a minor third,
+/// and a minor third.
 ///
 /// # Examples
 ///
@@ -391,40 +443,20 @@ pub fn major_sixth(root: Note) -> Chord<3> {
 /// use mozzart_std::*;
 /// use mozzart_std::constants::*;
 ///
-/// let c_minor_sixth = minor_sixth(C4);
-/// assert_eq!(c_minor_sixth.quality(), ChordQuality::MinorSixth);
+/// let b_diminished = diminished_triad(B4);
+/// assert_eq!(b_diminished.quality(), ChordQuality::DiminishedTriad);
 /// ```
-pub fn minor_sixth(root: Note) -> Chord<3> {
-    let intervals = MINOR_SIXTH_INTERVALS;
+pub fn diminished_triad(root: Note) -> Chord<3> {
+    let intervals = DIMINISHED_TRIAD_INTERVALS;
     let notes = root.into_notes_from_intervals(intervals);
-    Chord::new(ChordQuality::MinorSixth, notes)
+    Chord::new(ChordQuality::DiminishedTriad, notes)
 }
 
-/// Creates a major sixth ninth chord
+/// Creates a diminished seventh chord
 ///
-/// This function takes a root note and returns a `Chord<4>` representing a major sixth ninth chord.
-/// The major sixth ninth chord is a four-note chord consisting of the root note, a major third,
-/// a major sixth, and a major ninth.
-///
-/// # Examples
-///
-/// ```rust
-/// use mozzart_std::*;
-/// use mozzart_std::constants::*;
-/// let c_major_sixth_ninth = major_sixth_ninth(C4);
-/// assert_eq!(c_major_sixth_ninth.quality(), ChordQuality::MajorSixthNinth);
-/// ```
-pub fn major_sixth_ninth(root: Note) -> Chord<4> {
-    let intervals = MAJOR_SIXTH_NINTH_INTERVALS;
-    let notes = root.into_notes_from_intervals(intervals);
-    Chord::new(ChordQuality::MajorSixthNinth, notes)
-}
-
-/// Creates a minor sixth ninth chord
-///
-/// This function takes a root note and returns a `Chord<4>` representing a minor sixth ninth chord.
-/// The minor sixth ninth chord is a four-note chord consisting of the root note, a minor third,
-/// a major sixth, and a major ninth.
+/// This function takes a root note and returns a `Chord<4>` representing a diminished seventh chord.
+/// The diminished seventh chord is a four-note chord consisting of the root note, a minor third,
+/// a diminished fifth, and a major sixth.
 ///
 /// # Examples
 ///
@@ -432,19 +464,79 @@ pub fn major_sixth_ninth(root: Note) -> Chord<4> {
 /// use mozzart_std::*;
 /// use mozzart_std::constants::*;
 ///
-/// let c_minor_sixth_ninth = minor_sixth_ninth(C4);
-/// assert_eq!(c_minor_sixth_ninth.quality(), ChordQuality::MinorSixthNinth);
+/// let c_diminished_seventh = diminished_seventh(C4);
+/// assert_eq!(c_diminished_seventh.quality(), ChordQuality::DiminishedSeventh);
 /// ```
-pub fn minor_sixth_ninth(root: Note) -> Chord<4> {
-    let intervals = MINOR_SIXTH_NINTH_INTERVALS;
+pub fn diminished_seventh(root: Note) -> Chord<4> {
+    let intervals = DIMINISHED_SEVENTH_INTERVALS;
     let notes = root.into_notes_from_intervals(intervals);
-    Chord::new(ChordQuality::MinorSixthNinth, notes)
+    Chord::new(ChordQuality::DiminishedSeventh, notes)
 }
 
-/// Creates a dominant seventh ninth chord
+/// Creates a half-diminished seventh chord
 ///
-/// This function takes a root note and returns a `Chord<5>` representing a dominant seventh ninth chord.
-/// The dominant seventh ninth chord is a five-note chord consisting of the root note, a major third,
+/// This function takes a root note and returns a `Chord<4>` representing a half-diminished seventh chord.
+/// The half-diminished seventh chord is a four-note chord consisting of the root note, a minor third,
+/// a diminished fifth, and a minor seventh.
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+///
+/// let c_half_diminished_seventh = half_diminished_seventh(C4);
+/// assert_eq!(c_half_diminished_seventh.quality(), ChordQuality::HalfDiminishedSeventh);
+/// ```
+pub fn half_diminished_seventh(root: Note) -> Chord<4> {
+    let intervals = HALF_DIMINISHED_SEVENTH_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::HalfDiminishedSeventh, notes)
+}
+
+/// Creates an augmented triad chord
+///
+/// This function takes a root note and returns a `Chord<3>` representing an augmented triad.
+/// The augmented triad is a three-note chord consisting of the root note, a major third,
+/// and a major third.
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+///
+/// let c_augmented = augmented_triad(C4);
+/// assert_eq!(c_augmented.quality(), ChordQuality::AugmentedTriad);
+/// ```
+pub fn augmented_triad(root: Note) -> Chord<3> {
+    let intervals = AUGMENTED_TRIAD_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::AugmentedTriad, notes)
+}
+
+/// Creates an augmented seventh chord
+///
+/// This function takes a root note and returns a `Chord<4>` representing an augmented seventh chord.
+/// The augmented seventh chord is a four-note chord consisting of the root note, a major third,
+/// an augmented fifth, and an augmented seventh.
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+/// ```
+pub fn augmented_seventh(root: Note) -> Chord<4> {
+    let intervals = AUGMENTED_SEVENTH_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::AugmentedSeventh, notes)
+}
+
+/// Creates a dominant ninth chord
+///
+/// This function takes a root note and returns a `Chord<5>` representing a dominant ninth chord.
+/// The dominant ninth chord is a five-note chord consisting of the root note, a major third,
 /// a perfect fifth, a minor seventh, and a major ninth.
 ///
 /// # Examples
@@ -453,19 +545,19 @@ pub fn minor_sixth_ninth(root: Note) -> Chord<4> {
 /// use mozzart_std::*;
 /// use mozzart_std::constants::*;
 ///
-/// let c_dominant_seventh_ninth = dominant_seventh_ninth(C4);
-/// assert_eq!(c_dominant_seventh_ninth.quality(), ChordQuality::DominantSeventhNinth);
+/// let c_dominant_ninth = dominant_ninth(C4);
+/// assert_eq!(c_dominant_ninth.quality(), ChordQuality::DominantNinth);
 /// ```
-pub fn dominant_seventh_ninth(root: Note) -> Chord<5> {
-    let intervals = DOMINANT_SEVENTH_NINTH_INTERVALS;
+pub fn dominant_ninth(root: Note) -> Chord<5> {
+    let intervals = DOMINANT_NINTH_INTERVALS;
     let notes = root.into_notes_from_intervals(intervals);
-    Chord::new(ChordQuality::DominantSeventhNinth, notes)
+    Chord::new(ChordQuality::DominantNinth, notes)
 }
 
-/// Creates a minor seventh ninth chord
+/// Creates a minor ninth chord
 ///
-/// This function takes a root note and returns a `Chord<5>` representing a minor seventh ninth chord.
-/// The minor seventh ninth chord is a five-note chord consisting of the root note, a minor third,
+/// This function takes a root note and returns a `Chord<5>` representing a minor ninth chord.
+/// The minor ninth chord is a five-note chord consisting of the root note, a minor third,
 /// a perfect fifth, a minor seventh, and a major ninth.
 ///
 /// # Examples
@@ -474,13 +566,160 @@ pub fn dominant_seventh_ninth(root: Note) -> Chord<5> {
 /// use mozzart_std::*;
 /// use mozzart_std::constants::*;
 ///
-/// let c_minor_seventh_ninth = minor_seventh_ninth(C4);
-/// assert_eq!(c_minor_seventh_ninth.quality(), ChordQuality::MinorSeventhNinth);
+/// let c_minor_ninth = minor_ninth(C4);
+/// assert_eq!(c_minor_ninth.quality(), ChordQuality::MinorNinth);
 /// ```
-pub fn minor_seventh_ninth(root: Note) -> Chord<5> {
-    let intervals = MINOR_SEVENTH_NINTH_INTERVALS;
+pub fn minor_ninth(root: Note) -> Chord<5> {
+    let intervals = MINOR_NINTH_INTERVALS;
     let notes = root.into_notes_from_intervals(intervals);
-    Chord::new(ChordQuality::MinorSeventhNinth, notes)
+    Chord::new(ChordQuality::MinorNinth, notes)
+}
+
+/// Creates a major ninth chord
+///
+/// This function takes a root note and returns a `Chord<5>` representing a major ninth chord.
+/// The major ninth chord is a five-note chord consisting of the root note, a major third,
+/// a perfect fifth, a major seventh, and a major ninth.
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+///
+/// let c_major_ninth = major_ninth(C4);
+/// assert_eq!(c_major_ninth.quality(), ChordQuality::MajorNinth);
+/// ```
+pub fn major_ninth(root: Note) -> Chord<5> {
+    let intervals = MAJOR_NINTH_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::MajorNinth, notes)
+}
+
+/// Creates a dominant eleventh chord
+///
+/// This function takes a root note and returns a `Chord<6>` representing a dominant eleventh chord.
+/// The dominant eleventh chord is a six-note chord consisting of the root note, a major third,
+/// a perfect fifth, a minor seventh, a major ninth, and a major eleventh.
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+///
+/// let c_dominant_eleventh = dominant_eleventh(C4);
+/// assert_eq!(c_dominant_eleventh.quality(), ChordQuality::DominantEleventh);
+/// ```
+pub fn dominant_eleventh(root: Note) -> Chord<6> {
+    let intervals = DOMINANT_ELEVENTH_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::DominantEleventh, notes)
+}
+
+/// Creates a minor eleventh chord
+///
+/// This function takes a root note and returns a `Chord<6>` representing a minor eleventh chord.
+/// The minor eleventh chord is a six-note chord consisting of the root note, a minor third,
+/// a perfect fifth, a minor seventh, a major ninth, and a perfect eleventh.
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+///
+/// let c_minor_eleventh = minor_eleventh(C4);
+/// assert_eq!(c_minor_eleventh.quality(), ChordQuality::MinorEleventh);
+/// ```
+pub fn minor_eleventh(root: Note) -> Chord<6> {
+    let intervals = MINOR_ELEVENTH_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::MinorEleventh, notes)
+}
+
+/// Creates a major eleventh chord
+///
+/// This function takes a root note and returns a `Chord<6>` representing a major eleventh chord.
+/// The major eleventh chord is a six-note chord consisting of the root note, a major third,
+/// a perfect fifth, a major seventh, a major ninth, and a perfect eleventh.
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+///
+/// let c_major_eleventh = major_eleventh(C4);
+/// assert_eq!(c_major_eleventh.quality(), ChordQuality::MajorEleventh);
+/// ```
+pub fn major_eleventh(root: Note) -> Chord<6> {
+    let intervals = MAJOR_ELEVENTH_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::MajorEleventh, notes)
+}
+
+/// Creates a dominant thirteenth chord
+///
+/// This function takes a root note and returns a `Chord<7>` representing a dominant thirteenth chord.
+/// The dominant thirteenth chord is a seven-note chord consisting of the root note, a major third,
+/// a perfect fifth, a minor seventh, a major ninth, a perfect eleventh, and a major thirteenth.
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+///
+/// let c_dominant_thirteenth = dominant_thirteenth(C4);
+/// assert_eq!(c_dominant_thirteenth.quality(), ChordQuality::DominantThirteenth);
+/// ```
+pub fn dominant_thirteenth(root: Note) -> Chord<7> {
+    let intervals = DOMINANT_THIRTEENTH_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::DominantThirteenth, notes)
+}
+
+/// Creates a minor thirteenth chord
+///
+/// This function takes a root note and returns a `Chord<7>` representing a minor thirteenth chord.
+/// The minor thirteenth chord is a seven-note chord consisting of the root note, a minor third,
+/// a perfect fifth, a minor seventh, a major ninth, a perfect eleventh, and a minor thirteenth.    
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+///
+/// let c_minor_thirteenth = minor_thirteenth(C4);
+/// assert_eq!(c_minor_thirteenth.quality(), ChordQuality::MinorThirteenth);
+/// ```
+pub fn minor_thirteenth(root: Note) -> Chord<7> {
+    let intervals = MINOR_THIRTEENTH_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::MinorThirteenth, notes)
+}
+
+/// Creates a major thirteenth chord
+///
+/// This function takes a root note and returns a `Chord<7>` representing a major thirteenth chord.
+/// The major thirteenth chord is a seven-note chord consisting of the root note, a major third,
+/// a perfect fifth, a major seventh, a major ninth, a perfect eleventh, and a major thirteenth.
+///
+/// # Examples
+///
+/// ```rust
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+///
+/// let c_major_thirteenth = major_thirteenth(C4);
+/// assert_eq!(c_major_thirteenth.quality(), ChordQuality::MajorThirteenth);
+/// ```
+pub fn major_thirteenth(root: Note) -> Chord<7> {
+    let intervals = MAJOR_THIRTEENTH_INTERVALS;
+    let notes = root.into_notes_from_intervals(intervals);
+    Chord::new(ChordQuality::MajorThirteenth, notes)
 }
 
 #[cfg(test)]
@@ -489,19 +728,225 @@ mod tests {
 
     #[test]
     fn test_major_triad() {
-        let c_major = major_triad(C4);
-        assert_eq!(c_major.quality(), ChordQuality::MajorTriad);
-        assert_eq!(c_major.root(), C4);
-        assert_eq!(c_major.notes()[0], C4);
-        assert_eq!(c_major.notes()[1], E4);
-        assert_eq!(c_major.notes()[2], G4);
+        let scale = major_triad(C4);
+        assert_eq!(scale.quality(), ChordQuality::MajorTriad);
+        assert_eq!(scale.notes().len(), 3);
+        assert_eq!(scale.notes(), &[C4, E4, G4]);
     }
 
     #[test]
     fn test_minor_triad() {
-        let a_minor = minor_triad(A4);
-        assert_eq!(a_minor.quality(), ChordQuality::MinorTriad);
-        assert_eq!(a_minor.root(), A4);
-        assert_eq!(a_minor.notes()[0], A4);
+        let scale = minor_triad(C4);
+        assert_eq!(scale.quality(), ChordQuality::MinorTriad);
+        assert_eq!(scale.notes().len(), 3);
+        assert_eq!(scale.notes(), &[C4, DSHARP4, G4]);
+    }
+
+    #[test]
+    fn test_dominant_seventh() {
+        let scale = dominant_seventh(C4);
+        assert_eq!(scale.quality(), ChordQuality::DominantSeventh);
+        assert_eq!(scale.notes().len(), 4);
+        assert_eq!(scale.notes(), &[C4, E4, G4, BFLAT4]);
+    }
+
+    #[test]
+    fn test_dominant_seventh_ninth() {
+        let scale = dominant_seventh_ninth(C4);
+        assert_eq!(scale.quality(), ChordQuality::DominantSeventhNinth);
+        assert_eq!(scale.notes().len(), 5);
+        assert_eq!(scale.notes(), &[C4, E4, G4, BFLAT4, D5]);
+    }
+
+    #[test]
+    fn test_minor_seventh() {
+        let scale = minor_seventh(C4);
+        assert_eq!(scale.quality(), ChordQuality::MinorSeventh);
+        assert_eq!(scale.notes().len(), 4);
+        assert_eq!(scale.notes(), &[C4, EFLAT4, G4, BFLAT4]);
+    }
+
+    #[test]
+    fn test_minor_seventh_ninth() {
+        let scale = minor_seventh_ninth(C4);
+        assert_eq!(scale.quality(), ChordQuality::MinorSeventhNinth);
+        assert_eq!(scale.notes().len(), 5);
+        assert_eq!(scale.notes(), &[C4, EFLAT4, G4, BFLAT4, D5]);
+    }
+
+    #[test]
+    fn test_major_seventh() {
+        let scale = major_seventh(C4);
+        assert_eq!(scale.quality(), ChordQuality::MajorSeventh);
+        assert_eq!(scale.notes().len(), 4);
+        assert_eq!(scale.notes(), &[C4, E4, G4, B4]);
+    }
+
+    #[test]
+    fn test_minor_major_seventh() {
+        let scale = minor_major_seventh(C4);
+        assert_eq!(scale.quality(), ChordQuality::MinorMajorSeventh);
+        assert_eq!(scale.notes().len(), 4);
+        assert_eq!(scale.notes(), &[C4, EFLAT4, G4, B4]);
+    }
+
+    #[test]
+    fn test_major_sixth() {
+        let scale = major_sixth(C4);
+        assert_eq!(scale.quality(), ChordQuality::MajorSixth);
+        assert_eq!(scale.notes().len(), 4);
+        assert_eq!(scale.notes(), &[C4, E4, G4, A4]);
+    }
+
+    #[test]
+    fn test_minor_sixth() {
+        let scale = minor_sixth(C4);
+        assert_eq!(scale.quality(), ChordQuality::MinorSixth);
+        assert_eq!(scale.notes().len(), 4);
+        assert_eq!(scale.notes(), &[C4, EFLAT4, G4, A4]);
+    }
+
+    #[test]
+    fn test_major_sixth_ninth() {
+        let scale = major_sixth_ninth(C4);
+        assert_eq!(scale.quality(), ChordQuality::MajorSixthNinth);
+        assert_eq!(scale.notes().len(), 5);
+        assert_eq!(scale.notes(), &[C4, E4, G4, A4, D5]);
+    }
+
+    #[test]
+    fn test_minor_sixth_ninth() {
+        let scale = minor_sixth_ninth(C4);
+        assert_eq!(scale.quality(), ChordQuality::MinorSixthNinth);
+        assert_eq!(scale.notes().len(), 5);
+        assert_eq!(scale.notes(), &[C4, EFLAT4, G4, A4, D5]);
+    }
+
+    #[test]
+    fn test_sus2() {
+        let scale = sus2(C4);
+        assert_eq!(scale.quality(), ChordQuality::Sus2);
+        assert_eq!(scale.notes().len(), 3);
+        assert_eq!(scale.notes(), &[C4, D4, G4]);
+    }
+
+    #[test]
+    fn test_sus4() {
+        let scale = sus4(C4);
+        assert_eq!(scale.quality(), ChordQuality::Sus4);
+        assert_eq!(scale.notes().len(), 3);
+        assert_eq!(scale.notes(), &[C4, F4, G4]);
+    }
+
+    #[test]
+    fn test_diminished_triad() {
+        let scale = diminished_triad(C4);
+        assert_eq!(scale.quality(), ChordQuality::DiminishedTriad);
+        assert_eq!(scale.notes().len(), 3);
+        assert_eq!(scale.notes(), &[C4, EFLAT4, GFLAT4]);
+    }
+
+    #[test]
+    fn test_diminished_seventh() {
+        let scale = diminished_seventh(C4);
+        assert_eq!(scale.quality(), ChordQuality::DiminishedSeventh);
+        assert_eq!(scale.notes().len(), 4);
+        assert_eq!(scale.notes(), &[C4, EFLAT4, GFLAT4, A4]);
+    }
+
+    #[test]
+    fn test_half_diminished_seventh() {
+        let scale = half_diminished_seventh(C4);
+        assert_eq!(scale.quality(), ChordQuality::HalfDiminishedSeventh);
+        assert_eq!(scale.notes().len(), 4);
+        assert_eq!(scale.notes(), &[C4, EFLAT4, GFLAT4, BFLAT4]);
+    }
+
+    #[test]
+    fn test_augmented_triad() {
+        let scale = augmented_triad(C4);
+        assert_eq!(scale.quality(), ChordQuality::AugmentedTriad);
+        assert_eq!(scale.notes().len(), 3);
+        assert_eq!(scale.notes(), &[C4, E4, GSHARP4]);
+    }
+
+    #[test]
+    fn test_augmented_seventh() {
+        let scale = augmented_seventh(C4);
+        assert_eq!(scale.quality(), ChordQuality::AugmentedSeventh);
+        assert_eq!(scale.notes().len(), 4);
+        assert_eq!(scale.notes(), &[C4, E4, GSHARP4, BFLAT4]);
+    }
+
+    #[test]
+    fn test_dominant_ninth() {
+        let scale = dominant_ninth(C4);
+        assert_eq!(scale.quality(), ChordQuality::DominantNinth);
+        assert_eq!(scale.notes().len(), 5);
+        assert_eq!(scale.notes(), &[C4, E4, G4, BFLAT4, D5]);
+    }
+
+    #[test]
+    fn test_minor_ninth() {
+        let scale = minor_ninth(C4);
+        assert_eq!(scale.quality(), ChordQuality::MinorNinth);
+        assert_eq!(scale.notes().len(), 5);
+        assert_eq!(scale.notes(), &[C4, EFLAT4, G4, BFLAT4, D5]);
+    }
+
+    #[test]
+    fn test_major_ninth() {
+        let scale = major_ninth(C4);
+        assert_eq!(scale.quality(), ChordQuality::MajorNinth);
+        assert_eq!(scale.notes().len(), 5);
+        assert_eq!(scale.notes(), &[C4, E4, G4, B4, D5]);
+    }
+
+    #[test]
+    fn test_dominant_eleventh() {
+        let scale = dominant_eleventh(C4);
+        assert_eq!(scale.quality(), ChordQuality::DominantEleventh);
+        assert_eq!(scale.notes().len(), 6);
+        assert_eq!(scale.notes(), &[C4, E4, G4, BFLAT4, D5, F5]);
+    }
+
+    #[test]
+    fn test_minor_eleventh() {
+        let scale = minor_eleventh(C4);
+        assert_eq!(scale.quality(), ChordQuality::MinorEleventh);
+        assert_eq!(scale.notes().len(), 6);
+        assert_eq!(scale.notes(), &[C4, EFLAT4, G4, BFLAT4, D5, F5]);
+    }
+
+    #[test]
+    fn test_major_eleventh() {
+        let scale = major_eleventh(C4);
+        assert_eq!(scale.quality(), ChordQuality::MajorEleventh);
+        assert_eq!(scale.notes().len(), 6);
+        assert_eq!(scale.notes(), &[C4, E4, G4, B4, D5, F5]);
+    }
+
+    #[test]
+    fn test_dominant_thirteenth() {
+        let scale = dominant_thirteenth(C4);
+        assert_eq!(scale.quality(), ChordQuality::DominantThirteenth);
+        assert_eq!(scale.notes().len(), 7);
+        assert_eq!(scale.notes(), &[C4, E4, G4, BFLAT4, D5, F5, A5]);
+    }
+
+    #[test]
+    fn test_minor_thirteenth() {
+        let scale = minor_thirteenth(C4);
+        assert_eq!(scale.quality(), ChordQuality::MinorThirteenth);
+        assert_eq!(scale.notes().len(), 7);
+        assert_eq!(scale.notes(), &[C4, EFLAT4, G4, BFLAT4, D5, F5, A5]);
+    }
+
+    #[test]
+    fn test_major_thirteenth() {
+        let scale = major_thirteenth(C4);
+        assert_eq!(scale.quality(), ChordQuality::MajorThirteenth);
+        assert_eq!(scale.notes().len(), 7);
+        assert_eq!(scale.notes(), &[C4, E4, G4, B4, D5, F5, A5]);
     }
 }

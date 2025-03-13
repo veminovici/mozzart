@@ -10,8 +10,8 @@ use crate::Note;
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_major = major_triad(C4);
 /// assert_eq!(c_major.quality(), ChordQuality::MajorTriad);
@@ -46,8 +46,8 @@ pub enum ChordQuality {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_major = major_triad(C4);
 /// assert_eq!(c_major.quality(), ChordQuality::MajorTriad);
@@ -88,8 +88,8 @@ impl<const N: usize> Chord<N> {
     /// # Examples
     ///
     /// ```rust
-    /// use mazzart_ply::*;
-    /// use mazzart_ply::constants::*;
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
     ///
     /// let c_major = major_triad(C4);
     /// assert_eq!(c_major.notes(), &[C4, E4, G4]);
@@ -106,8 +106,8 @@ impl<const N: usize> Chord<N> {
     /// # Examples
     ///
     /// ```rust
-    /// use mazzart_ply::*;
-    /// use mazzart_ply::constants::*;
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
     ///
     /// let c_major = major_triad(C4);
     /// assert_eq!(c_major.quality(), ChordQuality::MajorTriad);
@@ -136,8 +136,8 @@ impl<const N: usize> Chord<N> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_major = major_triad(C4);
 /// assert_eq!(c_major.quality(), ChordQuality::MajorTriad);
@@ -157,8 +157,8 @@ pub fn major_triad(root: Note) -> Chord<3> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let a_minor = minor_triad(A4);
 /// assert_eq!(a_minor.quality(), ChordQuality::MinorTriad);
@@ -178,8 +178,8 @@ pub fn minor_triad(root: Note) -> Chord<3> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let b_diminished = diminished_triad(B4);
 /// assert_eq!(b_diminished.quality(), ChordQuality::DiminishedTriad);
@@ -199,8 +199,8 @@ pub fn diminished_triad(root: Note) -> Chord<3> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_augmented = augmented_triad(C4);
 /// assert_eq!(c_augmented.quality(), ChordQuality::AugmentedTriad);
@@ -220,8 +220,8 @@ pub fn augmented_triad(root: Note) -> Chord<3> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_major_seventh = major_seventh(C4);
 /// assert_eq!(c_major_seventh.quality(), ChordQuality::MajorSeventh);
@@ -241,8 +241,8 @@ pub fn major_seventh(root: Note) -> Chord<4> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_dominant_seventh = dominant_seventh(C4);
 /// assert_eq!(c_dominant_seventh.quality(), ChordQuality::DominantSeventh);
@@ -262,8 +262,8 @@ pub fn dominant_seventh(root: Note) -> Chord<4> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_minor_seventh = minor_seventh(C4);
 /// assert_eq!(c_minor_seventh.quality(), ChordQuality::MinorSeventh);
@@ -283,8 +283,8 @@ pub fn minor_seventh(root: Note) -> Chord<4> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_half_diminished_seventh = half_diminished_seventh(C4);
 /// assert_eq!(c_half_diminished_seventh.quality(), ChordQuality::HalfDiminishedSeventh);
@@ -304,8 +304,8 @@ pub fn half_diminished_seventh(root: Note) -> Chord<4> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_diminished_seventh = diminished_seventh(C4);
 /// assert_eq!(c_diminished_seventh.quality(), ChordQuality::DiminishedSeventh);
@@ -325,8 +325,8 @@ pub fn diminished_seventh(root: Note) -> Chord<4> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_suspended_2 = sus2(C4);
 /// assert_eq!(c_suspended_2.quality(), ChordQuality::Sus2);
@@ -346,8 +346,8 @@ pub fn sus2(root: Note) -> Chord<3> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_suspended_4 = sus4(C4);
 /// assert_eq!(c_suspended_4.quality(), ChordQuality::Sus4);
@@ -367,8 +367,8 @@ pub fn sus4(root: Note) -> Chord<3> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_major_sixth = major_sixth(C4);
 /// assert_eq!(c_major_sixth.quality(), ChordQuality::MajorSixth);
@@ -388,8 +388,8 @@ pub fn major_sixth(root: Note) -> Chord<3> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_minor_sixth = minor_sixth(C4);
 /// assert_eq!(c_minor_sixth.quality(), ChordQuality::MinorSixth);
@@ -409,8 +409,8 @@ pub fn minor_sixth(root: Note) -> Chord<3> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 /// let c_major_sixth_ninth = major_sixth_ninth(C4);
 /// assert_eq!(c_major_sixth_ninth.quality(), ChordQuality::MajorSixthNinth);
 /// ```
@@ -429,8 +429,8 @@ pub fn major_sixth_ninth(root: Note) -> Chord<4> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_minor_sixth_ninth = minor_sixth_ninth(C4);
 /// assert_eq!(c_minor_sixth_ninth.quality(), ChordQuality::MinorSixthNinth);
@@ -450,8 +450,8 @@ pub fn minor_sixth_ninth(root: Note) -> Chord<4> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_dominant_seventh_ninth = dominant_seventh_ninth(C4);
 /// assert_eq!(c_dominant_seventh_ninth.quality(), ChordQuality::DominantSeventhNinth);
@@ -471,8 +471,8 @@ pub fn dominant_seventh_ninth(root: Note) -> Chord<5> {
 /// # Examples
 ///
 /// ```rust
-/// use mazzart_ply::*;
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c_minor_seventh_ninth = minor_seventh_ninth(C4);
 /// assert_eq!(c_minor_seventh_ninth.quality(), ChordQuality::MinorSeventhNinth);

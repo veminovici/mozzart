@@ -29,7 +29,7 @@ impl Step {
     ///
     /// # Examples
     /// ```
-    /// use mazzart_ply::constants::*;
+    /// use mozzart_std::constants::*;
     ///
     /// let perfect_fifth = PERFECT_FIFTH;
     /// assert_eq!(perfect_fifth.semitones(), 7);

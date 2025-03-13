@@ -1,7 +1,7 @@
 [workspace]
 members = [
     "mozzart-app",
-    "mazzart-ply"
+    "mazzart-std"
 ]
 
 resolver = "2"

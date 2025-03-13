@@ -80,7 +80,7 @@ impl<const N: usize> Scale<N> {
     ///
     /// # Examples
     /// ```
-    /// use mazzart_ply::{constants::*, major_scale};
+    /// use mozzart_std::{constants::*, major_scale};
     ///
     /// let d_major = major_scale(D4);
     /// assert_eq!(d_major.root(), D4);
@@ -100,7 +100,7 @@ impl<const N: usize> Scale<N> {
     ///
     /// # Examples
     /// ```
-    /// use mazzart_ply::{constants::*, major_scale};
+    /// use mozzart_std::{constants::*, major_scale};
     ///
     /// let c_major = major_scale(C4);
     /// let notes = c_major.notes();
@@ -125,7 +125,7 @@ impl<const N: usize> Scale<N> {
     ///
     /// # Examples
     /// ```
-    /// use mazzart_ply::{constants::*, major_scale, natural_minor_scale, ScaleQuality};
+    /// use mozzart_std::{constants::*, major_scale, natural_minor_scale, ScaleQuality};
     ///
     /// let c_major = major_scale(C4);
     /// assert_eq!(c_major.quality(), ScaleQuality::Major);
@@ -152,7 +152,7 @@ impl<const N: usize> Scale<N> {
 ///
 /// # Examples
 /// ```
-/// use mazzart_ply::{Note, constants::*, major_scale};
+/// use mozzart_std::{Note, constants::*, major_scale};
 ///
 /// // Create a C major scale
 /// let c_major = major_scale(C4);
@@ -180,7 +180,8 @@ pub fn major_scale(root: Note) -> Scale<8> {
 ///
 /// # Examples
 /// ```
-/// use mazzart_ply::{Note, constants::*, natural_minor_scale};
+/// use mozzart_std::{Note, natural_minor_scale};
+/// use mozzart_std::constants::*;
 ///
 /// // Create an A minor scale
 /// let a_minor = natural_minor_scale(A4);
@@ -215,7 +216,7 @@ pub fn natural_minor_scale(root: Note) -> Scale<8> {
 ///
 /// # Examples
 /// ```
-/// use mazzart_ply::{Note, constants::*, harmonic_minor_scale};
+/// use mozzart_std::{Note, constants::*, harmonic_minor_scale};
 ///
 /// // Create an A harmonic minor scale
 /// let a_harmonic_minor = harmonic_minor_scale(A4);
@@ -250,7 +251,7 @@ pub fn harmonic_minor_scale(root: Note) -> Scale<8> {
 ///
 /// # Examples
 /// ```
-/// use mazzart_ply::{Note, constants::*, melodic_minor_scale};
+/// use mozzart_std::{Note, constants::*, melodic_minor_scale};
 ///
 /// // Create an A melodic minor scale
 /// let a_melodic_minor = melodic_minor_scale(A4);

@@ -30,7 +30,7 @@ impl Note {
     ///
     /// # Examples
     /// ```ignore
-    /// use mazzart_ply::Note;
+    /// use mozzart_std::Note;
     ///
     /// let middle_c = Note::new(60);  // C4
     /// let a440 = Note::new(69);      // A4 (standard tuning reference at 440Hz)
@@ -59,7 +59,7 @@ impl Note {
     ///
     /// # Examples
     /// ```ignore
-    /// use mazzart_ply::constants::*;
+    /// use mozzart_std::constants::*;
     ///
     /// // Create a C major scale using whole and half steps
     /// let c4 = C4;
@@ -102,7 +102,7 @@ impl Note {
     ///
     /// # Examples
     /// ```ignore
-    /// use mazzart_ply::constants::*;
+    /// use mozzart_std::constants::*;
     ///
     /// // Create a C major chord using fixed intervals from the root
     /// let c4 = C4;
@@ -140,8 +140,8 @@ impl Note {
     ///
     /// # Examples
     /// ```
-    /// use mazzart_ply::*;
-    /// use mazzart_ply::constants::*;
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
     ///
     /// // Create a C minor triad using intervals
     /// let c_minor_triad: Vec<_> = C4.into_notes_from_steps([MINOR_THIRD.into(), MAJOR_THIRD.into()]).collect();
@@ -176,7 +176,7 @@ impl Note {
     ///
     /// # Examples
     /// ```
-    /// use mazzart_ply::constants::*;
+    /// use mozzart_std::constants::*;
     ///
     /// // Create a C major chord (C, E, G)
     /// let c_major_chord: Vec<_> = C4.into_notes_from_intervals([MAJOR_THIRD, PERFECT_FIFTH]).collect();
@@ -210,7 +210,7 @@ impl Note {
     ///
     /// # Examples
     /// ```
-    /// use mazzart_ply::constants::*;
+    /// use mozzart_std::constants::*;
     ///
     /// assert_eq!(C4.midi_number(), 60);
     /// assert_eq!(A4.midi_number(), 69);
@@ -397,7 +397,7 @@ impl SubAssign<Step> for Note {
 ///
 /// # Examples
 /// ```
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c4 = C4;
 /// let c5 = c4 >> 1;  // C5 (one octave higher)
@@ -430,7 +430,7 @@ impl ShrAssign<u8> for Note {
 ///
 /// # Examples
 /// ```
-/// use mazzart_ply::constants::*;
+/// use mozzart_std::constants::*;
 ///
 /// let c5 = C5;
 /// let c4 = c5 << 1;  // C4 (one octave lower)

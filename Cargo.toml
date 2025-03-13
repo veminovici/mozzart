@@ -1,6 +1,5 @@
 [workspace]
 members = [
-    "mozzart-std",
     "mozzart-app",
     "mazzart-ply"
 ]

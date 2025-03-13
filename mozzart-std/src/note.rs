@@ -1,4 +1,4 @@
-use crate::{major_scale, Interval, Scale, Step};
+use crate::*;
 use std::ops::{Add, AddAssign, Shl, ShlAssign, Shr, ShrAssign, Sub, SubAssign};
 
 /// Represents a musical note using MIDI note numbering
@@ -235,6 +235,40 @@ impl Note {
     /// ```
     pub fn major_scale(&self) -> Scale<8> {
         major_scale(*self)
+    }
+
+    /// Returns a natural minor scale starting from this note
+    ///
+    /// # Returns
+    /// A `Scale<8>` representing the natural minor scale starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_natural_minor_scale = C4.natural_minor_scale();
+    /// assert_eq!(c_natural_minor_scale.notes(), &[C4, D4, EFLAT4, F4, G4, AFLAT4, BFLAT4, C5]);
+    /// ```
+    pub fn natural_minor_scale(&self) -> Scale<8> {
+        natural_minor_scale(*self)
+    }
+
+    /// Returns a major triad chord starting from this note
+    ///
+    /// # Returns
+    /// A `Chord<3>` representing the major triad chord starting from this note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c_major_triad = C4.major_triad_chord();
+    /// assert_eq!(c_major_triad.notes(), &[C4, E4, G4]);
+    /// ```
+    pub fn major_triad_chord(&self) -> Chord<3> {
+        major_triad(*self)
     }
 }
 

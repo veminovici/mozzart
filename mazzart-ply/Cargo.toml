@@ -1,0 +1,8 @@
+[package]
+name = "mazzart-ply"
+version = "0.1.0"
+edition = "2021"
+description = "Polyphony and voice-leading library for the Mozzart music system"
+license = "MIT"
+
+[dependencies]

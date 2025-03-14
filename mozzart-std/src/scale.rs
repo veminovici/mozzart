@@ -3,12 +3,55 @@ use crate::{Interval, Note, Step};
 use std::fmt;
 use std::marker::PhantomData;
 
+/// Defines the musical quality of a scale, providing its name and characteristics
+///
+/// This trait is implemented by various scale quality types, each representing
+/// a specific scale pattern (major, minor, harmonic minor, etc.).
+/// Scale qualities define the pattern of intervals that give each scale its distinct sound.
 pub trait ScaleQuality {
+    /// Returns the name of the scale quality
     fn name() -> &'static str;
 }
+
+/// Represents the major scale quality
+///
+/// The major scale follows the pattern of whole and half steps: W-W-H-W-W-W-H.
+/// It is one of the most common scales in Western music and has a bright,
+/// happy, or resolved sound. The major scale forms the basis of major tonality
+/// and is often associated with positive emotional expressions in music.
 pub struct MajorScaleQuality;
+
+/// Represents the natural minor scale quality (also known as Aeolian mode)
+///
+/// The natural minor scale follows the pattern of whole and half steps: W-H-W-W-H-W-W.
+/// It has a darker, more melancholic sound compared to the major scale.
+/// The natural minor scale forms the basis of minor tonality and is often
+/// associated with sad, serious, or contemplative emotional expressions in music.
 pub struct MinorScaleQuality;
+
+/// Represents the harmonic minor scale quality
+///
+/// The harmonic minor scale is based on the natural minor scale but with a raised 7th degree.
+/// It follows the pattern: W-H-W-W-H-(W+H)-H, where W+H represents an augmented second (3 semitones).
+///
+/// The raised 7th creates a leading tone that has a stronger pull to the tonic,
+/// and the augmented second between the 6th and 7th degrees gives the scale
+/// its distinctive exotic sound. This scale is commonly used in classical music and
+/// various world music traditions, particularly those of Eastern Europe and the Middle East.
 pub struct HarmonicMinorScaleQuality;
+
+/// Represents the melodic minor scale quality (ascending form)
+///
+/// The melodic minor scale is based on the natural minor scale but with raised 6th and 7th degrees.
+/// It follows the pattern: W-H-W-W-W-W-H.
+///
+/// The raised 6th and 7th degrees create a smoother ascending melodic line.
+/// Traditionally, the descending form reverts to the natural minor scale,
+/// though in modern practice (especially in jazz), the ascending form is
+/// often used both up and down.
+///
+/// This scale is commonly used in classical, jazz, and contemporary music,
+/// offering a distinctive sound that is neither fully major nor minor.
 pub struct MelodicMinorScaleQuality;
 
 impl ScaleQuality for MajorScaleQuality {

@@ -1,6 +1,4 @@
 use crate::{constants::SEMITONES_IN_OCTAVE, *};
-use std::fmt;
-use std::ops::{Add, AddAssign, Shl, ShlAssign, Shr, ShrAssign, Sub, SubAssign};
 
 /// Represents a musical note using MIDI note numbering
 ///
@@ -757,278 +755,418 @@ impl From<&Note> for u8 {
     }
 }
 
-/// Implements addition of an interval to a note, producing a new note
-///
-/// This allows for transposition of notes by adding musical intervals.
-/// For example, adding a perfect fifth (7 semitones) to C4 results in G4.
-impl Add<Interval> for Note {
-    type Output = Note;
+mod ops {
+    use super::*;
+    use std::ops::{Add, AddAssign, Shl, ShlAssign, Shr, ShrAssign, Sub, SubAssign};
 
-    #[inline]
-    fn add(self, interval: Interval) -> Self::Output {
-        let interval: u8 = interval.into();
-        Note::new(self.0 + interval)
+    /// Implements addition of an interval to a note, producing a new note
+    ///
+    /// This allows for transposition of notes by adding musical intervals.
+    /// For example, adding a perfect fifth (7 semitones) to C4 results in G4.
+    impl Add<Interval> for Note {
+        type Output = Note;
+
+        #[inline]
+        fn add(self, interval: Interval) -> Self::Output {
+            let interval: u8 = interval.into();
+            Note::new(self.0 + interval)
+        }
+    }
+
+    /// Implements in-place addition of an interval to a note
+    ///
+    /// This allows for modifying a note by adding a musical interval directly.
+    impl AddAssign<Interval> for Note {
+        #[inline]
+        fn add_assign(&mut self, interval: Interval) {
+            let interval: u8 = interval.into();
+            self.0 = self.0 + interval;
+        }
+    }
+
+    /// Implements addition of an interval to a note, producing a new note
+    ///
+    /// This allows for transposition of notes by adding musical intervals.
+    /// For example, adding a perfect fifth (7 semitones) to C4 results in G4.
+    impl Add<&Interval> for Note {
+        type Output = Note;
+
+        #[inline]
+        fn add(self, interval: &Interval) -> Self::Output {
+            let interval: u8 = interval.into();
+            Note::new(self.0 + interval)
+        }
+    }
+
+    /// Implements in-place addition of an interval to a note
+    ///
+    /// This allows for modifying a note by adding a musical interval directly.
+    impl AddAssign<&Interval> for Note {
+        #[inline]
+        fn add_assign(&mut self, interval: &Interval) {
+            let interval: u8 = interval.into();
+            self.0 = self.0 + interval;
+        }
+    }
+
+    /// Implements subtraction of an interval from a note, producing a new note
+    ///
+    /// This allows for downward transposition of notes by musical intervals.
+    /// For example, subtracting a perfect fifth (7 semitones) from C5 results in F4.
+    impl Sub<Interval> for Note {
+        type Output = Note;
+
+        #[inline]
+        fn sub(self, interval: Interval) -> Self::Output {
+            let interval: u8 = interval.into();
+            Note::new(self.0 - interval)
+        }
+    }
+
+    /// Implements in-place subtraction of an interval from a note
+    ///
+    /// This allows for modifying a note by subtracting a musical interval directly.
+    impl SubAssign<Interval> for Note {
+        #[inline]
+        fn sub_assign(&mut self, interval: Interval) {
+            let interval: u8 = interval.into();
+            self.0 = self.0 - interval;
+        }
+    }
+
+    /// Implements addition of a step to a note, producing a new note
+    ///
+    /// This allows for transposition of notes by adding musical steps.
+    /// For example, adding a whole step (2 semitones) to C4 results in D4.
+    impl Add<Step> for Note {
+        type Output = Note;
+
+        #[inline]
+        fn add(self, step: Step) -> Self::Output {
+            let step: u8 = step.into();
+            Note::new(self.0 + step)
+        }
+    }
+
+    /// Implements in-place addition of a step to a note
+    ///
+    /// This allows for modifying a note by adding a musical step directly.
+    impl AddAssign<Step> for Note {
+        #[inline]
+        fn add_assign(&mut self, step: Step) {
+            let step: u8 = step.into();
+            self.0 = self.0 + step;
+        }
+    }
+
+    /// Implements addition of a step to a note, producing a new note
+    ///
+    /// This allows for transposition of notes by adding musical steps.
+    /// For example, adding a whole step (2 semitones) to C4 results in D4.
+    impl Add<&Step> for Note {
+        type Output = Note;
+
+        #[inline]
+        fn add(self, step: &Step) -> Self::Output {
+            let step: u8 = step.into();
+            Note::new(self.0 + step)
+        }
+    }
+
+    /// Implements in-place addition of a step to a note
+    ///
+    /// This allows for modifying a note by adding a musical step directly.
+    impl AddAssign<&Step> for Note {
+        #[inline]
+        fn add_assign(&mut self, step: &Step) {
+            let step: u8 = step.into();
+            self.0 = self.0 + step;
+        }
+    }
+
+    /// Implements subtraction of an interval from a note, producing a new note
+    ///
+    /// This allows for downward transposition of notes by musical steps.
+    /// For example, subtracting a whole step (2 semitones) from C5 results in A4.
+    impl Sub<Step> for Note {
+        type Output = Note;
+
+        #[inline]
+        fn sub(self, step: Step) -> Self::Output {
+            let step: u8 = step.into();
+            Note::new(self.0 - step)
+        }
+    }
+
+    /// Implements in-place subtraction of a step from a note
+    ///
+    /// This allows for modifying a note by subtracting a musical step directly.
+    impl SubAssign<Step> for Note {
+        #[inline]
+        fn sub_assign(&mut self, step: Step) {
+            let step: u8 = step.into();
+            self.0 = self.0 - step;
+        }
+    }
+
+    /// Implements subtraction of a note from another note, producing a step
+    ///
+    /// This allows for calculating the interval between two notes.
+    /// For example, subtracting C4 from D4 results in a whole step (2 semitones).
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::*;
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c4 = C4;
+    /// let d4 = D4;
+    /// let step = d4 - c4;
+    /// assert_eq!(step, WHOLE);
+    /// ```
+    impl Sub<Note> for Note {
+        type Output = Step;
+
+        #[inline]
+        fn sub(self, other: Note) -> Self::Output {
+            Step::new(self.0 - other.0)
+        }
+    }
+
+    /// Implements the right shift operator for notes, which transposes up by octaves
+    ///
+    /// Each octave shift up adds 12 semitones to the note.
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c4 = C4;
+    /// let c5 = c4 >> 1;  // C5 (one octave higher)
+    /// let c6 = c4 >> 2;  // C6 (two octaves higher)
+    /// ```
+    impl Shr<u8> for Note {
+        type Output = Note;
+
+        #[inline]
+        fn shr(self, octaves: u8) -> Self::Output {
+            let interval = Interval::from_octave(octaves);
+            self.add(interval)
+        }
+    }
+
+    /// Implements in-place right shift for notes, which transposes up by octaves
+    ///
+    /// Each octave shift up adds 12 semitones to the note.
+    impl ShrAssign<u8> for Note {
+        #[inline]
+        fn shr_assign(&mut self, octaves: u8) {
+            let interval = Interval::from_octave(octaves);
+            self.add_assign(interval);
+        }
+    }
+
+    /// Implements the left shift operator for notes, which transposes down by octaves
+    ///
+    /// Each octave shift down subtracts 12 semitones from the note.
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::constants::*;
+    ///
+    /// let c5 = C5;
+    /// let c4 = c5 << 1;  // C4 (one octave lower)
+    /// let c3 = c5 << 2;  // C3 (two octaves lower)
+    /// ```
+    impl Shl<u8> for Note {
+        type Output = Note;
+
+        #[inline]
+        fn shl(self, octaves: u8) -> Self::Output {
+            let interval = Interval::from_octave(octaves);
+            self.sub(interval)
+        }
+    }
+
+    /// Implements in-place left shift for notes, which transposes down by octaves
+    ///
+    /// Each octave shift down subtracts 12 semitones from the note.
+    impl ShlAssign<u8> for Note {
+        #[inline]
+        fn shl_assign(&mut self, octaves: u8) {
+            let interval = Interval::from_octave(octaves);
+            self.sub_assign(interval);
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use crate::constants::*;
+
+        #[test]
+        fn test_adding_interval() {
+            let c4 = C4;
+
+            // Test addition
+            let d4 = c4 + WHOLE;
+            assert_eq!(62u8, d4.into());
+            assert_eq!(D4, d4);
+
+            let e4 = d4 + WHOLE;
+            assert_eq!(64u8, e4.into());
+            assert_eq!(E4, e4);
+
+            let f4 = e4 + HALF;
+            assert_eq!(65u8, f4.into());
+            assert_eq!(F4, f4);
+        }
+
+        #[test]
+        fn test_adding_step() {
+            let c4 = C4;
+            let d4 = c4 + WHOLE;
+            assert_eq!(62u8, d4.into());
+            assert_eq!(D4, d4);
+        }
+
+        #[test]
+        fn test_adding_interval_in_place() {
+            let mut note = C4; // C4
+
+            // Test in-place addition
+            note += WHOLE;
+            assert_eq!(62u8, note.into()); // D4
+            assert_eq!(D4, note);
+            note += HALF;
+            assert_eq!(63u8, note.into()); // D#4/Eb4
+            assert_eq!(DSHARP4, note);
+        }
+
+        #[test]
+        fn test_adding_step_in_place() {
+            let mut note = C4;
+            note += WHOLE;
+            assert_eq!(62u8, note.into());
+            assert_eq!(D4, note);
+        }
+
+        #[test]
+        fn test_subtracting_interval() {
+            let a4 = A4;
+
+            // Test subtraction
+            let g4 = a4 - WHOLE;
+            assert_eq!(67u8, g4.into());
+            assert_eq!(G4, g4);
+        }
+
+        #[test]
+        fn test_subtracting_step() {
+            let a4 = A4;
+            let g4 = a4 - WHOLE;
+            assert_eq!(67u8, g4.into());
+            assert_eq!(G4, g4);
+        }
+
+        #[test]
+        fn test_subtracting_interval_in_place() {
+            let mut note = A4; // A4
+
+            // Test in-place subtraction
+            note -= WHOLE;
+            assert_eq!(67u8, note.into()); // G4
+            assert_eq!(G4, note);
+
+            note -= HALF;
+            assert_eq!(66u8, note.into()); // F#4/Gb4
+            assert_eq!(FSHARP4, note);
+        }
+
+        #[test]
+        fn test_subtracting_step_in_place() {
+            let mut note = A4;
+            note -= WHOLE;
+            assert_eq!(67u8, note.into());
+            assert_eq!(G4, note);
+        }
+
+        #[test]
+        fn test_octave_shifts() {
+            let c4 = C4;
+
+            // Test right shift (transposing up)
+            let c5 = c4 >> 1;
+            assert_eq!(72u8, c5.into());
+            assert_eq!(C5, c5);
+
+            let c6 = c4 >> 2;
+            assert_eq!(84u8, c6.into());
+            assert_eq!(C6, c6);
+
+            // Test left shift (transposing down)
+            let c3 = c4 << 1;
+            assert_eq!(48u8, c3.into());
+            assert_eq!(C3, c3);
+
+            let c2 = c4 << 2;
+            assert_eq!(36u8, c2.into());
+            assert_eq!(C2, c2);
+        }
+
+        #[test]
+        fn test_octave_shifts_in_place() {
+            let mut note = C4;
+
+            // Test in-place right shift
+            note >>= 1;
+            assert_eq!(72u8, note.into()); // C5
+            assert_eq!(C5, note);
+
+            // Test in-place left shift
+            note <<= 2;
+            assert_eq!(48u8, note.into()); // C3
+            assert_eq!(C3, note);
+        }
     }
 }
 
-/// Implements in-place addition of an interval to a note
-///
-/// This allows for modifying a note by adding a musical interval directly.
-impl AddAssign<Interval> for Note {
-    #[inline]
-    fn add_assign(&mut self, interval: Interval) {
-        let interval: u8 = interval.into();
-        self.0 = self.0 + interval;
+mod fmt {
+    use super::*;
+    use std::fmt;
+
+    impl fmt::UpperHex for Note {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            const NAMES: [&str; 12] = [
+                "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+            ];
+            let index = self.0 % SEMITONES_IN_OCTAVE;
+            let name = NAMES[index as usize];
+
+            write!(f, "{name}")
+        }
     }
-}
 
-/// Implements addition of an interval to a note, producing a new note
-///
-/// This allows for transposition of notes by adding musical intervals.
-/// For example, adding a perfect fifth (7 semitones) to C4 results in G4.
-impl Add<&Interval> for Note {
-    type Output = Note;
-
-    #[inline]
-    fn add(self, interval: &Interval) -> Self::Output {
-        let interval: u8 = interval.into();
-        Note::new(self.0 + interval)
+    impl fmt::LowerHex for Note {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            const NAMES: [&str; 12] = [
+                "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B",
+            ];
+            let index = self.0 % SEMITONES_IN_OCTAVE;
+            let name = NAMES[index as usize];
+            write!(f, "{name}")
+        }
     }
-}
 
-/// Implements in-place addition of an interval to a note
-///
-/// This allows for modifying a note by adding a musical interval directly.
-impl AddAssign<&Interval> for Note {
-    #[inline]
-    fn add_assign(&mut self, interval: &Interval) {
-        let interval: u8 = interval.into();
-        self.0 = self.0 + interval;
+    impl fmt::Display for Note {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "{:X}", self)
+        }
     }
-}
 
-/// Implements subtraction of an interval from a note, producing a new note
-///
-/// This allows for downward transposition of notes by musical intervals.
-/// For example, subtracting a perfect fifth (7 semitones) from C5 results in F4.
-impl Sub<Interval> for Note {
-    type Output = Note;
-
-    #[inline]
-    fn sub(self, interval: Interval) -> Self::Output {
-        let interval: u8 = interval.into();
-        Note::new(self.0 - interval)
-    }
-}
-
-/// Implements in-place subtraction of an interval from a note
-///
-/// This allows for modifying a note by subtracting a musical interval directly.
-impl SubAssign<Interval> for Note {
-    #[inline]
-    fn sub_assign(&mut self, interval: Interval) {
-        let interval: u8 = interval.into();
-        self.0 = self.0 - interval;
-    }
-}
-
-/// Implements addition of a step to a note, producing a new note
-///
-/// This allows for transposition of notes by adding musical steps.
-/// For example, adding a whole step (2 semitones) to C4 results in D4.
-impl Add<Step> for Note {
-    type Output = Note;
-
-    #[inline]
-    fn add(self, step: Step) -> Self::Output {
-        let step: u8 = step.into();
-        Note::new(self.0 + step)
-    }
-}
-
-/// Implements in-place addition of a step to a note
-///
-/// This allows for modifying a note by adding a musical step directly.
-impl AddAssign<Step> for Note {
-    #[inline]
-    fn add_assign(&mut self, step: Step) {
-        let step: u8 = step.into();
-        self.0 = self.0 + step;
-    }
-}
-
-/// Implements addition of a step to a note, producing a new note
-///
-/// This allows for transposition of notes by adding musical steps.
-/// For example, adding a whole step (2 semitones) to C4 results in D4.
-impl Add<&Step> for Note {
-    type Output = Note;
-
-    #[inline]
-    fn add(self, step: &Step) -> Self::Output {
-        let step: u8 = step.into();
-        Note::new(self.0 + step)
-    }
-}
-
-/// Implements in-place addition of a step to a note
-///
-/// This allows for modifying a note by adding a musical step directly.
-impl AddAssign<&Step> for Note {
-    #[inline]
-    fn add_assign(&mut self, step: &Step) {
-        let step: u8 = step.into();
-        self.0 = self.0 + step;
-    }
-}
-
-/// Implements subtraction of an interval from a note, producing a new note
-///
-/// This allows for downward transposition of notes by musical steps.
-/// For example, subtracting a whole step (2 semitones) from C5 results in A4.
-impl Sub<Step> for Note {
-    type Output = Note;
-
-    #[inline]
-    fn sub(self, step: Step) -> Self::Output {
-        let step: u8 = step.into();
-        Note::new(self.0 - step)
-    }
-}
-
-/// Implements in-place subtraction of a step from a note
-///
-/// This allows for modifying a note by subtracting a musical step directly.
-impl SubAssign<Step> for Note {
-    #[inline]
-    fn sub_assign(&mut self, step: Step) {
-        let step: u8 = step.into();
-        self.0 = self.0 - step;
-    }
-}
-
-/// Implements subtraction of a note from another note, producing a step
-///
-/// This allows for calculating the interval between two notes.
-/// For example, subtracting C4 from D4 results in a whole step (2 semitones).
-///
-/// # Examples
-/// ```
-/// use mozzart_std::*;
-/// use mozzart_std::constants::*;
-///
-/// let c4 = C4;
-/// let d4 = D4;
-/// let step = d4 - c4;
-/// assert_eq!(step, WHOLE);
-/// ```
-impl Sub<Note> for Note {
-    type Output = Step;
-
-    #[inline]
-    fn sub(self, other: Note) -> Self::Output {
-        Step::new(self.0 - other.0)
-    }
-}
-
-/// Implements the right shift operator for notes, which transposes up by octaves
-///
-/// Each octave shift up adds 12 semitones to the note.
-///
-/// # Examples
-/// ```
-/// use mozzart_std::constants::*;
-///
-/// let c4 = C4;
-/// let c5 = c4 >> 1;  // C5 (one octave higher)
-/// let c6 = c4 >> 2;  // C6 (two octaves higher)
-/// ```
-impl Shr<u8> for Note {
-    type Output = Note;
-
-    #[inline]
-    fn shr(self, octaves: u8) -> Self::Output {
-        let interval = Interval::from_octave(octaves);
-        self.add(interval)
-    }
-}
-
-/// Implements in-place right shift for notes, which transposes up by octaves
-///
-/// Each octave shift up adds 12 semitones to the note.
-impl ShrAssign<u8> for Note {
-    #[inline]
-    fn shr_assign(&mut self, octaves: u8) {
-        let interval = Interval::from_octave(octaves);
-        self.add_assign(interval);
-    }
-}
-
-/// Implements the left shift operator for notes, which transposes down by octaves
-///
-/// Each octave shift down subtracts 12 semitones from the note.
-///
-/// # Examples
-/// ```
-/// use mozzart_std::constants::*;
-///
-/// let c5 = C5;
-/// let c4 = c5 << 1;  // C4 (one octave lower)
-/// let c3 = c5 << 2;  // C3 (two octaves lower)
-/// ```
-impl Shl<u8> for Note {
-    type Output = Note;
-
-    #[inline]
-    fn shl(self, octaves: u8) -> Self::Output {
-        let interval = Interval::from_octave(octaves);
-        self.sub(interval)
-    }
-}
-
-/// Implements in-place left shift for notes, which transposes down by octaves
-///
-/// Each octave shift down subtracts 12 semitones from the note.
-impl ShlAssign<u8> for Note {
-    #[inline]
-    fn shl_assign(&mut self, octaves: u8) {
-        let interval = Interval::from_octave(octaves);
-        self.sub_assign(interval);
-    }
-}
-
-impl fmt::UpperHex for Note {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        const NAMES: [&str; 12] = [
-            "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-        ];
-        let index = self.0 % SEMITONES_IN_OCTAVE;
-        let name = NAMES[index as usize];
-
-        write!(f, "{name}")
-    }
-}
-
-impl fmt::LowerHex for Note {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        const NAMES: [&str; 12] = [
-            "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B",
-        ];
-        let index = self.0 % SEMITONES_IN_OCTAVE;
-        let name = NAMES[index as usize];
-        write!(f, "{name}")
-    }
-}
-
-impl fmt::Display for Note {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:X}", self)
-    }
-}
-
-impl fmt::Debug for Note {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:X}[{}]", self, self.0)
+    impl fmt::Debug for Note {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "{:X}[{}]", self, self.0)
+        }
     }
 }
 
@@ -1060,131 +1198,6 @@ mod tests {
         // Test From<&Note> for u8
         let midi_num: u8 = (&note).into();
         assert_eq!(60, midi_num);
-    }
-
-    #[test]
-    fn test_adding_interval() {
-        let c4 = C4;
-
-        // Test addition
-        let d4 = c4 + WHOLE;
-        assert_eq!(62u8, d4.into());
-        assert_eq!(D4, d4);
-
-        let e4 = d4 + WHOLE;
-        assert_eq!(64u8, e4.into());
-        assert_eq!(E4, e4);
-
-        let f4 = e4 + HALF;
-        assert_eq!(65u8, f4.into());
-        assert_eq!(F4, f4);
-    }
-
-    #[test]
-    fn test_adding_step() {
-        let c4 = C4;
-        let d4 = c4 + WHOLE;
-        assert_eq!(62u8, d4.into());
-        assert_eq!(D4, d4);
-    }
-
-    #[test]
-    fn test_adding_interval_in_place() {
-        let mut note = C4; // C4
-
-        // Test in-place addition
-        note += WHOLE;
-        assert_eq!(62u8, note.into()); // D4
-        assert_eq!(D4, note);
-        note += HALF;
-        assert_eq!(63u8, note.into()); // D#4/Eb4
-        assert_eq!(DSHARP4, note);
-    }
-
-    #[test]
-    fn test_adding_step_in_place() {
-        let mut note = C4;
-        note += WHOLE;
-        assert_eq!(62u8, note.into());
-        assert_eq!(D4, note);
-    }
-
-    #[test]
-    fn test_subtracting_interval() {
-        let a4 = A4;
-
-        // Test subtraction
-        let g4 = a4 - WHOLE;
-        assert_eq!(67u8, g4.into());
-        assert_eq!(G4, g4);
-    }
-
-    #[test]
-    fn test_subtracting_step() {
-        let a4 = A4;
-        let g4 = a4 - WHOLE;
-        assert_eq!(67u8, g4.into());
-        assert_eq!(G4, g4);
-    }
-
-    #[test]
-    fn test_subtracting_interval_in_place() {
-        let mut note = A4; // A4
-
-        // Test in-place subtraction
-        note -= WHOLE;
-        assert_eq!(67u8, note.into()); // G4
-        assert_eq!(G4, note);
-
-        note -= HALF;
-        assert_eq!(66u8, note.into()); // F#4/Gb4
-        assert_eq!(FSHARP4, note);
-    }
-
-    #[test]
-    fn test_subtracting_step_in_place() {
-        let mut note = A4;
-        note -= WHOLE;
-        assert_eq!(67u8, note.into());
-        assert_eq!(G4, note);
-    }
-
-    #[test]
-    fn test_octave_shifts() {
-        let c4 = C4;
-
-        // Test right shift (transposing up)
-        let c5 = c4 >> 1;
-        assert_eq!(72u8, c5.into());
-        assert_eq!(C5, c5);
-
-        let c6 = c4 >> 2;
-        assert_eq!(84u8, c6.into());
-        assert_eq!(C6, c6);
-
-        // Test left shift (transposing down)
-        let c3 = c4 << 1;
-        assert_eq!(48u8, c3.into());
-        assert_eq!(C3, c3);
-
-        let c2 = c4 << 2;
-        assert_eq!(36u8, c2.into());
-        assert_eq!(C2, c2);
-    }
-
-    #[test]
-    fn test_octave_shifts_in_place() {
-        let mut note = C4;
-
-        // Test in-place right shift
-        note >>= 1;
-        assert_eq!(72u8, note.into()); // C5
-        assert_eq!(C5, note);
-
-        // Test in-place left shift
-        note <<= 2;
-        assert_eq!(48u8, note.into()); // C3
-        assert_eq!(C3, note);
     }
 
     #[test]

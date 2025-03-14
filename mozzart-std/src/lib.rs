@@ -1,14 +1,10 @@
-mod chord;
+mod chords;
 pub mod constants;
-mod interval;
-mod note;
-mod scale;
-mod step;
+mod core;
+mod scales;
 mod utils;
 
-pub use chord::*;
-pub use interval::*;
-pub use note::*;
-pub use scale::*;
-pub use step::*;
+pub use chords::*;
+pub use core::*;
+pub use scales::*;
 pub use utils::*;

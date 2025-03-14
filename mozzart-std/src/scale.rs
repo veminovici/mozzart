@@ -1,5 +1,5 @@
 use crate::constants::*;
-use crate::Note;
+use crate::{Interval, Note, Step};
 use std::fmt;
 
 /// Represents the quality or type of a musical scale
@@ -199,6 +199,65 @@ impl<const N: usize> fmt::Debug for Scale<N> {
 impl<const N: usize> fmt::Display for Scale<N> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
         write!(f, "{:X}", self)
+    }
+}
+
+impl Scale<8> {
+    /// Returns the steps between the notes in the scale
+    ///
+    /// This method calculates the interval between each pair of adjacent notes
+    /// in the scale and returns an array of steps.
+    ///
+    /// # Returns
+    /// An array of 7 steps representing the intervals between the notes
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Note, constants::*, major_scale};
+    ///
+    /// let c_major = major_scale(C4);
+    /// let steps = c_major.steps();
+    /// assert_eq!(steps.len(), 7);
+    ///
+    /// // C major scale steps: W-W-H-W-W-W-H
+    /// assert_eq!(steps, [WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF]);
+    /// ```
+    pub fn steps(&self) -> [Step; 7] {
+        let mut steps = [UNISON; 7];
+        for (i, step) in steps.iter_mut().enumerate() {
+            *step = self.notes[i + 1] - self.notes[i];
+        }
+
+        steps
+    }
+
+    /// Returns the intervals between the notes in the scale
+    ///
+    /// This method calculates the interval between each note and the root note
+    /// in the scale and returns an array of intervals.
+    ///
+    /// # Returns
+    /// An array of 7 intervals representing the intervals between the notes and the root note
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Note, constants::*, major_scale};
+    ///
+    /// let c_major = major_scale(C4);
+    /// let intervals = c_major.intervals();
+    /// assert_eq!(intervals.len(), 7);
+    ///
+    /// // C major intervals: [MAJOR_SECOND, MAJOR_THIRD, PERFECT_FOURTH, PERFECT_FIFTH, MINOR_SIXTH, MAJOR_SEVENTH, PERFECT_OCTAVE]
+    /// assert_eq!(intervals, [MAJOR_SECOND, MAJOR_THIRD, PERFECT_FOURTH, PERFECT_FIFTH, MINOR_SIXTH, MAJOR_SEVENTH, PERFECT_OCTAVE]);
+    /// ```
+    pub fn intervals(&self) -> [Interval; 7] {
+        let mut intervals = [PERFECT_UNISON; 7];
+        for (i, interval) in intervals.iter_mut().enumerate() {
+            let step = self.notes[i + 1] - self.notes[0];
+            *interval = step.into();
+        }
+
+        intervals
     }
 }
 
@@ -456,5 +515,30 @@ mod tests {
         assert_eq!(notes[0], G4); // G4
         assert_eq!(notes[5], E5); // E5 (raised 6th)
         assert_eq!(notes[6], FSHARP5); // F#5 (raised 7th)
+    }
+
+    #[test]
+    fn test_intervals() {
+        let c_major = major_scale(C4);
+        let intervals = c_major.intervals();
+        assert_eq!(
+            intervals,
+            [
+                MAJOR_SECOND,
+                MAJOR_THIRD,
+                PERFECT_FOURTH,
+                PERFECT_FIFTH,
+                MINOR_SIXTH,
+                MAJOR_SEVENTH,
+                PERFECT_OCTAVE
+            ]
+        );
+    }
+
+    #[test]
+    fn test_steps() {
+        let c_major = major_scale(C4);
+        let steps = c_major.steps();
+        assert_eq!(steps, [WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF]);
     }
 }

@@ -1,29 +1,35 @@
 use crate::constants::*;
 use crate::{Interval, Note, Step};
 use std::fmt;
+use std::marker::PhantomData;
 
-/// Represents the quality or type of a musical scale
-///
-/// In music theory, scale quality defines the character and emotional color of a scale
-/// based on its unique interval pattern. Each scale quality creates a distinct sound
-/// and has specific applications in different musical contexts.
-///
-/// The four primary scale qualities in Western music are:
-/// - Major: bright, happy, resolved sound used extensively in pop, classical, and folk music
-/// - Minor (Natural): darker, melancholic sound common in emotional or somber compositions
-/// - Harmonic Minor: exotic sound with an augmented second interval, creating tension
-/// - Melodic Minor: smoother ascending melodic line that addresses the awkward interval
-///   found in the harmonic minor scale
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub enum ScaleQuality {
-    /// Major scale quality, characterized by a bright, happy sound
-    Major,
-    /// Natural minor scale quality (Aeolian mode), with a darker, melancholic sound
-    Minor,
-    /// Harmonic minor scale quality, featuring an augmented second interval for stronger resolution
-    HarmonicMinor,
-    /// Melodic minor scale quality (ascending form), with raised 6th and 7th degrees for smoother voice leading
-    MelodicMinor,
+pub trait ScaleQuality {
+    fn name() -> &'static str;
+}
+pub struct MajorScaleQuality;
+pub struct MinorScaleQuality;
+pub struct HarmonicMinorScaleQuality;
+pub struct MelodicMinorScaleQuality;
+
+impl ScaleQuality for MajorScaleQuality {
+    fn name() -> &'static str {
+        "major"
+    }
+}
+impl ScaleQuality for MinorScaleQuality {
+    fn name() -> &'static str {
+        "minor"
+    }
+}
+impl ScaleQuality for HarmonicMinorScaleQuality {
+    fn name() -> &'static str {
+        "harmonic minor"
+    }
+}
+impl ScaleQuality for MelodicMinorScaleQuality {
+    fn name() -> &'static str {
+        "melodic minor"
+    }
 }
 
 /// Represents a musical scale with a specific number of notes
@@ -41,14 +47,19 @@ pub enum ScaleQuality {
 /// - A root note (the first note of the scale, which establishes the key center)
 /// - A quality (major, minor, etc.) that defines its interval pattern
 /// - A sequence of notes following the pattern defined by the quality
-pub struct Scale<const N: usize> {
-    /// The quality of the scale (major, minor, etc.)
-    quality: ScaleQuality,
+pub struct Scale<Q, const N: usize>
+where
+    Q: ScaleQuality,
+{
     /// The notes that make up the scale, starting with the root note
     notes: [Note; N],
+    quality: PhantomData<Q>,
 }
 
-impl<const N: usize> Scale<N> {
+impl<Q, const N: usize> Scale<Q, N>
+where
+    Q: ScaleQuality,
+{
     /// Creates a new `Scale` with the specified quality and notes
     ///
     /// This constructor takes a scale quality and a collection of notes, and
@@ -62,13 +73,16 @@ impl<const N: usize> Scale<N> {
     ///
     /// # Returns
     /// A new `Scale` instance with the specified quality and notes
-    pub(crate) fn new(quality: ScaleQuality, notes: impl IntoIterator<Item = Note>) -> Self {
-        let mut ns = [C; N];
+    pub(crate) fn new(notes: impl IntoIterator<Item = Note>) -> Self {
+        let mut ns = [C4; N];
         for (i, n) in notes.into_iter().enumerate() {
             ns[i] = n;
         }
 
-        Self { quality, notes: ns }
+        Self {
+            quality: PhantomData,
+            notes: ns,
+        }
     }
 
     /// Returns the root note of the scale
@@ -115,94 +129,57 @@ impl<const N: usize> Scale<N> {
     pub const fn notes(&self) -> &[Note; N] {
         &self.notes
     }
-
-    /// Returns the quality of the scale
-    ///
-    /// The scale quality (major, minor, etc.) defines the pattern of intervals
-    /// between adjacent notes, which gives the scale its characteristic sound and mood.
-    ///
-    /// # Returns
-    /// The quality (type) of the scale
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::{constants::*, major_scale, natural_minor_scale, ScaleQuality};
-    ///
-    /// let c_major = major_scale(C4);
-    /// assert_eq!(c_major.quality(), ScaleQuality::Major);
-    ///
-    /// let a_minor = natural_minor_scale(A4);
-    /// assert_eq!(a_minor.quality(), ScaleQuality::Minor);
-    /// ```
-    #[inline]
-    pub const fn quality(&self) -> ScaleQuality {
-        self.quality
-    }
 }
 
-/// Returns the suffix for a scale
-///
-/// This function takes a `ScaleQuality` and returns the appropriate suffix for the scale.
-///
-/// # Arguments
-/// * `quality` - The quality (type) of the scale
-///
-/// # Returns
-/// The suffix for the scale
-///
-/// # Examples
-/// ```ignore
-/// use mozzart_std::{ScaleQuality, scale_suffix};
-/// use mozzart_std::constants::*;
-///
-/// assert_eq!(scale_suffix(ScaleQuality::Major), "major");
-/// assert_eq!(scale_suffix(ScaleQuality::Minor), "minor");
-/// assert_eq!(scale_suffix(ScaleQuality::HarmonicMinor), "harmonic minor");
-/// assert_eq!(scale_suffix(ScaleQuality::MelodicMinor), "melodic minor");
-/// ```
-fn scale_suffix(quality: ScaleQuality) -> &'static str {
-    match quality {
-        ScaleQuality::Major => "major",
-        ScaleQuality::Minor => "minor",
-        ScaleQuality::HarmonicMinor => "harmonic minor",
-        ScaleQuality::MelodicMinor => "melodic minor",
-    }
-}
-
-impl<const N: usize> fmt::UpperHex for Scale<N> {
+impl<Q, const N: usize> fmt::UpperHex for Scale<Q, N>
+where
+    Q: ScaleQuality,
+{
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
         let root = self.root();
-        let suffix = scale_suffix(self.quality());
+        let suffix = Q::name();
 
         write!(f, "{root:X} {suffix}")
     }
 }
 
-impl<const N: usize> fmt::LowerHex for Scale<N> {
+impl<Q, const N: usize> fmt::LowerHex for Scale<Q, N>
+where
+    Q: ScaleQuality,
+{
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
         let root = self.root();
-        let suffix = scale_suffix(self.quality());
+        let suffix = Q::name();
 
         write!(f, "{root:x} {suffix}")
     }
 }
 
-impl<const N: usize> fmt::Debug for Scale<N> {
+impl<Q, const N: usize> fmt::Debug for Scale<Q, N>
+where
+    Q: ScaleQuality,
+{
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
         let root = self.root();
-        let suffix = scale_suffix(self.quality());
+        let suffix = Q::name();
 
-        write!(f, "{root:?}{suffix}")
+        write!(f, "{root:?} {suffix}")
     }
 }
 
-impl<const N: usize> fmt::Display for Scale<N> {
+impl<Q, const N: usize> fmt::Display for Scale<Q, N>
+where
+    Q: ScaleQuality,
+{
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
         write!(f, "{:X}", self)
     }
 }
 
-impl Scale<8> {
+impl<Q> Scale<Q, 8>
+where
+    Q: ScaleQuality,
+{
     /// Returns the steps between the notes in the scale
     ///
     /// This method calculates the interval between each pair of adjacent notes
@@ -270,7 +247,7 @@ impl Scale<8> {
 /// * `root` - The root note from which to build the scale
 ///
 /// # Returns
-/// A `Scale<8>` representing the major scale
+/// A `Scale<MajorScale, 8>` representing the major scale
 ///
 /// # Examples
 /// ```
@@ -284,9 +261,9 @@ impl Scale<8> {
 /// assert_eq!(notes[0], C4);
 /// assert_eq!(notes[7], C5);
 /// ```
-pub fn major_scale(root: Note) -> Scale<8> {
+pub fn major_scale(root: Note) -> Scale<MajorScaleQuality, 8> {
     let notes = root.into_notes_from_steps(MAJOR_SCALE_STEPS);
-    Scale::new(ScaleQuality::Major, notes)
+    Scale::new(notes)
 }
 
 /// Creates a natural minor scale starting from the specified root note
@@ -298,7 +275,7 @@ pub fn major_scale(root: Note) -> Scale<8> {
 /// * `root` - The root note from which to build the scale
 ///
 /// # Returns
-/// A `Scale<8>` representing the natural minor scale
+/// A `Scale<MinorScale, 8>` representing the natural minor scale
 ///
 /// # Examples
 /// ```
@@ -314,9 +291,9 @@ pub fn major_scale(root: Note) -> Scale<8> {
 /// assert_eq!(notes[2], C5);
 /// assert_eq!(notes[7], A5);
 /// ```
-pub fn natural_minor_scale(root: Note) -> Scale<8> {
+pub fn natural_minor_scale(root: Note) -> Scale<MinorScaleQuality, 8> {
     let notes = root.into_notes_from_steps(NATURAL_MINOR_SCALE_STEPS);
-    Scale::new(ScaleQuality::Minor, notes)
+    Scale::new(notes)
 }
 
 /// Creates a harmonic minor scale starting from the specified root note
@@ -334,7 +311,7 @@ pub fn natural_minor_scale(root: Note) -> Scale<8> {
 /// * `root` - The root note from which to build the scale
 ///
 /// # Returns
-/// A `Scale<8>` representing the harmonic minor scale
+/// A `Scale<HarmonicMinorScale, 8>` representing the harmonic minor scale
 ///
 /// # Examples
 /// ```
@@ -349,9 +326,9 @@ pub fn natural_minor_scale(root: Note) -> Scale<8> {
 /// assert_eq!(notes[6], GSHARP5); // The raised 7th degree
 /// assert_eq!(notes[7], A5);
 /// ```
-pub fn harmonic_minor_scale(root: Note) -> Scale<8> {
+pub fn harmonic_minor_scale(root: Note) -> Scale<HarmonicMinorScaleQuality, 8> {
     let notes = root.into_notes_from_steps(HARMONIC_MINOR_SCALE_STEPS);
-    Scale::new(ScaleQuality::HarmonicMinor, notes)
+    Scale::new(notes)
 }
 
 /// Creates a melodic minor scale (ascending form) starting from the specified root note
@@ -369,7 +346,7 @@ pub fn harmonic_minor_scale(root: Note) -> Scale<8> {
 /// * `root` - The root note from which to build the scale
 ///
 /// # Returns
-/// A `Scale<8>` representing the melodic minor scale (ascending form)
+/// A `Scale<MelodicMinorScale, 8>` representing the melodic minor scale (ascending form)
 ///
 /// # Examples
 /// ```
@@ -385,9 +362,9 @@ pub fn harmonic_minor_scale(root: Note) -> Scale<8> {
 /// assert_eq!(notes[6], GSHARP5); // The raised 7th degree
 /// assert_eq!(notes[7], A5);
 /// ```
-pub fn melodic_minor_scale(root: Note) -> Scale<8> {
+pub fn melodic_minor_scale(root: Note) -> Scale<MelodicMinorScaleQuality, 8> {
     let notes = root.into_notes_from_steps(MELODIC_MINOR_SCALE_STEPS);
-    Scale::new(ScaleQuality::MelodicMinor, notes)
+    Scale::new(notes)
 }
 
 #[cfg(test)]
@@ -398,9 +375,6 @@ mod tests {
     fn test_major_scale() {
         let c4_major = major_scale(C4);
         let notes = c4_major.notes();
-
-        // Verify scale quality
-        assert_eq!(c4_major.quality(), ScaleQuality::Major);
 
         // Verify notes in C major scale
         assert_eq!(notes[0], C4); // C4 (root)
@@ -420,9 +394,6 @@ mod tests {
         let a4_minor = natural_minor_scale(A4);
         let notes = a4_minor.notes();
 
-        // Verify scale quality
-        assert_eq!(a4_minor.quality(), ScaleQuality::Minor);
-
         // Verify notes in A minor scale
         assert_eq!(notes[0], A4); // A4 (root)
         assert_eq!(notes[1], B4); // B4
@@ -440,9 +411,6 @@ mod tests {
     fn test_harmonic_minor_scale() {
         let a4_harmonic_minor = harmonic_minor_scale(A4);
         let notes = a4_harmonic_minor.notes();
-
-        // Verify scale quality
-        assert_eq!(a4_harmonic_minor.quality(), ScaleQuality::HarmonicMinor);
 
         // Verify notes in A harmonic minor scale
         assert_eq!(notes[0], A4); // A4 (root)
@@ -466,9 +434,6 @@ mod tests {
     fn test_melodic_minor_scale() {
         let a4_melodic_minor = melodic_minor_scale(A4);
         let notes = a4_melodic_minor.notes();
-
-        // Verify scale quality
-        assert_eq!(a4_melodic_minor.quality(), ScaleQuality::MelodicMinor);
 
         // Verify notes in A melodic minor scale (ascending)
         assert_eq!(notes[0], A4); // A4 (root)

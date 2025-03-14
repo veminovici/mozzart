@@ -224,7 +224,7 @@ impl Note {
     /// Returns a major scale starting from this note
     ///
     /// # Returns
-    /// A `Scale<8>` representing the major scale starting from this note
+    /// A `Scale<MajorScale, 8>` representing the major scale starting from this note
     ///
     /// # Examples
     /// ```
@@ -235,14 +235,14 @@ impl Note {
     /// assert_eq!(c_major_scale.notes(), &[C4, D4, E4, F4, G4, A4, B4, C5]);
     /// ```
     #[inline]
-    pub fn major_scale(&self) -> Scale<8> {
+    pub fn major_scale(&self) -> Scale<MajorScaleQuality, 8> {
         major_scale(*self)
     }
 
     /// Returns a natural minor scale starting from this note
     ///
     /// # Returns
-    /// A `Scale<8>` representing the natural minor scale starting from this note
+    /// A `Scale<MinorScale, 8>` representing the natural minor scale starting from this note
     ///
     /// # Examples
     /// ```
@@ -253,14 +253,14 @@ impl Note {
     /// assert_eq!(c_natural_minor_scale.notes(), &[C4, D4, EFLAT4, F4, G4, AFLAT4, BFLAT4, C5]);
     /// ```
     #[inline]
-    pub fn natural_minor_scale(&self) -> Scale<8> {
+    pub fn natural_minor_scale(&self) -> Scale<MinorScaleQuality, 8> {
         natural_minor_scale(*self)
     }
 
     /// Returns a harmonic minor scale starting from this note
     ///
     /// # Returns
-    /// A `Scale<8>` representing the harmonic minor scale starting from this note
+    /// A `Scale<HarmonicMinorScale, 8>` representing the harmonic minor scale starting from this note
     ///
     /// # Examples
     /// ```
@@ -271,14 +271,14 @@ impl Note {
     /// assert_eq!(c_harmonic_minor_scale.notes(), &[C4, D4, EFLAT4, F4, G4, AFLAT4, B4, C5]);
     /// ```
     #[inline]
-    pub fn harmonic_minor_scale(&self) -> Scale<8> {
+    pub fn harmonic_minor_scale(&self) -> Scale<HarmonicMinorScaleQuality, 8> {
         harmonic_minor_scale(*self)
     }
 
     /// Returns a melodic minor scale starting from this note
     ///
     /// # Returns
-    /// A `Scale<8>` representing the melodic minor scale starting from this note
+    /// A `Scale<MelodicMinorScale, 8>` representing the melodic minor scale starting from this note
     ///
     /// # Examples
     /// ```
@@ -289,7 +289,7 @@ impl Note {
     /// assert_eq!(c_melodic_minor_scale.notes(), &[C4, D4, EFLAT4, F4, G4, A4, B4, C5]);
     /// ```
     #[inline]
-    pub fn melodic_minor_scale(&self) -> Scale<8> {
+    pub fn melodic_minor_scale(&self) -> Scale<MelodicMinorScaleQuality, 8> {
         melodic_minor_scale(*self)
     }
 

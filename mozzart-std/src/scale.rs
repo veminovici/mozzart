@@ -140,6 +140,27 @@ impl<const N: usize> Scale<N> {
     }
 }
 
+/// Returns the suffix for a scale
+///
+/// This function takes a `ScaleQuality` and returns the appropriate suffix for the scale.
+///
+/// # Arguments
+/// * `quality` - The quality (type) of the scale
+///
+/// # Returns
+/// The suffix for the scale
+///
+/// # Examples
+/// ```ignore
+/// use mozzart_std::{ScaleQuality, scale_suffix};
+/// use mozzart_std::constants::*;
+///
+/// assert_eq!(scale_suffix(ScaleQuality::Major), "major");
+/// assert_eq!(scale_suffix(ScaleQuality::Minor), "minor");
+/// assert_eq!(scale_suffix(ScaleQuality::HarmonicMinor), "harmonic minor");
+/// assert_eq!(scale_suffix(ScaleQuality::MelodicMinor), "melodic minor");
+/// ```
+
 fn scale_suffix(quality: ScaleQuality) -> &'static str {
     match quality {
         ScaleQuality::Major => "major",

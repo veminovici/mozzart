@@ -723,6 +723,32 @@ pub fn major_thirteenth(root: Note) -> Chord<7> {
     Chord::new(ChordQuality::MajorThirteenth, notes)
 }
 
+/// Returns the suffix for a chord
+///
+/// This function takes a `ChordQuality` and returns the appropriate suffix for the chord.
+///
+/// # Arguments
+/// * `quality` - The quality (type) of the chord
+///
+/// # Returns
+/// The suffix for the chord
+///
+/// # Examples
+/// ```ignore
+/// use mozzart_std::ChordQuality;
+/// use mozzart_std::constants::*;
+///
+/// assert_eq!(chord_suffix(ChordQuality::MajorTriad), "");
+/// assert_eq!(chord_suffix(ChordQuality::MinorTriad), "m");
+/// assert_eq!(chord_suffix(ChordQuality::DominantSeventh), "7");
+/// assert_eq!(chord_suffix(ChordQuality::MinorSeventh), "m7");
+/// assert_eq!(chord_suffix(ChordQuality::MajorSeventh), "maj7");
+/// assert_eq!(chord_suffix(ChordQuality::MinorMajorSeventh), "mM7");
+/// assert_eq!(chord_suffix(ChordQuality::MajorSixth), "6");
+/// assert_eq!(chord_suffix(ChordQuality::MinorSixth), "m6");
+/// assert_eq!(chord_suffix(ChordQuality::MajorSixthNinth), "6/9");
+/// assert_eq!(chord_suffix(ChordQuality::MinorSixthNinth), "m6/9");
+/// ```
 fn chord_suffix(quality: ChordQuality) -> &'static str {
     match quality {
         ChordQuality::MajorTriad => "",

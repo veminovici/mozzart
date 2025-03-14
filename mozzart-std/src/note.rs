@@ -221,78 +221,6 @@ impl Note {
         self.0
     }
 
-    /// Returns a major scale starting from this note
-    ///
-    /// # Returns
-    /// A `Scale<MajorScale, 8>` representing the major scale starting from this note
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::*;
-    /// use mozzart_std::constants::*;
-    ///
-    /// let c_major_scale = C4.major_scale();
-    /// assert_eq!(c_major_scale.notes(), &[C4, D4, E4, F4, G4, A4, B4, C5]);
-    /// ```
-    #[inline]
-    pub fn major_scale(&self) -> Scale<MajorScaleQuality, 8> {
-        major_scale(*self)
-    }
-
-    /// Returns a natural minor scale starting from this note
-    ///
-    /// # Returns
-    /// A `Scale<MinorScale, 8>` representing the natural minor scale starting from this note
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::*;
-    /// use mozzart_std::constants::*;
-    ///
-    /// let c_natural_minor_scale = C4.natural_minor_scale();
-    /// assert_eq!(c_natural_minor_scale.notes(), &[C4, D4, EFLAT4, F4, G4, AFLAT4, BFLAT4, C5]);
-    /// ```
-    #[inline]
-    pub fn natural_minor_scale(&self) -> Scale<MinorScaleQuality, 8> {
-        natural_minor_scale(*self)
-    }
-
-    /// Returns a harmonic minor scale starting from this note
-    ///
-    /// # Returns
-    /// A `Scale<HarmonicMinorScale, 8>` representing the harmonic minor scale starting from this note
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::*;
-    /// use mozzart_std::constants::*;
-    ///
-    /// let c_harmonic_minor_scale = C4.harmonic_minor_scale();
-    /// assert_eq!(c_harmonic_minor_scale.notes(), &[C4, D4, EFLAT4, F4, G4, AFLAT4, B4, C5]);
-    /// ```
-    #[inline]
-    pub fn harmonic_minor_scale(&self) -> Scale<HarmonicMinorScaleQuality, 8> {
-        harmonic_minor_scale(*self)
-    }
-
-    /// Returns a melodic minor scale starting from this note
-    ///
-    /// # Returns
-    /// A `Scale<MelodicMinorScale, 8>` representing the melodic minor scale starting from this note
-    ///
-    /// # Examples
-    /// ```
-    /// use mozzart_std::*;
-    /// use mozzart_std::constants::*;
-    ///
-    /// let c_melodic_minor_scale = C4.melodic_minor_scale();
-    /// assert_eq!(c_melodic_minor_scale.notes(), &[C4, D4, EFLAT4, F4, G4, A4, B4, C5]);
-    /// ```
-    #[inline]
-    pub fn melodic_minor_scale(&self) -> Scale<MelodicMinorScaleQuality, 8> {
-        melodic_minor_scale(*self)
-    }
-
     /// Returns a major triad chord starting from this note
     ///
     /// # Returns
@@ -782,6 +710,30 @@ impl Note {
     #[inline]
     pub fn major_thirteenth_chord(&self) -> Chord<7> {
         major_thirteenth(*self)
+    }
+}
+
+impl IntoMajorScale for Note {
+    fn into_major_scale(self) -> Scale<MajorScaleQuality, 8> {
+        major_scale(self)
+    }
+}
+
+impl IntoNaturalMinorScale for Note {
+    fn into_natural_minor_scale(self) -> Scale<MinorScaleQuality, 8> {
+        natural_minor_scale(self)
+    }
+}
+
+impl IntoHarmonicMinorScale for Note {
+    fn into_harmonic_minor_scale(self) -> Scale<HarmonicMinorScaleQuality, 8> {
+        harmonic_minor_scale(self)
+    }
+}
+
+impl IntoMelodicMinorScale for Note {
+    fn into_melodic_minor_scale(self) -> Scale<MelodicMinorScaleQuality, 8> {
+        melodic_minor_scale(self)
     }
 }
 

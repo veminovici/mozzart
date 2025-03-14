@@ -3,6 +3,58 @@ use crate::{Chord, Interval, Note, Step};
 use std::fmt;
 use std::marker::PhantomData;
 
+/// Trait for converting a note into a major scale
+///
+/// This trait provides a method to convert a note into a major scale.
+/// It is implemented for the `Note` type and allows for easy conversion
+/// between notes and their corresponding major scales.
+pub trait IntoMajorScale {
+    /// Converts the note into a major scale
+    ///
+    /// # Returns
+    /// A `Scale<MajorScaleQuality, 8>` representing the major scale starting from this note
+    fn into_major_scale(self) -> Scale<MajorScaleQuality, 8>;
+}
+
+/// Trait for converting a note into a natural minor scale
+///
+/// This trait provides a method to convert a note into a natural minor scale.
+/// It is implemented for the `Note` type and allows for easy conversion
+/// between notes and their corresponding natural minor scales.
+pub trait IntoNaturalMinorScale {
+    /// Converts the note into a natural minor scale
+    ///
+    /// # Returns
+    /// A `Scale<MinorScaleQuality, 8>` representing the natural minor scale starting from this note
+    fn into_natural_minor_scale(self) -> Scale<MinorScaleQuality, 8>;
+}
+
+/// Trait for converting a note into a harmonic minor scale
+///
+/// This trait provides a method to convert a note into a harmonic minor scale.
+/// It is implemented for the `Note` type and allows for easy conversion
+/// between notes and their corresponding harmonic minor scales.
+pub trait IntoHarmonicMinorScale {
+    /// Converts the note into a harmonic minor scale
+    ///
+    /// # Returns
+    /// A `Scale<HarmonicMinorScaleQuality, 8>` representing the harmonic minor scale starting from this note
+    fn into_harmonic_minor_scale(self) -> Scale<HarmonicMinorScaleQuality, 8>;
+}
+
+/// Trait for converting a note into a melodic minor scale
+///
+/// This trait provides a method to convert a note into a melodic minor scale.
+/// It is implemented for the `Note` type and allows for easy conversion
+/// between notes and their corresponding melodic minor scales.
+pub trait IntoMelodicMinorScale {
+    /// Converts the note into a melodic minor scale
+    ///
+    /// # Returns
+    /// A `Scale<MelodicMinorScaleQuality, 8>` representing the melodic minor scale starting from this note
+    fn into_melodic_minor_scale(self) -> Scale<MelodicMinorScaleQuality, 8>;
+}
+
 /// Defines the musical quality of a scale, providing its name and characteristics
 ///
 /// This trait is implemented by various scale quality types, each representing

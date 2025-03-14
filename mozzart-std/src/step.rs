@@ -60,6 +60,19 @@ impl From<&Step> for u8 {
     }
 }
 
+/// Conversion from `Interval` to `Step`
+///
+/// This allows converting an interval to a step.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Interval, Step};
+/// use mozzart_std::constants::*;
+///
+/// let interval = MAJOR_THIRD;
+/// let step = Step::from(interval);
+/// assert_eq!(step.semitones(), 4);
+/// ```
 impl From<Interval> for Step {
     #[inline]
     fn from(interval: Interval) -> Self {
@@ -67,6 +80,19 @@ impl From<Interval> for Step {
     }
 }
 
+/// Conversion from a reference to `Interval` to `Step`
+///
+/// This allows converting an interval to a step without consuming it.
+///
+/// # Examples
+/// ```
+/// use mozzart_std::{Interval, Step};
+/// use mozzart_std::constants::*;
+///
+/// let interval = MAJOR_THIRD;
+/// let step = Step::from(&interval);
+/// assert_eq!(step.semitones(), 4);
+/// ```
 impl From<&Interval> for Step {
     #[inline]
     fn from(interval: &Interval) -> Self {

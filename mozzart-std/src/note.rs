@@ -955,6 +955,30 @@ impl SubAssign<Step> for Note {
     }
 }
 
+/// Implements subtraction of a note from another note, producing a step
+///
+/// This allows for calculating the interval between two notes.
+/// For example, subtracting C4 from D4 results in a whole step (2 semitones).
+///
+/// # Examples
+/// ```
+/// use mozzart_std::*;
+/// use mozzart_std::constants::*;
+///
+/// let c4 = C4;
+/// let d4 = D4;
+/// let step = d4 - c4;
+/// assert_eq!(step, WHOLE);
+/// ```
+impl Sub<Note> for Note {
+    type Output = Step;
+
+    #[inline]
+    fn sub(self, other: Note) -> Self::Output {
+        Step::new(self.0 - other.0)
+    }
+}
+
 /// Implements the right shift operator for notes, which transposes up by octaves
 ///
 /// Each octave shift up adds 12 semitones to the note.

@@ -160,7 +160,6 @@ impl<const N: usize> Scale<N> {
 /// assert_eq!(scale_suffix(ScaleQuality::HarmonicMinor), "harmonic minor");
 /// assert_eq!(scale_suffix(ScaleQuality::MelodicMinor), "melodic minor");
 /// ```
-
 fn scale_suffix(quality: ScaleQuality) -> &'static str {
     match quality {
         ScaleQuality::Major => "major",

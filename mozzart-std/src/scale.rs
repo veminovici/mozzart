@@ -1,5 +1,5 @@
-use crate::constants::*;
-use crate::{Interval, Note, Step};
+use crate::{constants::*, diminished_triad, major_triad, minor_triad};
+use crate::{Chord, Interval, Note, Step};
 use std::fmt;
 use std::marker::PhantomData;
 
@@ -281,6 +281,155 @@ where
     }
 }
 
+impl Scale<MajorScaleQuality, 8> {
+    /// Returns the I major chord of the scale
+    ///
+    /// The I major chord is the first chord in the scale, built from the root note.
+    /// It is a major triad with the root, third, and fifth notes.
+    ///
+    /// # Returns
+    /// A `Chord<3>` representing the I major chord
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Note, constants::*, major_scale};
+    ///
+    /// let c_major = major_scale(C4);
+    /// let i_major_chord = c_major.i_major_chord();
+    /// assert_eq!(i_major_chord.notes(), &[C4, E4, G4]);
+    /// ```
+    pub fn i_major_chord(&self) -> Chord<3> {
+        let root = self.notes[0];
+        major_triad(root)
+    }
+
+    /// Returns the II minor chord of the scale
+    ///
+    /// The II minor chord is the second chord in the scale, built from the second note.
+    /// It is a minor triad with the root, third, and fifth notes.
+    ///
+    /// # Returns
+    /// A `Chord<3>` representing the II minor chord
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Note, constants::*, major_scale};
+    ///
+    /// let c_major = major_scale(C4);
+    /// let ii_minor_chord = c_major.ii_minor_chord();
+    /// assert_eq!(ii_minor_chord.notes(), &[D4, F4, A4]);
+    /// ```
+    pub fn ii_minor_chord(&self) -> Chord<3> {
+        let root = self.notes[1];
+        minor_triad(root)
+    }
+
+    /// Returns the III minor chord of the scale
+    ///
+    /// The III minor chord is the third chord in the scale, built from the third note.
+    /// It is a minor triad with the root, third, and fifth notes.
+    ///
+    /// # Returns
+    /// A `Chord<3>` representing the III minor chord
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Note, constants::*, major_scale};
+    ///
+    /// let c_major = major_scale(C4);
+    /// let iii_minor_chord = c_major.iii_minor_chord();
+    /// assert_eq!(iii_minor_chord.notes(), &[E4, G4, B4]);
+    /// ```
+    pub fn iii_minor_chord(&self) -> Chord<3> {
+        let root = self.notes[2];
+        minor_triad(root)
+    }
+
+    /// Returns the IV major chord of the scale
+    ///
+    /// The IV major chord is the fourth chord in the scale, built from the fourth note.
+    /// It is a major triad with the root, third, and fifth notes.
+    ///
+    /// # Returns
+    /// A `Chord<3>` representing the IV major chord
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Note, constants::*, major_scale};
+    ///
+    /// let c_major = major_scale(C4);
+    /// let iv_major_chord = c_major.iv_major_chord();
+    /// assert_eq!(iv_major_chord.notes(), &[F4, A4, C5]);
+    /// ```
+    pub fn iv_major_chord(&self) -> Chord<3> {
+        let root = self.notes[3];
+        major_triad(root)
+    }
+
+    /// Returns the V major chord of the scale
+    ///
+    /// The V major chord is the fifth chord in the scale, built from the fifth note.
+    /// It is a major triad with the root, third, and fifth notes.
+    ///
+    /// # Returns
+    /// A `Chord<3>` representing the V major chord
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Note, constants::*, major_scale};
+    ///
+    /// let c_major = major_scale(C4);
+    /// let v_major_chord = c_major.v_major_chord();
+    /// assert_eq!(v_major_chord.notes(), &[G4, B4, D5]);
+    /// ```
+    pub fn v_major_chord(&self) -> Chord<3> {
+        let root = self.notes[4];
+        major_triad(root)
+    }
+
+    /// Returns the VI minor chord of the scale
+    ///
+    /// The VI minor chord is the sixth chord in the scale, built from the sixth note.
+    /// It is a minor triad with the root, third, and fifth notes.
+    ///
+    /// # Returns
+    /// A `Chord<3>` representing the VI minor chord
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Note, constants::*, major_scale};
+    ///
+    /// let c_major = major_scale(C4);
+    /// let vi_minor_chord = c_major.vi_minor_chord();
+    /// assert_eq!(vi_minor_chord.notes(), &[A4, C5, E5]);
+    /// ```
+    pub fn vi_minor_chord(&self) -> Chord<3> {
+        let root = self.notes[5];
+        minor_triad(root)
+    }
+
+    /// Returns the VII diminished chord of the scale
+    ///
+    /// The VII diminished chord is the seventh chord in the scale, built from the seventh note.
+    /// It is a diminished triad with the root, third, and fifth notes.
+    ///
+    /// # Returns
+    /// A `Chord<3>` representing the VII diminished chord
+    ///
+    /// # Examples
+    /// ```
+    /// use mozzart_std::{Note, constants::*, major_scale};
+    ///
+    /// let c_major = major_scale(C4);
+    /// let vii_diminished_chord = c_major.vii_diminished_chord();
+    /// assert_eq!(vii_diminished_chord.notes(), &[B4, D5, F5]);
+    /// ```
+    pub fn vii_diminished_chord(&self) -> Chord<3> {
+        let root = self.notes[6];
+        diminished_triad(root)
+    }
+}
+
 /// Creates a major scale starting from the specified root note
 ///
 /// A major scale consists of 8 notes (including the octave) and follows
@@ -548,5 +697,54 @@ mod tests {
         let c_major = major_scale(C4);
         let steps = c_major.steps();
         assert_eq!(steps, [WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF]);
+    }
+
+    #[test]
+    fn test_major_scale_i_chord() {
+        let c_major = major_scale(C4);
+        let i_chord = c_major.i_major_chord();
+        assert_eq!(i_chord.notes(), &[C4, E4, G4]);
+    }
+
+    #[test]
+    fn test_major_scale_ii_chord() {
+        let c_major = major_scale(C4);
+        let ii_chord = c_major.ii_minor_chord();
+        assert_eq!(ii_chord.notes(), &[D4, F4, A4]);
+    }
+
+    #[test]
+    fn test_major_scale_iii_chord() {
+        let c_major = major_scale(C4);
+        let iii_chord = c_major.iii_minor_chord();
+        assert_eq!(iii_chord.notes(), &[E4, G4, B4]);
+    }
+
+    #[test]
+    fn test_major_scale_iv_chord() {
+        let c_major = major_scale(C4);
+        let iv_chord = c_major.iv_major_chord();
+        assert_eq!(iv_chord.notes(), &[F4, A4, C5]);
+    }
+
+    #[test]
+    fn test_major_scale_v_chord() {
+        let c_major = major_scale(C4);
+        let v_chord = c_major.v_major_chord();
+        assert_eq!(v_chord.notes(), &[G4, B4, D5]);
+    }
+
+    #[test]
+    fn test_major_scale_vi_chord() {
+        let c_major = major_scale(C4);
+        let vi_chord = c_major.vi_minor_chord();
+        assert_eq!(vi_chord.notes(), &[A4, C5, E5]);
+    }
+
+    #[test]
+    fn test_major_scale_vii_chord() {
+        let c_major = major_scale(C4);
+        let vii_chord = c_major.vii_diminished_chord();
+        assert_eq!(vii_chord.notes(), &[B4, D5, F5]);
     }
 }
